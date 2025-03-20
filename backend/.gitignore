@@ -1,0 +1,9 @@
+# Ignore environment variables
+.env
+
+# Ignore dependencies folder
+node_modules/
+
+# Ignore OS/macOS/Windows system files
+.DS_Store
+Thumbs.db
