@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './App.css';
 
 const App = () => {
   // State variables
@@ -53,14 +54,7 @@ const App = () => {
     setLoading(true);
     setError(null);
     try {
-      // Fetch weather data
-      const weatherRes = await axios.post('http://localhost:5001/weather', { city });
-      if (weatherRes.data.error) {
-        throw new Error(weatherRes.data.error);
-      }
-      setWeatherData(weatherRes.data);
-
-      // Fetch crop predictions
+      // Fetch crop predictions with all data
       const predictRes = await axios.post('http://localhost:5001/predict', {
         city,
         month: parseInt(month),
@@ -70,7 +64,9 @@ const App = () => {
         throw new Error(predictRes.data.error);
       }
       
-      setRecommendations(predictRes.data.crops);
+      // Set all the data from the response
+      setRecommendations(predictRes.data.allCrops);
+      setWeatherData(predictRes.data.weatherData);
       setDemandTrend(predictRes.data.demand_trend);
       setRegion(predictRes.data.region);
       setRegionDetails(predictRes.data.regionDetails);
@@ -83,103 +79,139 @@ const App = () => {
     }
   };
 
+  // Function to get trend label and class
+  const getTrendLabel = (value) => {
+    if (value >= 0.7) return { label: 'High', class: 'trend-high' };
+    if (value >= 0.4) return { label: 'Moderate', class: 'trend-moderate' };
+    return { label: 'Low', class: 'trend-low' };
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex flex-col items-center justify-center p-5">
-      <h1 className="text-4xl font-bold mb-6 text-green-700 text-center">
-        Krishi-Mitra Dashboard 🌾
-        <p className="text-lg text-gray-600 mt-2">Your Smart Agriculture Assistant</p>
-      </h1>
+    <div className="app-container">
+      <div className="header">
+        <h1>Krishi-Mitra Dashboard 🌾</h1>
+        <p>Your Smart Agriculture Assistant</p>
+      </div>
 
       {/* Input Section */}
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md mb-4">
-        <div className="mb-4">
-          <label className="block text-sm font-semibold text-gray-600">City:</label>
-          <input
-            type="text"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="Enter city name (e.g., Mumbai, Delhi, Bangalore)"
-          />
-          {allRegions.length > 0 && (
-            <div className="mt-2">
-              <details className="text-xs text-gray-500">
-                <summary className="cursor-pointer">View supported regions and cities</summary>
-                <div className="mt-2 p-2 bg-gray-50 rounded text-xs max-h-40 overflow-y-auto">
-                  {allRegions.map((region, idx) => (
-                    <div key={idx} className="mb-2">
-                      <p className="font-medium">{region.name}:</p>
-                      <p>Cities: {region.major_cities.join(', ')}</p>
-                    </div>
-                  ))}
-                </div>
-              </details>
+      <div className="form-container card">
+        <div className="card-body">
+          <div className="form-group">
+            <label htmlFor="city">City:</label>
+            <input
+              id="city"
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="form-control"
+              placeholder="Enter city name (e.g., Mumbai, Delhi, Bangalore)"
+            />
+            {allRegions.length > 0 && (
+              <div className="mt-2">
+                <details>
+                  <summary className="details-toggle">View supported regions and cities</summary>
+                  <div className="details-content">
+                    {allRegions.map((region, idx) => (
+                      <div key={idx} className="region-item">
+                        <span className="region-name">{region.name}:</span>
+                        <div className="city-list">
+                          {region.major_cities.join(', ')}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              </div>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="month">Month:</label>
+            <select
+              id="month"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+              className="form-control"
+            >
+              <option value="">Select Month</option>
+              {months.map((m) => (
+                <option key={m.value} value={m.value}>{m.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="alert alert-danger">
+              <div className="alert-icon">⚠️</div>
+              <div className="alert-content">{error}</div>
             </div>
           )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-semibold text-gray-600">Month:</label>
-          <select
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+
+          {/* Single Action Button */}
+          <button
+            onClick={predictCrop}
+            disabled={loading}
+            className={`btn btn-primary btn-block ${loading ? 'disabled' : ''}`}
           >
-            <option value="">Select Month</option>
-            {months.map((m) => (
-              <option key={m.value} value={m.value}>{m.label}</option>
-            ))}
-          </select>
+            {loading ? (
+              <>
+                <span className="spinner">
+                  <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </span>
+                Analyzing...
+              </>
+            ) : (
+              'Get Crop Recommendations'
+            )}
+          </button>
         </div>
-
-        {/* Error Message */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {error}
-          </div>
-        )}
-
-        {/* Single Action Button */}
-        <button
-          onClick={predictCrop}
-          disabled={loading}
-          className={`w-full bg-green-500 text-white px-4 py-3 rounded-lg transition-colors font-semibold ${
-            loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'
-          }`}
-        >
-          {loading ? 'Analyzing...' : 'Get Crop Recommendations'}
-        </button>
       </div>
 
       {/* Results Section */}
-      <div className="w-full max-w-3xl space-y-6">
+      <div className="results-container">
         {loading && (
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto"></div>
-            <p className="text-blue-600 font-semibold mt-2">Analyzing data...</p>
+          <div className="loading-container fade-in">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Analyzing agricultural data...</p>
           </div>
         )}
 
         {/* Region Information */}
         {region && regionDetails && !error && (
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <span className="text-2xl mr-2">📍</span> Region Information
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600">Detected Region</p>
-                <p className="text-xl font-bold text-blue-700">{region}</p>
-                <p className="text-sm text-gray-600 mt-2">Climate</p>
-                <p className="text-md text-blue-700">{regionDetails.climate}</p>
-              </div>
-              <div className="bg-green-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600">Common Crops in this Region</p>
-                <div className="mt-1">
-                  {regionDetails.typicalCrops.map((crop, index) => (
-                    <span key={index} className="inline-block bg-green-100 text-green-800 px-2 py-1 rounded mr-2 mb-2 text-sm">
-                      {crop}
-                    </span>
-                  ))}
+          <div className="card fade-in-1">
+            <div className="card-header">
+              <div className="icon">📍</div>
+              <h2>Region Information</h2>
+            </div>
+            <div className="card-body">
+              <div className="info-grid">
+                <div className="info-card info-blue">
+                  <div className="info-label">Detected Region</div>
+                  <div className="info-value">{region}</div>
+                  <div className="info-label" style={{marginTop: '10px'}}>Climate</div>
+                  <div style={{fontSize: '0.95rem'}}>{regionDetails.climate}</div>
+                </div>
+                <div className="info-card info-green">
+                  <div className="info-label">Common Crops in this Region</div>
+                  <div className="info-content">
+                    {regionDetails.typicalCrops.map((crop, index) => (
+                      <span key={index} className="badge badge-best" style={{
+                        margin: '0 4px 4px 0',
+                        padding: '4px 8px',
+                        fontSize: '0.75rem',
+                        fontWeight: '500',
+                        borderRadius: '4px',
+                        display: 'inline-block',
+                        background: 'rgba(56, 161, 105, 0.1)',
+                        color: '#38a169'
+                      }}>
+                        {crop}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -188,22 +220,25 @@ const App = () => {
 
         {/* Weather Data */}
         {weatherData && !error && (
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <span className="text-2xl mr-2">🌦️</span> Weather Data
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600">Temperature</p>
-                <p className="text-xl font-bold text-blue-700">{weatherData.temperature}°C</p>
-              </div>
-              <div className="bg-green-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600">Humidity</p>
-                <p className="text-xl font-bold text-green-700">{weatherData.humidity}%</p>
-              </div>
-              <div className="bg-purple-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600">Rainfall</p>
-                <p className="text-xl font-bold text-purple-700">{weatherData.rainfall} mm</p>
+          <div className="card fade-in-2">
+            <div className="card-header">
+              <div className="icon">🌦️</div>
+              <h2>Weather Data</h2>
+            </div>
+            <div className="card-body">
+              <div className="info-grid">
+                <div className="info-card info-blue">
+                  <div className="info-label">Temperature</div>
+                  <div className="info-value">{weatherData.temperature}°C</div>
+                </div>
+                <div className="info-card info-green">
+                  <div className="info-label">Humidity</div>
+                  <div className="info-value">{weatherData.humidity}%</div>
+                </div>
+                <div className="info-card info-purple">
+                  <div className="info-label">Rainfall</div>
+                  <div className="info-value">{weatherData.rainfall} mm</div>
+                </div>
               </div>
             </div>
           </div>
@@ -211,38 +246,70 @@ const App = () => {
 
         {/* Crop Recommendations */}
         {recommendations.length > 0 && !error && (
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <span className="text-2xl mr-2">🌱</span> Recommended Crops
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {recommendations.map((crop, index) => (
-                <div key={index} className="bg-green-50 p-4 rounded-lg">
-                  <p className="font-medium text-green-800">{crop}</p>
-                </div>
-              ))}
+          <div className="card fade-in-3">
+            <div className="card-header">
+              <div className="icon">🌱</div>
+              <h2>Recommended Crops</h2>
             </div>
-          </div>
-        )}
-
-        {/* Demand Trends */}
-        {demandTrend !== null && !error && (
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <span className="text-2xl mr-2">📊</span> Market Analysis
-            </h2>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">Demand Trend Index</p>
-              <p className="text-2xl font-bold text-purple-700">
-                {demandTrend >= 0.7 ? 'High' : demandTrend >= 0.4 ? 'Moderate' : 'Low'}
-              </p>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                <div 
-                  className="bg-purple-600 h-2.5 rounded-full" 
-                  style={{ width: `${Math.round(demandTrend * 100)}%` }}
-                ></div>
+            <div className="card-body">
+              <div className="recommendation-container">
+                {recommendations.map((crop, index) => (
+                  <div key={index} className={`recommendation-card ${index === 0 ? 'best-match' : ''}`}>
+                    <div className="recommendation-header">
+                      <div className="recommendation-title">
+                        {index === 0 && <span className="recommendation-badge badge-best">BEST MATCH</span>}
+                        {crop.name}
+                      </div>
+                      <div>
+                        <span className="recommendation-badge badge-score">
+                          Score: {crop.score}%
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="recommendation-body">
+                      <div className="stats-card">
+                        <div className="stats-label">Market Price</div>
+                        <div className="stats-value">₹{Math.round(crop.marketPrice)} per quintal</div>
+                        <div className="trend-indicator">
+                          <span className={getTrendLabel(crop.marketTrend).class}>
+                            {getTrendLabel(crop.marketTrend).label} Market Trend
+                          </span>
+                        </div>
+                        <div className="progress-bar-container">
+                          <div 
+                            className={`progress-bar-fill ${crop.marketTrend >= 0.7 ? 'progress-bar-high' : crop.marketTrend >= 0.4 ? 'progress-bar-moderate' : 'progress-bar-low'}`}
+                            style={{ width: `${Math.round(crop.marketTrend * 100)}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                      
+                      <div className="stats-card">
+                        <div className="stats-label">Demand Trend</div>
+                        <div className="stats-value">{getTrendLabel(crop.demandTrend).label}</div>
+                        <div className="trend-indicator">
+                          <span className={getTrendLabel(crop.demandTrend).class}>
+                            {Math.round(crop.demandTrend * 100)}% 
+                          </span>
+                        </div>
+                        <div className="progress-bar-container">
+                          <div 
+                            className={`progress-bar-fill ${crop.demandTrend >= 0.7 ? 'progress-bar-high' : crop.demandTrend >= 0.4 ? 'progress-bar-moderate' : 'progress-bar-low'}`}
+                            style={{ width: `${Math.round(crop.demandTrend * 100)}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p className="text-xs text-right mt-1 text-gray-500">{Math.round(demandTrend * 100)}%</p>
+              
+              <div className="alert alert-warning" style={{marginTop: '20px'}}>
+                <div className="alert-icon">📝</div>
+                <div className="alert-content">
+                  <strong>Note:</strong> These recommendations are based on current weather conditions, market trends, and regional suitability. The best match is highlighted above.
+                </div>
+              </div>
             </div>
           </div>
         )}
