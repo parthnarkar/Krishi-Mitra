@@ -1,23 +1,32 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+const mongoose = require('mongoose');
+const reportRoutes = require('./routes/reportRoutes');
+const productRoutes = require('./routes/productRoutes');
+const farmerRoutes = require('./routes/farmerRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
-// Load environment variables
 dotenv.config();
-
-// Connect to MongoDB
-connectDB();
-
 const app = express();
 
-// Middleware to parse JSON
+// Middleware
 app.use(express.json());
 
-// A simple test route
-app.get('/', (req, res) => {
-  res.send('Krishi Mitra Backend Running...');
-});
+// Routes
+app.use('/api/reports', reportRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/farmers', farmerRoutes);
+app.use('/api/orders', orderRoutes);
 
-// Define the port and start the server
+
+// MongoDB Connection
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('MongoDB connected...'))
+  .catch((err) => console.log(err));
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
