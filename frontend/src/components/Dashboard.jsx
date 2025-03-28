@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Navbar from './Navbar';
+import { addToCart } from '../utils/cartUtils';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -106,7 +108,7 @@ const fallbackCategories = [
   {
     _id: '3',
     name: 'Grains & Cereals',
-    image: 'https://unsplash.com/photos/a-table-topped-with-lots-of-different-types-of-food-G0Hl-Y5ujlo?'
+    image: 'https://images.unsplash.com/photo-1518843875459-f738682238a6?q=80&w=2142'
   },
   {
     _id: '4',
@@ -118,29 +120,15 @@ const fallbackCategories = [
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [cart, setCart] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
 
   // Auth token from localStorage
   const token = localStorage.getItem('token');
   
   useEffect(() => {
-    // Function to fetch user profile
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/users/profile`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setUser(response.data);
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-      }
-    };
-
     // Function to fetch categories
     const fetchCategories = async () => {
       try {
@@ -181,7 +169,8 @@ const Dashboard = () => {
           filteredProducts = filteredProducts.filter(
             product => 
               product.name.toLowerCase().includes(searchLower) || 
-              product.description.toLowerCase().includes(searchLower)
+              product.description.toLowerCase().includes(searchLower) ||
+              product.category.toLowerCase().includes(searchLower)
           );
         }
         
@@ -190,69 +179,17 @@ const Dashboard = () => {
       }
     };
 
-    // Function to fetch cart
-    const fetchCart = async () => {
-      if (!token) return;
-      
-      try {
-        const response = await axios.get(`${API_URL}/users/cart`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setCart(response.data);
-      } catch (error) {
-        console.error('Error fetching cart:', error);
-      }
-    };
-
-    fetchUserProfile();
     fetchCategories();
     fetchProducts();
-    fetchCart();
-  }, [token, selectedCategory, searchTerm]);
+  }, [selectedCategory, searchTerm]);
 
   // Function to add item to cart
-  const addToCart = async (productId) => {
-    if (!token) {
-      alert('Please login to add items to cart');
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        `${API_URL}/users/cart`,
-        { productId, quantity: 1 },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setCart(response.data);
-      alert('Product added to cart');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      
-      // Add to local cart if API fails
-      const productToAdd = products.find(p => p._id === productId);
-      if (productToAdd) {
-        const existingItem = cart.find(item => 
-          item.productId?._id === productId || item.productId === productId
-        );
-        
-        if (existingItem) {
-          const updatedCart = cart.map(item => 
-            (item.productId?._id === productId || item.productId === productId) 
-              ? {...item, quantity: item.quantity + 1} 
-              : item
-          );
-          setCart(updatedCart);
-        } else {
-          setCart([...cart, { 
-            productId: productToAdd, 
-            quantity: 1 
-          }]);
-        }
-        alert('Product added to cart');
-      } else {
-        alert('Failed to add to cart');
-      }
-    }
+  const handleAddToCart = (e, product) => {
+    e.preventDefault(); // Prevent navigation when clicking the cart button
+    addToCart(product);
+    
+    // Show toast notification
+    alert(`${product.name} added to cart!`);
   };
 
   // Function to filter products by category
@@ -260,43 +197,18 @@ const Dashboard = () => {
     setSelectedCategory(category === selectedCategory ? '' : category);
   };
 
-  // Calculate cart total
-  const cartTotal = cart.reduce((total, item) => {
-    return total + (item.productId?.price * item.quantity);
-  }, 0);
+  // Function to handle search form submission
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      // Apply search filter
+      fetchProducts();
+    }
+  };
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm py-4 mb-6">
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-green-700">FarmFresh Market</h1>
-          
-          <div className="flex items-center gap-4">
-            {user ? (
-              <div className="flex items-center gap-2">
-                <span className="text-sm">Hello, {user.name}</span>
-                <div className="relative">
-                  <button className="bg-green-600 text-white p-2 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3z" />
-                    </svg>
-                  </button>
-                  {cart.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {cart.length}
-                    </span>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                Login
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 pb-12">
@@ -311,16 +223,18 @@ const Dashboard = () => {
                 Support local farmers and enjoy fresh, seasonal produce at affordable prices
               </p>
               <div className="bg-white p-2 rounded-lg flex">
-                <input
-                  type="text"
-                  placeholder="Search for products..."
-                  className="flex-grow bg-transparent text-gray-800 outline-none px-2"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <button className="bg-green-600 text-white px-4 py-2 rounded">
-                  Search
-                </button>
+                <form onSubmit={handleSearchSubmit} className="flex w-full">
+                  <input
+                    type="text"
+                    placeholder="Search for products..."
+                    className="flex-grow bg-transparent text-gray-800 outline-none px-2"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+                    Search
+                  </button>
+                </form>
               </div>
             </div>
             <div className="md:w-1/3">
@@ -329,6 +243,57 @@ const Dashboard = () => {
                 alt="Fresh Produce" 
                 className="rounded-lg shadow-lg"
               />
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Farmers */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Meet Our Farmers</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="bg-white rounded-lg shadow-sm p-4 text-center">
+              <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-3">
+                <img 
+                  src="https://images.unsplash.com/photo-1553787499-6f9133860278?w=500" 
+                  alt="Farmer Ravi" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className="font-medium">Farmer Ravi</h3>
+              <p className="text-sm text-gray-600">Organic Vegetables</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-sm p-4 text-center">
+              <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-3">
+                <img 
+                  src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=500" 
+                  alt="Farmer Priya" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className="font-medium">Farmer Priya</h3>
+              <p className="text-sm text-gray-600">Fruits Specialist</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-sm p-4 text-center">
+              <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-3">
+                <img 
+                  src="https://images.unsplash.com/photo-1610275280978-51f3f5324c83?w=500" 
+                  alt="Farmer Ajay" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className="font-medium">Farmer Ajay</h3>
+              <p className="text-sm text-gray-600">Dairy Products</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-sm p-4 text-center">
+              <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-3">
+                <img 
+                  src="https://images.unsplash.com/photo-1594547915764-b92fc34c8ad7?w=500" 
+                  alt="Farmer Kavita" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className="font-medium">Farmer Kavita</h3>
+              <p className="text-sm text-gray-600">Spices & Herbs</p>
             </div>
           </div>
         </section>
@@ -374,7 +339,7 @@ const Dashboard = () => {
 
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
-              <p>Loading products...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
             </div>
           ) : error ? (
             <div className="bg-red-100 text-red-700 p-4 rounded-lg">
@@ -417,10 +382,7 @@ const Dashboard = () => {
                         )}
                       </div>
                       <button 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          addToCart(product._id);
-                        }}
+                        onClick={(e) => handleAddToCart(e, product)}
                         className="bg-green-600 text-white p-2 rounded-full hover:bg-green-700"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -439,6 +401,54 @@ const Dashboard = () => {
               No products found. Try changing your search or filter.
             </div>
           )}
+        </section>
+
+        {/* Direct from Farm Section */}
+        <section className="mt-16 p-8 bg-green-50 rounded-xl">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-green-800 mb-4">Why Choose Farm Direct?</h2>
+            <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+              When you buy directly from farmers, you get fresher, healthier produce while supporting local agriculture
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="text-green-600 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Freshness Guaranteed</h3>
+              <p className="text-gray-600">
+                Products are harvested and delivered within 24 hours, ensuring maximum freshness and nutritional value.
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="text-green-600 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Fair Pricing</h3>
+              <p className="text-gray-600">
+                By eliminating middlemen, farmers earn more while you pay less for higher quality produce.
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="text-green-600 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Support Local Farming</h3>
+              <p className="text-gray-600">
+                Your purchase directly supports local farming communities and sustainable agricultural practices.
+              </p>
+            </div>
+          </div>
         </section>
       </main>
 

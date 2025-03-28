@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getLocalCart } from './cart/CartUtils';
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Update cart count
@@ -19,6 +21,7 @@ const Navbar = () => {
 
     // Listen for storage changes (for cart updates)
     window.addEventListener('storage', updateCartCount);
+    window.addEventListener('cartUpdated', updateCartCount);
 
     // Get user info if logged in
     if (token) {
@@ -28,8 +31,16 @@ const Navbar = () => {
 
     return () => {
       window.removeEventListener('storage', updateCartCount);
+      window.removeEventListener('cartUpdated', updateCartCount);
     };
   }, [token]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
 
   return (
     <>
@@ -45,22 +56,31 @@ const Navbar = () => {
             </div>
             
             <div className="relative flex-grow max-w-2xl mx-4">
-              <input
-                type="text"
-                placeholder="Search for products, categories or brands..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
-              />
-              <button className="absolute right-3 top-2.5">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                </svg>
-              </button>
+              <form onSubmit={handleSearch}>
+                <input
+                  type="text"
+                  placeholder="Search for products, categories or brands..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button type="submit" className="absolute right-3 top-2.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </form>
             </div>
             
             <div className="flex items-center space-x-6">
               {user ? (
                 <div className="flex items-center gap-4">
-                  <span className="text-sm">Hello, {user.name}</span>
+                  <Link to="/profile" className="flex items-center text-green-600 hover:text-green-800">
+                    <span className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white text-sm font-bold mr-2">
+                      {user.name?.charAt(0)}
+                    </span>
+                    <span className="text-sm">Hello, {user.name}</span>
+                  </Link>
                   <button 
                     onClick={() => {
                       localStorage.removeItem('token');
@@ -99,13 +119,15 @@ const Navbar = () => {
       {/* Navigation menu */}
       <nav className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4">
-          <div className="flex space-x-8 py-4">
-            <Link to="/" className="text-gray-800 hover:text-green-600">Home</Link>
-            <Link to="/shop" className="text-gray-800 hover:text-green-600">Shop</Link>
-            <Link to="/fruits-vegetables" className="text-gray-800 hover:text-green-600">Fruits & Vegetables</Link>
-            <Link to="/beverages" className="text-gray-800 hover:text-green-600">Beverages</Link>
-            <Link to="/blog" className="text-gray-800 hover:text-green-600">Blog</Link>
-            <Link to="/contact" className="text-gray-800 hover:text-green-600">Contact</Link>
+          <div className="flex space-x-8 py-4 overflow-x-auto">
+            <Link to="/" className="text-gray-800 hover:text-green-600 whitespace-nowrap">Home</Link>
+            <Link to="/category/fruits-vegetables" className="text-gray-800 hover:text-green-600 whitespace-nowrap">Fruits & Vegetables</Link>
+            <Link to="/category/dairy" className="text-gray-800 hover:text-green-600 whitespace-nowrap">Dairy Products</Link>
+            <Link to="/category/grains-cereals" className="text-gray-800 hover:text-green-600 whitespace-nowrap">Grains & Cereals</Link>
+            <Link to="/category/spices-herbs" className="text-gray-800 hover:text-green-600 whitespace-nowrap">Spices & Herbs</Link>
+            <Link to="/blog" className="text-gray-800 hover:text-green-600 whitespace-nowrap">Farming Blog</Link>
+            <Link to="/support" className="text-gray-800 hover:text-green-600 whitespace-nowrap">Support</Link>
+            <Link to="/about" className="text-gray-800 hover:text-green-600 whitespace-nowrap">About Us</Link>
           </div>
         </div>
       </nav>

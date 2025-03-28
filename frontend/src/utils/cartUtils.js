@@ -1,7 +1,7 @@
 /**
  * Get cart items from localStorage
  */
-export const getLocalCart = () => {
+export const getCartItems = () => {
   try {
     const cart = localStorage.getItem('cart');
     return cart ? JSON.parse(cart) : [];
@@ -17,9 +17,9 @@ export const getLocalCart = () => {
  * @param {Number} quantity - Quantity to add (default: 1)
  * @returns {Array} Updated cart items
  */
-export const addToLocalCart = (product, quantity = 1) => {
+export const addToCart = (product, quantity = 1) => {
   try {
-    const cart = getLocalCart();
+    const cart = getCartItems();
     
     // Find if product already exists in cart
     const existingProductIndex = cart.findIndex(
@@ -40,14 +40,14 @@ export const addToLocalCart = (product, quantity = 1) => {
     // Save to localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
     
-    // Dispatch events to notify other components
+    // Dispatch event to notify other components
     window.dispatchEvent(new Event('cartUpdated'));
     window.dispatchEvent(new Event('storage'));
     
     return cart;
   } catch (error) {
     console.error('Error adding product to cart:', error);
-    return getLocalCart();
+    return getCartItems();
   }
 };
 
@@ -57,13 +57,13 @@ export const addToLocalCart = (product, quantity = 1) => {
  * @param {Number} quantity - New quantity
  * @returns {Array} Updated cart items
  */
-export const updateLocalCartQuantity = (productId, quantity) => {
+export const updateCartQuantity = (productId, quantity) => {
   try {
     if (quantity <= 0) {
-      return removeFromLocalCart(productId);
+      return removeFromCart(productId);
     }
     
-    const cart = getLocalCart();
+    const cart = getCartItems();
     
     const updatedCart = cart.map(item => {
       const itemProductId = item.productId._id || item.productId;
@@ -75,14 +75,14 @@ export const updateLocalCartQuantity = (productId, quantity) => {
     
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     
-    // Dispatch events to notify other components
+    // Dispatch event to notify other components
     window.dispatchEvent(new Event('cartUpdated'));
     window.dispatchEvent(new Event('storage'));
     
     return updatedCart;
   } catch (error) {
     console.error('Error updating cart quantity:', error);
-    return getLocalCart();
+    return getCartItems();
   }
 };
 
@@ -91,9 +91,9 @@ export const updateLocalCartQuantity = (productId, quantity) => {
  * @param {String} productId - The product ID to remove
  * @returns {Array} Updated cart items
  */
-export const removeFromLocalCart = (productId) => {
+export const removeFromCart = (productId) => {
   try {
-    const cart = getLocalCart();
+    const cart = getCartItems();
     
     const updatedCart = cart.filter(item => {
       const itemProductId = item.productId._id || item.productId;
@@ -102,14 +102,14 @@ export const removeFromLocalCart = (productId) => {
     
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     
-    // Dispatch events to notify other components
+    // Dispatch event to notify other components
     window.dispatchEvent(new Event('cartUpdated'));
     window.dispatchEvent(new Event('storage'));
     
     return updatedCart;
   } catch (error) {
     console.error('Error removing product from cart:', error);
-    return getLocalCart();
+    return getCartItems();
   }
 };
 
@@ -117,18 +117,18 @@ export const removeFromLocalCart = (productId) => {
  * Clear all items from cart
  * @returns {Array} Empty array
  */
-export const clearLocalCart = () => {
+export const clearCart = () => {
   try {
     localStorage.setItem('cart', JSON.stringify([]));
     
-    // Dispatch events to notify other components
+    // Dispatch event to notify other components
     window.dispatchEvent(new Event('cartUpdated'));
     window.dispatchEvent(new Event('storage'));
     
     return [];
   } catch (error) {
     console.error('Error clearing cart:', error);
-    return getLocalCart();
+    return getCartItems();
   }
 };
 
@@ -136,9 +136,9 @@ export const clearLocalCart = () => {
  * Calculate cart total
  * @returns {Number} Total price
  */
-export const getLocalCartTotal = () => {
+export const getCartTotal = () => {
   try {
-    const cart = getLocalCart();
+    const cart = getCartItems();
     
     return cart.reduce((total, item) => {
       const price = item.productId.discountPrice || item.productId.price;
@@ -154,9 +154,9 @@ export const getLocalCartTotal = () => {
  * Get cart item count
  * @returns {Number} Number of items in cart
  */
-export const getLocalCartCount = () => {
+export const getCartCount = () => {
   try {
-    return getLocalCart().length;
+    return getCartItems().length;
   } catch (error) {
     console.error('Error getting cart count:', error);
     return 0;
