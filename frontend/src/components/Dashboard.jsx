@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -105,7 +106,7 @@ const fallbackCategories = [
   {
     _id: '3',
     name: 'Grains & Cereals',
-    image: 'https://images.unsplash.com/photo-1574323347407-f5e1c5a186f7?q=80&w=2070'
+    image: 'https://unsplash.com/photos/a-table-topped-with-lots-of-different-types-of-food-G0Hl-Y5ujlo?'
   },
   {
     _id: '4',
@@ -383,16 +384,18 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.map((product) => (
                 <div key={product._id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                  <div className="h-48 overflow-hidden">
+                  <Link to={`/product/${product._id}`} className="block h-48 overflow-hidden">
                     <img 
                       src={product.image} 
                       alt={product.name} 
                       className="w-full h-full object-cover"
                     />
-                  </div>
+                  </Link>
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium">{product.name}</h3>
+                      <Link to={`/product/${product._id}`} className="font-medium hover:text-green-600">
+                        {product.name}
+                      </Link>
                       {product.isOrganic && (
                         <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
                           Organic
@@ -414,7 +417,10 @@ const Dashboard = () => {
                         )}
                       </div>
                       <button 
-                        onClick={() => addToCart(product._id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCart(product._id);
+                        }}
                         className="bg-green-600 text-white p-2 rounded-full hover:bg-green-700"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
