@@ -8,6 +8,7 @@ import CategoryPage from "./components/CategoryPage";
 import Blog from "./components/Blog";
 import Support from "./components/Support";
 import AboutUs from "./components/AboutUs";
+import FarmingGuru from "./components/FarmingGuru";
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -19,6 +20,7 @@ function App() {
 
   return (
     <Router>
+      <FarmingGuru />
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<AuthPage isLogin={true} />} />

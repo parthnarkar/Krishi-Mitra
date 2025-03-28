@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getLocalCart } from './cart/CartUtils';
+import { getCartItems } from '../utils/cartUtils';
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
@@ -12,7 +12,7 @@ const Navbar = () => {
   useEffect(() => {
     // Update cart count
     const updateCartCount = () => {
-      const localCart = getLocalCart();
+      const localCart = getCartItems();
       setCartCount(localCart.length);
     };
 
@@ -49,9 +49,9 @@ const Navbar = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center space-x-4">
-              <Link to="/" className="text-2xl font-bold text-green-700">FarmFresh Market</Link>
+              <Link to="/" className="text-2xl font-bold text-green-700">Krishi-Connect</Link>
               <div className="text-sm text-gray-500">
-                Fresh & Healthy
+                Connecting Farmers & Consumers
               </div>
             </div>
             

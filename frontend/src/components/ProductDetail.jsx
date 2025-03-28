@@ -284,7 +284,7 @@ const ProductDetail = () => {
                     <svg className="w-5 h-5 text-orange-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="text-orange-600 font-semibold">Special Offer Ends In:</span>
+                    <span className="text-orange-600 font-semibold">Krishi-Connect Special Offer Ends In:</span>
                   </div>
                   <div className="flex space-x-2">
                     <div className="bg-white px-3 py-2 rounded-lg">
@@ -468,7 +468,7 @@ const ProductDetail = () => {
       
       {/* Related Products */}
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-6">You May Also Like</h2>
+        <h2 className="text-2xl font-bold mb-6">More from Krishi-Connect</h2>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {fallbackProducts.slice(0, 4).map((relatedProduct) => (

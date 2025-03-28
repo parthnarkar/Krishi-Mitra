@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
-import { getLocalCart, updateLocalCartQuantity, removeFromLocalCart } from './cart/CartUtils';
+import { getLocalCart, updateLocalCartQuantity, removeFromLocalCart } from '../utils/cartUtils';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -112,10 +112,10 @@ const Cart = () => {
   };
 
   const handleCouponApply = () => {
-    if (couponCode.toUpperCase() === 'FARM10') {
+    if (couponCode.toUpperCase() === 'KRISHI10') {
       setDiscountApplied(true);
       setDiscountAmount(calculateSubtotal() * 0.1); // 10% discount
-    } else if (couponCode.toUpperCase() === 'FRESH20') {
+    } else if (couponCode.toUpperCase() === 'CONNECT20') {
       setDiscountApplied(true);
       setDiscountAmount(calculateSubtotal() * 0.2); // 20% discount
     } else {
@@ -125,7 +125,13 @@ const Cart = () => {
 
   const calculateSubtotal = () => {
     return cartItems.reduce((total, item) => {
-      const price = item.productId.discountPrice || item.productId.price;
+      const product = item.productId;
+      if (!product) return total;
+      
+      const price = typeof product === 'object' 
+        ? (product.discountPrice || product.price)
+        : 0;
+        
       return total + (price * item.quantity);
     }, 0);
   };
@@ -186,39 +192,49 @@ const Cart = () => {
             <div className="lg:w-2/3">
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                 <div className="divide-y">
-                  {cartItems.map((item) => {
+                  {cartItems.map((item, index) => {
                     const product = item.productId;
+                    // Skip rendering if product is invalid
+                    if (!product) return null;
+                    
+                    const productId = typeof product === 'object' ? product._id : product;
+                    const productName = typeof product === 'object' ? product.name : 'Product';
+                    const productImage = typeof product === 'object' ? product.image : 'https://via.placeholder.com/100';
+                    const productCategory = typeof product === 'object' ? product.category : '';
+                    const productPrice = typeof product === 'object' ? product.price : 0;
+                    const productDiscountPrice = typeof product === 'object' ? product.discountPrice : null;
+                    
                     return (
-                      <div key={product._id || product} className="p-4">
+                      <div key={productId || index} className="p-4">
                         <div className="flex items-center">
                           <img
-                            src={product.image}
-                            alt={product.name}
+                            src={productImage}
+                            alt={productName}
                             className="w-20 h-20 object-cover rounded"
                           />
                           <div className="ml-4 flex-grow">
                             <Link
-                              to={`/product/${product._id || product}`}
+                              to={`/product/${productId}`}
                               className="font-medium hover:text-green-600"
                             >
-                              {product.name}
+                              {productName}
                             </Link>
                             <div className="text-sm text-gray-500">
-                              {product.category}
+                              {productCategory}
                             </div>
                             <div className="mt-1">
-                              {product.discountPrice ? (
+                              {productDiscountPrice ? (
                                 <>
                                   <span className="font-bold">
-                                    ₹{product.discountPrice}
+                                    ₹{productDiscountPrice}
                                   </span>
                                   <span className="text-gray-500 line-through ml-2">
-                                    ₹{product.price}
+                                    ₹{productPrice}
                                   </span>
                                 </>
                               ) : (
                                 <span className="font-bold">
-                                  ₹{product.price}
+                                  ₹{productPrice}
                                 </span>
                               )}
                             </div>
@@ -226,7 +242,7 @@ const Cart = () => {
                           <div className="flex items-center space-x-4">
                             <div className="flex border border-gray-300 rounded-md">
                               <button
-                                onClick={() => updateQuantity(product._id || product, item.quantity - 1)}
+                                onClick={() => updateQuantity(productId, item.quantity - 1)}
                                 className="px-3 py-1 hover:bg-gray-100"
                               >
                                 −
@@ -235,14 +251,14 @@ const Cart = () => {
                                 {item.quantity}
                               </span>
                               <button
-                                onClick={() => updateQuantity(product._id || product, item.quantity + 1)}
+                                onClick={() => updateQuantity(productId, item.quantity + 1)}
                                 className="px-3 py-1 hover:bg-gray-100"
                               >
                                 +
                               </button>
                             </div>
                             <button
-                              onClick={() => removeFromCart(product._id || product)}
+                              onClick={() => removeFromCart(productId)}
                               className="text-red-500 hover:text-red-700"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -312,7 +328,7 @@ const Cart = () => {
                       Apply
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Try "FARM10" for 10% off or "FRESH20" for 20% off</p>
+                  <p className="text-xs text-gray-500 mt-1">Try "KRISHI10" for 10% off or "CONNECT20" for 20% off</p>
                 </div>
 
                 <button 

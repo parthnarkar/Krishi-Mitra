@@ -152,6 +152,121 @@ const fallbackProductsByCategory = {
   ]
 };
 
+// Additional products for each category to enhance variety
+const additionalProducts = {
+  'fruits-vegetables': [
+    {
+      _id: '16',
+      name: 'Organic Bananas',
+      description: 'Sweet and nutritious bananas grown organically',
+      price: 60,
+      discountPrice: 55,
+      category: 'Fruits & Vegetables',
+      image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?q=80&w=2080',
+      stock: 40,
+      isOrganic: true
+    },
+    {
+      _id: '17',
+      name: 'Fresh Cucumbers',
+      description: 'Crisp and refreshing cucumbers perfect for salads',
+      price: 35,
+      category: 'Fruits & Vegetables',
+      image: 'https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?q=80&w=2067',
+      stock: 25,
+      isOrganic: true
+    },
+    {
+      _id: '18',
+      name: 'Green Bell Peppers',
+      description: 'Vibrant green peppers, great for stir-fries and salads',
+      price: 40,
+      category: 'Fruits & Vegetables',
+      image: 'https://images.unsplash.com/photo-1518568403628-df55701ade9e?q=80&w=1780',
+      stock: 30,
+      isOrganic: false
+    }
+  ],
+  'dairy': [
+    {
+      _id: '19',
+      name: 'Natural Yogurt',
+      description: 'Creamy and probiotic-rich yogurt made from farm-fresh milk',
+      price: 90,
+      discountPrice: 80,
+      category: 'Dairy Products',
+      image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?q=80&w=1887',
+      stock: 20,
+      isOrganic: true
+    },
+    {
+      _id: '20',
+      name: 'Artisanal Cheese',
+      description: 'Handcrafted cheese aged to perfection',
+      price: 250,
+      category: 'Dairy Products',
+      image: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?q=80&w=2073',
+      stock: 15,
+      isOrganic: false
+    }
+  ],
+  'grains-cereals': [
+    {
+      _id: '21',
+      name: 'Organic Oats',
+      description: 'Whole grain rolled oats perfect for breakfast',
+      price: 75,
+      category: 'Grains & Cereals',
+      image: 'https://images.unsplash.com/photo-1614961233913-a5113a4a34ed?q=80&w=2070',
+      stock: 45,
+      isOrganic: true
+    },
+    {
+      _id: '22',
+      name: 'Brown Rice',
+      description: 'Nutritious whole grain brown rice',
+      price: 95,
+      discountPrice: 85,
+      category: 'Grains & Cereals',
+      image: 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?q=80&w=2070',
+      stock: 50,
+      isOrganic: true
+    }
+  ],
+  'spices-herbs': [
+    {
+      _id: '23',
+      name: 'Cumin Seeds',
+      description: 'Aromatic cumin seeds for Indian and Middle Eastern cooking',
+      price: 65,
+      category: 'Spices & Herbs',
+      image: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?q=80&w=2075',
+      stock: 30,
+      isOrganic: false
+    },
+    {
+      _id: '24',
+      name: 'Fresh Basil',
+      description: 'Fragrant basil leaves, harvested daily',
+      price: 40,
+      category: 'Spices & Herbs',
+      image: 'https://images.unsplash.com/photo-1600788886242-5c96aabe3757?q=80&w=2069',
+      stock: 20,
+      isOrganic: true
+    }
+  ]
+};
+
+// Merge additional products into fallback products
+Object.keys(additionalProducts).forEach(category => {
+  if (fallbackProductsByCategory[category]) {
+    fallbackProductsByCategory[category] = [
+      ...fallbackProductsByCategory[category],
+      ...additionalProducts[category]
+    ];
+  }
+});
+
 // Category name mapping
 const categoryMapping = {
   'fruits-vegetables': 'Fruits & Vegetables',
@@ -177,14 +292,32 @@ const CategoryPage = () => {
   const fetchProductsByCategory = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/products`, {
-        params: { category: formattedCategoryName }
-      });
-      setProducts(response.data);
+      
+      // For demo purposes, always use the fallback data
+      const fallbackData = fallbackProductsByCategory[categoryName] || [];
+      
+      try {
+        // Attempt to get data from API
+        const response = await axios.get(`${API_URL}/products`, {
+          params: { category: formattedCategoryName }
+        });
+        
+        // If API returns data, use it, otherwise use fallback
+        if (response.data && response.data.length > 0) {
+          setProducts(response.data);
+        } else {
+          setProducts(fallbackData);
+        }
+      } catch (apiError) {
+        console.log('Using fallback data due to API error');
+        setProducts(fallbackData);
+      }
+      
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching products by category:', error);
-      // Use fallback data
+      console.error('Error in fetchProductsByCategory:', error);
+      setError('Failed to load products. Please try again later.');
+      // Ensure fallback data is used even in case of any error
       const fallbackData = fallbackProductsByCategory[categoryName] || [];
       setProducts(fallbackData);
       setLoading(false);

@@ -40,7 +40,7 @@ export const addToLocalCart = (product, quantity = 1) => {
     // Save to localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
     
-    // Dispatch events to notify other components
+    // Dispatch event to notify other components
     window.dispatchEvent(new Event('cartUpdated'));
     window.dispatchEvent(new Event('storage'));
     
@@ -75,7 +75,7 @@ export const updateLocalCartQuantity = (productId, quantity) => {
     
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     
-    // Dispatch events to notify other components
+    // Dispatch event to notify other components
     window.dispatchEvent(new Event('cartUpdated'));
     window.dispatchEvent(new Event('storage'));
     
@@ -102,7 +102,7 @@ export const removeFromLocalCart = (productId) => {
     
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     
-    // Dispatch events to notify other components
+    // Dispatch event to notify other components
     window.dispatchEvent(new Event('cartUpdated'));
     window.dispatchEvent(new Event('storage'));
     
@@ -121,7 +121,7 @@ export const clearLocalCart = () => {
   try {
     localStorage.setItem('cart', JSON.stringify([]));
     
-    // Dispatch events to notify other components
+    // Dispatch event to notify other components
     window.dispatchEvent(new Event('cartUpdated'));
     window.dispatchEvent(new Event('storage'));
     

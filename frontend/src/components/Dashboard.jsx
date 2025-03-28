@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
 import { addToCart } from '../utils/cartUtils';
+import { fetchProductImages, fetchFarmerImages } from '../utils/imageApi';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -124,6 +125,7 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [farmerImages, setFarmerImages] = useState([]);
 
   // Auth token from localStorage
   const token = localStorage.getItem('token');
@@ -138,6 +140,18 @@ const Dashboard = () => {
         console.error('Error fetching categories:', error);
         // Use fallback categories data
         setCategories(fallbackCategories);
+      }
+    };
+
+    // Function to fetch farmer images from Unsplash
+    const loadFarmerImages = async () => {
+      try {
+        const images = await fetchFarmerImages(3); // Fetch 3 farmer images
+        if (images && images.length > 0) {
+          setFarmerImages(images);
+        }
+      } catch (error) {
+        console.error('Error fetching farmer images:', error);
       }
     };
 
@@ -179,8 +193,45 @@ const Dashboard = () => {
       }
     };
 
+    // Add this function to fetch images for each product category
+    const fetchImagesForProducts = async () => {
+      setIsLoading(true);
+      
+      // Create copy of fallback products
+      const enhancedProducts = [...fallbackProducts];
+      
+      // Process in batches to avoid rate limiting
+      for (let i = 0; i < enhancedProducts.length; i++) {
+        const product = enhancedProducts[i];
+        try {
+          // Fetch image for this product
+          const images = await fetchProductImages(product.name, 1);
+          if (images && images.length > 0) {
+            enhancedProducts[i] = {
+              ...product,
+              image: images[0].url
+            };
+          }
+        } catch (err) {
+          console.error(`Error fetching image for ${product.name}:`, err);
+        }
+      }
+      
+      setProducts(enhancedProducts);
+      setIsLoading(false);
+    };
+
     fetchCategories();
-    fetchProducts();
+    
+    // If we're not filtering, fetch images for all products
+    if (!selectedCategory && !searchTerm) {
+      fetchImagesForProducts();
+    } else {
+      fetchProducts();
+    }
+
+    // Load farmer images
+    loadFarmerImages();
   }, [selectedCategory, searchTerm]);
 
   // Function to add item to cart
@@ -210,140 +261,478 @@ const Dashboard = () => {
     <div className="w-full min-h-screen bg-gray-50">
       <Navbar />
 
+      {/* Chatbot Modal */}
+      <div id="chatbot-modal" className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden">
+        <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg h-[600px] flex flex-col">
+          {/* Chatbot Header */}
+          <div className="p-4 border-b flex justify-between items-center bg-green-600 text-white rounded-t-xl">
+            <div className="flex items-center">
+              <div className="bg-white p-2 rounded-full mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+                  <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">FarmingGuru</h3>
+                <p className="text-xs text-green-100">Your AI Farming Assistant</p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              {/* Language Selector */}
+              <select className="mr-3 px-2 py-1 rounded text-sm bg-green-700 text-white border border-green-400">
+                <option value="en">English</option>
+                <option value="hi">हिंदी (Hindi)</option>
+                <option value="mr">मराठी (Marathi)</option>
+                <option value="gu">ગુજરાતી (Gujarati)</option>
+                <option value="ta">தமிழ் (Tamil)</option>
+                <option value="te">తెలుగు (Telugu)</option>
+              </select>
+              {/* Close Button */}
+              <button 
+                onClick={() => document.getElementById('chatbot-modal').classList.add('hidden')}
+                className="text-white hover:text-green-200"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          {/* Chatbot Messages */}
+          <div className="flex-grow p-4 overflow-y-auto" id="chat-messages">
+            {/* Welcome Message */}
+            <div className="flex mb-4">
+              <div className="bg-green-100 rounded-lg p-3 max-w-[80%]">
+                <p className="text-green-800">
+                  👋 Hello! I'm FarmingGuru, your AI farming assistant. How can I help you today? You can ask me about:
+                </p>
+                <ul className="list-disc pl-5 mt-2 text-green-800">
+                  <li>Crop diseases and treatments</li>
+                  <li>Soil management techniques</li>
+                  <li>Sustainable farming practices</li>
+                  <li>Seasonal crop recommendations</li>
+                  <li>Water management and irrigation</li>
+                </ul>
+              </div>
+            </div>
+            
+            {/* Sample Question */}
+            <div className="flex justify-end mb-4">
+              <div className="bg-blue-100 rounded-lg p-3 max-w-[80%]">
+                <p className="text-blue-800">How do I know if my soil is healthy?</p>
+              </div>
+            </div>
+            
+            {/* Sample Answer */}
+            <div className="flex mb-4">
+              <div className="bg-green-100 rounded-lg p-3 max-w-[80%]">
+                <p className="text-green-800">
+                  Good question! Healthy soil typically has these characteristics:
+                </p>
+                <ul className="list-disc pl-5 mt-2 text-green-800">
+                  <li>Good structure and crumbly texture</li>
+                  <li>Rich in organic matter</li>
+                  <li>Presence of earthworms and beneficial organisms</li>
+                  <li>Proper water drainage</li>
+                  <li>pH level between 6.0-7.0 for most crops</li>
+                </ul>
+                <p className="mt-2 text-green-800">
+                  You can perform simple tests like the jar test for soil composition or get a professional soil analysis. Would you like to know more about any specific soil testing methods?
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Chatbot Input */}
+          <div className="p-4 border-t">
+            <form className="flex" onSubmit={(e) => {
+              e.preventDefault();
+              const input = document.getElementById('chatbot-input');
+              if (input.value.trim()) {
+                // Add user message to chat
+                const messagesDiv = document.getElementById('chat-messages');
+                messagesDiv.innerHTML += `
+                  <div class="flex justify-end mb-4">
+                    <div class="bg-blue-100 rounded-lg p-3 max-w-[80%]">
+                      <p class="text-blue-800">${input.value}</p>
+                    </div>
+                  </div>
+                `;
+                
+                // In a real implementation, this would call an API
+                // For demo purposes, we'll add a loading message and then a response
+                setTimeout(() => {
+                  messagesDiv.innerHTML += `
+                    <div class="flex mb-4">
+                      <div class="bg-green-100 rounded-lg p-3 max-w-[80%]">
+                        <p class="text-green-800">
+                          I'm analyzing your question about "${input.value}". In a full implementation, this would connect to a language model API to provide relevant farming advice.
+                        </p>
+                        <p class="mt-2 text-green-800">
+                          For now, I recommend checking our Farming Blog section for detailed guides on various agricultural topics!
+                        </p>
+                      </div>
+                    </div>
+                  `;
+                  
+                  // Scroll to bottom
+                  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }, 1000);
+                
+                // Clear input
+                input.value = '';
+                
+                // Scroll to bottom
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+              }
+            }}>
+              <input
+                id="chatbot-input"
+                type="text"
+                placeholder="Type your farming question here..."
+                className="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <button
+                type="submit"
+                className="bg-green-600 text-white px-4 py-2 rounded-r-lg hover:bg-green-700"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </form>
+            <div className="text-xs text-gray-500 mt-1 text-center">
+              Powered by Krishi-Connect AI • Responses are for educational purposes only
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Chatbot Button */}
+      <button 
+        onClick={() => document.getElementById('chatbot-modal').classList.remove('hidden')}
+        className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 z-40 flex items-center justify-center"
+        title="Chat with FarmingGuru"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+      </button>
+
       {/* Main Content */}
       <main className="container mx-auto px-4 pb-12">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-green-700 to-green-500 rounded-xl p-8 text-white mb-12">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="md:w-1/2 mb-6 md:mb-0">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Farm Fresh Products Delivered Direct To You
-              </h2>
-              <p className="text-lg mb-6">
-                Support local farmers and enjoy fresh, seasonal produce at affordable prices
+        <section className="relative overflow-hidden rounded-2xl mb-12">
+          <div className="absolute inset-0">
+            <img 
+              src="https://images.unsplash.com/photo-1498579150354-977475b7ea0b?q=80&w=2070" 
+              alt="Farm Landscape" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-green-900/80 to-green-800/60"></div>
+          </div>
+          
+          <div className="relative py-16 px-8 md:py-24 md:px-12">
+            <div className="max-w-3xl">
+              <span className="bg-yellow-400 text-yellow-800 px-4 py-1 rounded-full text-sm font-medium mb-4 inline-block">
+                #SupportLocalFarmers
+              </span>
+              <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">Krishi-Connect: Bridging Farms To Homes</h1>
+              <p className="text-xl text-white/90 mb-8">
+                Support local farmers and enjoy fresh, seasonal produce at prices that are fair for everyone.
               </p>
-              <div className="bg-white p-2 rounded-lg flex">
-                <form onSubmit={handleSearchSubmit} className="flex w-full">
-                  <input
-                    type="text"
-                    placeholder="Search for products..."
-                    className="flex-grow bg-transparent text-gray-800 outline-none px-2"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
-                    Search
-                  </button>
-                </form>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-grow bg-white/90 backdrop-blur-sm rounded-lg">
+                  <form onSubmit={handleSearchSubmit} className="flex p-1">
+                    <input
+                      type="text"
+                      placeholder="Search for fresh produce..."
+                      className="flex-grow bg-transparent text-gray-800 outline-none px-4 py-3"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <button type="submit" className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
+                      Search
+                    </button>
+                  </form>
+                </div>
+                
+                <a href="#categories" className="inline-flex items-center bg-white/20 backdrop-blur-sm text-white border border-white/30 px-6 py-3 rounded-lg hover:bg-white/30 transition">
+                  Browse Categories
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </a>
               </div>
-            </div>
-            <div className="md:w-1/3">
-              <img 
-                src="https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
-                alt="Fresh Produce" 
-                className="rounded-lg shadow-lg"
-              />
+              
+              <div className="flex flex-wrap gap-4 mt-8">
+                <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  100% Organic
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                  </svg>
+                  Same-day Delivery
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
+                  </svg>
+                  Fair Pricing
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Featured Farmers */}
+        {/* Farmer Spotlight Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Meet Our Farmers</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="bg-white rounded-lg shadow-sm p-4 text-center">
-              <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-3">
-                <img 
-                  src="https://images.unsplash.com/photo-1553787499-6f9133860278?w=500" 
-                  alt="Farmer Ravi" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="font-medium">Farmer Ravi</h3>
-              <p className="text-sm text-gray-600">Organic Vegetables</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-4 text-center">
-              <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-3">
-                <img 
-                  src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=500" 
-                  alt="Farmer Priya" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="font-medium">Farmer Priya</h3>
-              <p className="text-sm text-gray-600">Fruits Specialist</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-4 text-center">
-              <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-3">
-                <img 
-                  src="https://images.unsplash.com/photo-1610275280978-51f3f5324c83?w=500" 
-                  alt="Farmer Ajay" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="font-medium">Farmer Ajay</h3>
-              <p className="text-sm text-gray-600">Dairy Products</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-4 text-center">
-              <div className="w-20 h-20 mx-auto rounded-full overflow-hidden mb-3">
-                <img 
-                  src="https://images.unsplash.com/photo-1594547915764-b92fc34c8ad7?w=500" 
-                  alt="Farmer Kavita" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="font-medium">Farmer Kavita</h3>
-              <p className="text-sm text-gray-600">Spices & Herbs</p>
-            </div>
+          <h2 className="text-2xl font-bold mb-8">Meet Our Farmers</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Dynamic farmer cards based on API images */}
+            {farmerImages.length > 0 ? (
+              <>
+                <div className="bg-white rounded-xl overflow-hidden shadow-md">
+                  <div className="h-48 overflow-hidden relative">
+                    <img 
+                      src={farmerImages[0]?.url || "https://images.unsplash.com/photo-1582488766472-8772ce613206?q=80&w=2070"} 
+                      alt="Farmer Rajesh" 
+                      className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                    />
+                    {farmerImages[0]?.credit && (
+                      <a 
+                        href={farmerImages[0].credit.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="absolute bottom-2 right-2 text-xs text-white bg-black/50 px-2 py-1 rounded-full"
+                      >
+                        Photo: {farmerImages[0].credit.name}
+                      </a>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">Rajesh Kumar</h3>
+                    <p className="text-gray-600 mb-4">Growing organic vegetables for over 15 years using traditional farming methods.</p>
+                    <div className="flex items-center">
+                      <span className="text-green-600 font-medium">View Products</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white rounded-xl overflow-hidden shadow-md">
+                  <div className="h-48 overflow-hidden relative">
+                    <img 
+                      src={farmerImages[1]?.url || "https://images.unsplash.com/photo-1527535839613-93e1d8b4d494?q=80&w=2071"} 
+                      alt="Farmer Sunita" 
+                      className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                    />
+                    {farmerImages[1]?.credit && (
+                      <a 
+                        href={farmerImages[1].credit.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="absolute bottom-2 right-2 text-xs text-white bg-black/50 px-2 py-1 rounded-full"
+                      >
+                        Photo: {farmerImages[1].credit.name}
+                      </a>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">Sunita Patel</h3>
+                    <p className="text-gray-600 mb-4">Specializes in dairy products from grass-fed cows raised on her family farm.</p>
+                    <div className="flex items-center">
+                      <span className="text-green-600 font-medium">View Products</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white rounded-xl overflow-hidden shadow-md">
+                  <div className="h-48 overflow-hidden relative">
+                    <img 
+                      src={farmerImages[2]?.url || "https://images.unsplash.com/photo-1619142992302-4a73061a0f8e?q=80&w=2069"} 
+                      alt="Farmer Amit" 
+                      className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                    />
+                    {farmerImages[2]?.credit && (
+                      <a 
+                        href={farmerImages[2].credit.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="absolute bottom-2 right-2 text-xs text-white bg-black/50 px-2 py-1 rounded-full"
+                      >
+                        Photo: {farmerImages[2].credit.name}
+                      </a>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">Amit Singh</h3>
+                    <p className="text-gray-600 mb-4">Third-generation rice farmer practicing sustainable agriculture methods.</p>
+                    <div className="flex items-center">
+                      <span className="text-green-600 font-medium">View Products</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              // Loading or fallback state
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="bg-white rounded-xl overflow-hidden shadow-md">
+                  <div className="h-48 bg-gray-200 animate-pulse"></div>
+                  <div className="p-6">
+                    <div className="h-6 bg-gray-200 rounded animate-pulse mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                    <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse mb-4"></div>
+                    <div className="flex items-center">
+                      <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </section>
 
         {/* Categories Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Categories</h2>
+          <h2 className="text-2xl font-bold mb-6">Shop by Category</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {categories.map((category) => (
               <div 
                 key={category._id}
-                onClick={() => filterByCategory(category.name)}
-                className={`bg-white rounded-lg shadow-sm p-4 flex flex-col items-center cursor-pointer transition-all hover:shadow-md ${
+                className={`relative rounded-lg overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
                   selectedCategory === category.name ? 'ring-2 ring-green-500' : ''
                 }`}
+                onClick={() => filterByCategory(category.name)}
               >
-                <div className="w-16 h-16 rounded-full overflow-hidden mb-3">
+                <div className="relative h-40">
+                  <div className="absolute inset-0 bg-black opacity-40"></div>
                   <img 
                     src={category.image} 
                     alt={category.name} 
                     className="w-full h-full object-cover"
                   />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <h3 className="text-white text-xl font-bold text-center">{category.name}</h3>
+                  </div>
                 </div>
-                <h3 className="font-medium text-center">{category.name}</h3>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Products Section */}
-        <section>
+        {/* Special Offers Section */}
+        <section className="mb-12 p-6 bg-yellow-50 rounded-xl">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold text-yellow-800 mb-2">Special Offers</h2>
+              <p className="text-yellow-700 mb-4">Limited time deals on fresh produce</p>
+              <div className="flex gap-4">
+                <div className="bg-white p-3 rounded-lg shadow-sm">
+                  <span className="text-sm text-gray-500">Ends in</span>
+                  <div className="flex gap-2 mt-1">
+                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-mono">12</span>
+                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-mono">45</span>
+                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-mono">20</span>
+                  </div>
+                </div>
+                <Link to="/category/fruits-vegetables" className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 flex items-center">
+                  Shop Now
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+            <div className="mt-6 md:mt-0 flex gap-4">
+              <div className="bg-white rounded-lg shadow-sm overflow-hidden w-32">
+                <div className="h-24 overflow-hidden">
+                  <img src="https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a?q=80&w=2070" alt="Organic Apples" className="w-full h-full object-cover" />
+                </div>
+                <div className="p-3">
+                  <p className="text-sm font-medium">Organic Apples</p>
+                  <div className="flex items-center mt-1">
+                    <span className="text-green-600 font-bold">₹65</span>
+                    <span className="text-gray-400 text-xs line-through ml-2">₹70</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm overflow-hidden w-32">
+                <div className="h-24 overflow-hidden">
+                  <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=2070" alt="Organic Paneer" className="w-full h-full object-cover" />
+                </div>
+                <div className="p-3">
+                  <p className="text-sm font-medium">Organic Paneer</p>
+                  <div className="flex items-center mt-1">
+                    <span className="text-green-600 font-bold">₹100</span>
+                    <span className="text-gray-400 text-xs line-through ml-2">₹120</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Products */}
+        <section className="mb-12">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">Featured Products</h2>
+            <h2 className="text-2xl font-bold">{selectedCategory || 'Featured Products'}</h2>
             {selectedCategory && (
               <button 
                 onClick={() => setSelectedCategory('')}
-                className="text-green-600 hover:underline"
+                className="text-green-600 flex items-center"
               >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
                 Clear Filter
               </button>
             )}
           </div>
-
+          
           {isLoading ? (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex justify-center items-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
             </div>
           ) : error ? (
-            <div className="bg-red-100 text-red-700 p-4 rounded-lg">
+            <div className="bg-red-50 text-red-600 p-4 rounded-lg">
               {error}
+            </div>
+          ) : products.length === 0 ? (
+            <div className="bg-gray-50 p-8 rounded-lg text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h3 className="text-xl font-medium text-gray-700 mb-2">No products found</h3>
+              <p className="text-gray-500 mb-4">
+                {searchTerm ? `No results found for "${searchTerm}"` : 'No products available in this category'}
+              </p>
+              <button 
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedCategory('');
+                }}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+              >
+                View All Products
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -353,7 +742,7 @@ const Dashboard = () => {
                     <img 
                       src={product.image} 
                       alt={product.name} 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform hover:scale-105"
                     />
                   </Link>
                   <div className="p-4">
@@ -395,18 +784,12 @@ const Dashboard = () => {
               ))}
             </div>
           )}
-
-          {products.length === 0 && !isLoading && (
-            <div className="bg-yellow-100 text-yellow-700 p-4 rounded-lg text-center">
-              No products found. Try changing your search or filter.
-            </div>
-          )}
         </section>
 
         {/* Direct from Farm Section */}
         <section className="mt-16 p-8 bg-green-50 rounded-xl">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-green-800 mb-4">Why Choose Farm Direct?</h2>
+            <h2 className="text-3xl font-bold text-green-800 mb-4">Why Choose Krishi-Connect?</h2>
             <p className="text-lg text-gray-700 max-w-3xl mx-auto">
               When you buy directly from farmers, you get fresher, healthier produce while supporting local agriculture
             </p>
@@ -450,49 +833,301 @@ const Dashboard = () => {
             </div>
           </div>
         </section>
-      </main>
 
-      {/* Footer */}
-      <footer className="bg-green-800 text-white py-8">
-        <div className="container mx-auto px-4">
+        {/* Why Choose Us Section */}
+        <section className="mb-12 bg-white rounded-xl shadow-sm p-8">
+          <h2 className="text-2xl font-bold mb-8 text-center">Why Choose Krishi-Connect?</h2>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-lg font-bold mb-4">FarmFresh Market</h3>
-              <p className="text-green-200">
-                Connecting farmers directly with consumers for the freshest produce at fair prices.
+            <div className="flex flex-col items-center text-center">
+              <div className="bg-green-100 p-4 rounded-full mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Directly from Farmers</h3>
+              <p className="text-gray-600">
+                Buy directly from verified local farmers, eliminating middlemen and ensuring farmers get fair prices for their produce.
               </p>
             </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-green-200 hover:text-white">About Us</a></li>
-                <li><a href="#" className="text-green-200 hover:text-white">How It Works</a></li>
-                <li><a href="#" className="text-green-200 hover:text-white">For Farmers</a></li>
-                <li><a href="#" className="text-green-200 hover:text-white">Contact Us</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4">Newsletter</h3>
-              <p className="text-green-200 mb-2">
-                Subscribe to get updates on new products and seasonal offers.
+            
+            <div className="flex flex-col items-center text-center">
+              <div className="bg-green-100 p-4 rounded-full mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Traceability & Transparency</h3>
+              <p className="text-gray-600">
+                Know exactly where your food comes from and which farmer grew it. Complete transparency from farm to table.
               </p>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="bg-green-700 text-white px-3 py-2 rounded-l outline-none flex-grow"
-                />
-                <button className="bg-green-600 text-white px-4 py-2 rounded-r">
-                  Subscribe
+            </div>
+            
+            <div className="flex flex-col items-center text-center">
+              <div className="bg-green-100 p-4 rounded-full mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Fresh & Healthy</h3>
+              <p className="text-gray-600">
+                Our products are harvested and delivered within 24 hours, ensuring you get the freshest and most nutritious food possible.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Customer Testimonials */}
+        <section className="mb-12">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold">What Our Customers Say</h2>
+            <div className="flex gap-2">
+              <button className="p-2 bg-gray-100 rounded-full hover:bg-green-100">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </button>
+              <button className="p-2 bg-gray-100 rounded-full hover:bg-green-100">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold text-xl mr-4">
+                  P
+                </div>
+                <div>
+                  <h3 className="font-medium">Priya Sharma</h3>
+                  <div className="flex text-yellow-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p className="text-gray-600">
+                "The organic vegetables I ordered were incredibly fresh - like they were picked the same day. Will definitely continue ordering from FarmFresh!"
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-xl mr-4">
+                  R
+                </div>
+                <div>
+                  <h3 className="font-medium">Rahul Verma</h3>
+                  <div className="flex text-yellow-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p className="text-gray-600">
+                "I love being able to support local farmers directly. The quality is exceptional and the prices are fair. Highly recommend their basmati rice!"
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 font-bold text-xl mr-4">
+                  A
+                </div>
+                <div>
+                  <h3 className="font-medium">Anita Desai</h3>
+                  <div className="flex text-yellow-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p className="text-gray-600">
+                "The farm-fresh dairy products are amazing! You can really taste the difference. Their ghee and paneer are now staples in my kitchen."
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Download App Banner */}
+        <section className="mb-12 bg-gradient-to-r from-green-800 to-green-600 rounded-xl overflow-hidden">
+          <div className="flex flex-col md:flex-row items-center p-8">
+            <div className="md:w-2/3 mb-6 md:mb-0">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Download Our Krishi-Connect App</h2>
+              <p className="text-white text-opacity-90 mb-6">
+                Get exclusive deals, track your orders, and shop faster with our mobile app.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <a href="#" className="bg-black text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-900">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.707 9.293l-5-5a.999.999 0 10-1.414 1.414L14.586 9H3a1 1 0 100 2h11.586l-2.293-2.293a1 1 0 010-1.414z" />
+                  </svg>
+                  <div>
+                    <div className="text-xs">Download on the</div>
+                    <div className="text-lg font-medium">App Store</div>
+                  </div>
+                </a>
+                <a href="#" className="bg-black text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-900">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.707 9.293l-5-5a.999.999 0 10-1.414 1.414L14.586 9H3a1 1 0 100 2h11.586l-2.293-2.293a1 1 0 010-1.414z" />
+                  </svg>
+                  <div>
+                    <div className="text-xs">GET IT ON</div>
+                    <div className="text-lg font-medium">Google Play</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div className="md:w-1/3 flex justify-center">
+              <img 
+                src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=2074" 
+                alt="Mobile App" 
+                className="h-48 md:h-64 rounded-lg shadow-lg object-cover"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* FarmingGuru AI Assistant Section */}
+        <section className="mb-12 rounded-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-amber-500 to-yellow-400 p-8 rounded-xl">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="md:w-2/3">
+                <h2 className="text-3xl font-bold text-white mb-4">Meet FarmingGuru - Your AI Farming Assistant</h2>
+                <p className="text-white text-opacity-90 mb-6">
+                  Get expert advice on farming techniques, crop diseases, soil health, and more in multiple languages. FarmingGuru is available 24/7 to answer your agriculture queries.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    Multilingual Support (English, Hindi, Marathi, and more)
+                  </div>
+                  <div className="flex items-center text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    Expert Advice on Crop Management
+                  </div>
+                  <div className="flex items-center text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    Pest & Disease Identification
+                  </div>
+                  <div className="flex items-center text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    Weather-based Suggestions
+                  </div>
+                </div>
+                <button 
+                  onClick={() => document.getElementById('chatbot-modal').classList.remove('hidden')}
+                  className="mt-6 bg-white text-amber-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition flex items-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                  </svg>
+                  Chat with FarmingGuru
                 </button>
+              </div>
+              <div className="md:w-1/3 flex justify-center">
+                <img 
+                  src="https://images.unsplash.com/photo-1581578017093-cd30fce4eeb7?q=80&w=2070"
+                  alt="AI Farming Assistant" 
+                  className="h-60 rounded-lg shadow-lg object-cover"
+                />
               </div>
             </div>
           </div>
-          <div className="border-t border-green-700 mt-8 pt-6 text-center text-green-200">
-            <p>&copy; 2023 FarmFresh Market. All rights reserved.</p>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-green-800 text-white py-8">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <h3 className="text-lg font-bold mb-4">Krishi-Connect</h3>
+                <p className="text-green-200">
+                  Connecting farmers directly with consumers for the freshest produce at fair prices.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+                <ul className="space-y-2">
+                  <li><a href="#" className="text-green-200 hover:text-white">About Us</a></li>
+                  <li><a href="#" className="text-green-200 hover:text-white">How It Works</a></li>
+                  <li><a href="#" className="text-green-200 hover:text-white">For Farmers</a></li>
+                  <li><a href="#" className="text-green-200 hover:text-white">Contact Us</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold mb-4">Newsletter</h3>
+                <p className="text-green-200 mb-2">
+                  Subscribe to get updates on new products and seasonal offers.
+                </p>
+                <div className="flex">
+                  <input
+                    type="email"
+                    placeholder="Your email"
+                    className="bg-green-700 text-white px-3 py-2 rounded-l outline-none flex-grow"
+                  />
+                  <button className="bg-green-600 text-white px-4 py-2 rounded-r">
+                    Subscribe
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="border-t border-green-700 mt-8 pt-6 text-center text-green-200">
+              <p>&copy; 2023 Krishi-Connect. All rights reserved.</p>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      </main>
     </div>
   );
 };

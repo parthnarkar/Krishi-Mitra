@@ -11,6 +11,9 @@ export const getCartItems = () => {
   }
 };
 
+// Alias for backward compatibility
+export const getLocalCart = getCartItems;
+
 /**
  * Add product to cart
  * @param {Object} product - The product to add
@@ -23,7 +26,14 @@ export const addToCart = (product, quantity = 1) => {
     
     // Find if product already exists in cart
     const existingProductIndex = cart.findIndex(
-      item => item.productId._id === product._id || item.productId === product._id
+      item => {
+        // Handle both direct ID comparison and object comparison
+        if (typeof item.productId === 'object' && item.productId !== null) {
+          return item.productId._id === product._id;
+        } else {
+          return item.productId === product._id;
+        }
+      }
     );
     
     if (existingProductIndex !== -1) {
@@ -51,6 +61,9 @@ export const addToCart = (product, quantity = 1) => {
   }
 };
 
+// Alias for backward compatibility
+export const addToLocalCart = addToCart;
+
 /**
  * Update product quantity in cart
  * @param {String} productId - The product ID to update
@@ -66,7 +79,10 @@ export const updateCartQuantity = (productId, quantity) => {
     const cart = getCartItems();
     
     const updatedCart = cart.map(item => {
-      const itemProductId = item.productId._id || item.productId;
+      const itemProductId = (typeof item.productId === 'object' && item.productId !== null) 
+        ? item.productId._id 
+        : item.productId;
+        
       if (itemProductId === productId) {
         return { ...item, quantity };
       }
@@ -86,6 +102,9 @@ export const updateCartQuantity = (productId, quantity) => {
   }
 };
 
+// Alias for backward compatibility
+export const updateLocalCartQuantity = updateCartQuantity;
+
 /**
  * Remove product from cart
  * @param {String} productId - The product ID to remove
@@ -96,7 +115,9 @@ export const removeFromCart = (productId) => {
     const cart = getCartItems();
     
     const updatedCart = cart.filter(item => {
-      const itemProductId = item.productId._id || item.productId;
+      const itemProductId = (typeof item.productId === 'object' && item.productId !== null) 
+        ? item.productId._id 
+        : item.productId;
       return itemProductId !== productId;
     });
     
@@ -112,6 +133,9 @@ export const removeFromCart = (productId) => {
     return getCartItems();
   }
 };
+
+// Alias for backward compatibility
+export const removeFromLocalCart = removeFromCart;
 
 /**
  * Clear all items from cart
@@ -141,7 +165,10 @@ export const getCartTotal = () => {
     const cart = getCartItems();
     
     return cart.reduce((total, item) => {
-      const price = item.productId.discountPrice || item.productId.price;
+      const productId = item.productId;
+      const price = (typeof productId === 'object' && productId !== null)
+        ? (productId.discountPrice || productId.price)
+        : 0;
       return total + (price * item.quantity);
     }, 0);
   } catch (error) {
