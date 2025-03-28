@@ -1,6 +1,4 @@
-Here’s the **README.md** file with corrected formatting using `#` for headers and `**` for bold text, ready to be pasted on GitHub:
 
----
 
 # 🌾 **KrishiConnect: AI-Powered Smart Marketplace for Indian Farmers**  
 🚀 **Empowering Farmers | Eliminating Middlemen | Delivering Fresh Produce**  
