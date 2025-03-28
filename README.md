@@ -1,125 +1,119 @@
-Krishi-Mitra: Direct Farmer-to-Consumer E-Commerce Platform
-📝 Project Overview
-Krishi-Mitra is a platform that connects farmers directly with consumers, ensuring fair pricing, real-time price updates, and seamless order management. The platform empowers farmers to list their products efficiently, eliminates middlemen, and ensures fresh produce for consumers.
+# KrishiConnect: AI-Powered Smart Marketplace for Indian Farmers
 
-🎯 Hackathon Submission Summary
-Project Name: Krishi-Mitra
+## 🚀 Overview
+**KrishiConnect** is an AI-powered, multilingual, and voice-assisted **e-commerce platform** designed to revolutionize agricultural trade in India. By integrating **AI-driven pricing, smart logistics, and real-time market insights**, this platform provides **direct market access** to farmers, eliminating middlemen and ensuring **fair trade**. 
 
-Team Name: Krishi-Mitra
+## 🔥 Problem Statement
+Indian farmers face critical challenges, including:
+- **Low profit margins** due to market exploitation.
+- **Post-harvest losses** caused by inefficient supply chains.
+- **Lack of direct access** to wholesalers and exporters.
+- **Limited technological accessibility**, preventing effective digital trade participation.
 
-Team Members:
+Despite the rise of agri-tech solutions, no **AI-powered, voice-enabled, fully automated** marketplace exists specifically for Indian farmers. **KrishiConnect** fills this gap by providing a **tech-driven, farmer-first** platform.
 
-🧑‍💻 Parth Narkar: Backend & API Integration (Node.js & Express.js)
+## 🎯 Key Features
+### ✅ AI-Driven Dynamic Pricing System
+- Ensures fair pricing using **real-time market data**.
+- Eliminates middlemen manipulation through **automated pricing algorithms**.
 
-🧑‍💻 Archit: Backend & Database Management (MongoDB)
+### ✅ Voice-Assisted Management & Multilingual Support
+- Farmers can **list products and manage inventory** using **voice commands**.
+- Supports **multiple Indian languages** via **speech recognition & translation APIs**.
 
-🎨 Harshvardhan (HVP): Frontend Design & Development (Figma & React.js)
+### ✅ AI-Based Demand Forecasting & Smart Crop Recommendation
+- Uses **historical data, weather patterns, and soil quality** to suggest the **most profitable crops**.
+- Optimizes **agricultural planning** and **maximizes earnings**.
 
-🔥 Aayush: Multi-domain Support (Chatbot Integration, API Testing, Minor Backend Support)
+### ✅ Customer Bargaining System for Bulk Buyers
+- Implements an **AI-driven bidding algorithm** for **negotiation** within farmer-set price limits.
+- Ensures fair trade and **higher profitability** for farmers.
 
-📢 Problem Statement
-Middlemen & Unfair Pricing: Farmers receive only 33-50% of the final price.
+### ✅ Direct Export Deals & Bulk Buyer Matching
+- Connects farmers directly to **wholesalers and exporters**.
+- Expands market reach and **boosts direct sales**.
 
-Market Fluctuations: Lack of real-time price updates impacts farmers’ profitability.
+### ✅ Cold Storage & Logistics Partnering
+- Provides **AI-powered recommendations** for **storage and transportation facilities**.
+- Reduces **post-harvest wastage**.
 
-Inefficient Stock Management: Delays and cancellations due to unoptimized order allocation.
+### ✅ AI Voice Bot for Non-Tech-Savvy Farmers
+- Offers **real-time market prices, weather updates, and crop recommendations**.
+- Enhances accessibility via **WhatsApp-based AI chatbots**.
 
-Language Barriers: Existing platforms lack multilingual support, making them inaccessible.
+## 🌍 Impact & Sustainability
+KrishiConnect aligns with **UN Sustainable Development Goals (SDGs):**
+- 🏭 **SDG 1:** No Poverty – Increases farmer earnings.
+- 🌾 **SDG 2:** Zero Hunger – Promotes sustainable food production.
+- 📈 **SDG 8:** Decent Work & Economic Growth – Supports fair trade.
+- 🍽 **SDG 12:** Responsible Consumption & Production – Reduces post-harvest losses.
 
-🚀 Proposed Solution
-🌾 Dynamic Pricing System: Auto-adjusts based on real-time market data.
+## 🛠 Tech Stack
+### **Frontend:**
+- **React** + **Tailwind CSS**
 
-🗣️ Voice-Assisted Product Listing & Ordering: Supports Hindi, Marathi, and English.
+### **Backend:**
+- **Node.js** + **Express.js**
 
-🌐 Multilingual Support: Ensures full platform accessibility in multiple languages.
+### **Database:**
+- **MongoDB**
 
-📦 Automated Order Allocation System: Prevents delays and stock mismatches.
+### **Authentication:**
+- **Firebase**
 
-🤖 AI-Powered Chatbot: Provides real-time assistance for farmers and consumers.
+### **Machine Learning:**
+- **TensorFlow**, **PyTorch**
 
-💬 Customer Bargaining System: Allows price negotiation within set limits for bulk orders.
+### **Tools & APIs:**
+- **LangChain**, **Hugging Face**
+- **Sarvam**, **Mistral Saba**, **Google DialogFlow**
 
-🛠️ Technology Stack
-Feature	Technology Used
-Frontend	React.js (Tailwind CSS for UI)
-Backend	Node.js & Express.js
-Database	MongoDB (Farmers, Products, Orders, Transactions)
-Authentication	Firebase Authentication for secure login
-Real-Time Pricing	Market Price API (Agmarknet, CommodityAPI)
-Voice Assistance	Google Speech-to-Text API
-Multilingual Support	i18n Translation API
-Order Allocation System	MongoDB aggregation & location-based queries
-Chatbot Integration	OpenAI GPT-4 API for assistance
-📂 Project Submission Structure
-bash
-Copy
-Edit
-/Krishi-Mitra
-├── /backend
-│   ├── /controllers
-│   ├── /models
-│   ├── /routes
-│   └── server.js
-├── /frontend
-│   ├── /public
-│   ├── /src
-│   └── App.js
-├── /docs
-│   ├── Krishi-Mitra_Presentation.pptx   <-- 🎯 Main Presentation File
-│   └── API_Documentation.pdf
-├── README.md
-└── package.json
-📊 PPT Submission Details
-🎯 File Name: Krishi-Mitra_Presentation.pptx
+## 🔧 Installation & Setup
+### **Prerequisites**
+Ensure you have the following installed:
+- [Node.js](https://nodejs.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [Firebase CLI](https://firebase.google.com/docs/cli/)
 
-📚 Location: /docs directory of the project repository.
+### **Clone the Repository**
+```sh
+git clone https://github.com/your-username/KrishiConnect.git
+cd KrishiConnect
+```
 
-🎥 Contents:
+### **Install Dependencies**
+```sh
+npm install
+```
 
-Introduction & Problem Statement
+### **Run the Project**
+#### **Backend**
+```sh
+cd backend
+npm start
+```
 
-Proposed Solution
+#### **Frontend**
+```sh
+cd frontend
+npm start
+```
 
-Platform Features & Technology Stack
+### **Environment Variables**
+Create a `.env` file in the root directory and configure the required credentials:
+```env
+MONGO_URI=mongodb+srv://krishimitra:krishimitra@krishi-mitra-db.vxqbr.mongodb.net/
+FIREBASE_API_KEY=your_firebase_api_key
+```
 
-Use Case Flow Diagrams
+## 🚀 Future Enhancements
+- 📊 **Blockchain Integration** for **secure transactions**.
+- 🌐 **AI-Powered Market Insights** for better price predictions.
+- 🛰 **IoT-based Smart Farming** tools for better resource management.
 
-Live Demo Screenshots
+## 📜 License
+This project is **open-source** under the **MIT License**.
 
-Conclusion & Future Scope
+---
 
-📈 Use Case / Flow Diagram
-Farmers Onboard & List Products: Easy listing with voice and multilingual support.
-
-Consumers Browse, Filter, and Order: Intuitive product search and order placement.
-
-Real-Time Pricing: Dynamic price adjustments to ensure market parity.
-
-Order Allocation System: Ensures timely delivery and optimized stock management.
-
-AI Chatbot Assistance: Helps users with queries and recommendations.
-
-📡 API Endpoints Documentation
-API Documentation is available in API_Documentation.pdf inside the /docs folder.
-
-Base URL: https://krishi-mitra.com/api
-
-✅ CRUD APIs for Farmer, Product, and Order Management.
-
-✅ Auth APIs with Firebase JWT Tokens.
-
-✅ Bargaining APIs for bulk orders.
-
-🧩 Future Scope
-📱 Mobile App Launch: Native Android & iOS support.
-
-📡 AI-Powered Market Analysis: Predictive price analysis for farmers.
-
-🤝 Government Integration: Linkage with Agri-Markets and Subsidy Schemes.
-
-📬 Contact Information
-📧 Parth Narkar: 2023.parth.narkar@ves.ac.in
-
-📧 Archit: 2023.archit.chitte@ves.ac.in
-
-📧 Harshvardhan (HVP): 2023.harshvardhan.patil@ves.ac.in
+🌱 **Empowering Indian Farmers with AI & Tech!** 🌱
