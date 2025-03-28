@@ -1,27 +1,22 @@
 const express = require('express');
 const {
-  createOrder,
+  getOrders,
   getOrderById,
-  getAllOrders,
+  createOrder,
   updateOrderStatus,
   deleteOrder,
 } = require('../controllers/orderController');
 
 const router = express.Router();
 
-// Create a new order
-router.post('/', createOrder);
+// Routes for CRUD operations on orders
+router.route('/')
+  .get(getOrders)
+  .post(createOrder);
 
-// Get all orders
-router.get('/', getAllOrders);
-
-// Get a specific order by ID
-router.get('/:id', getOrderById);
-
-// Update order status
-router.put('/:id', updateOrderStatus);
-
-// Delete an order
-router.delete('/:id', deleteOrder);
+router.route('/:id')
+  .get(getOrderById)
+  .put(updateOrderStatus)
+  .delete(deleteOrder);
 
 module.exports = router;

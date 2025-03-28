@@ -1,15 +1,21 @@
 const express = require('express');
-const { getProducts, createProduct, updateProduct, deleteProduct } = require('../controllers/productController');
+const {
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} = require('../controllers/productController');
 
 const router = express.Router();
 
-// Route for getting all products and adding a new product
+// Routes for CRUD operations on products
 router.route('/')
   .get(getProducts)
   .post(createProduct);
 
-// Routes for updating and deleting a product by ID
 router.route('/:id')
+  .get(getProductById)
   .put(updateProduct)
   .delete(deleteProduct);
 

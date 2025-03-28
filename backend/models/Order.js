@@ -2,23 +2,6 @@ const mongoose = require('mongoose');
 
 const orderSchema = mongoose.Schema(
   {
-    buyerName: {
-      type: String,
-      required: [true, 'Buyer name is required'],
-      trim: true,
-    },
-    buyerPhone: {
-      type: String,
-      required: [true, 'Buyer phone number is required'],
-      match: [/^[6-9]\d{9}$/, 'Please enter a valid 10-digit phone number'],
-    },
-    buyerEmail: {
-      type: String,
-      match: [
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-        'Please enter a valid email address',
-      ],
-    },
     deliveryAddress: {
       addressLine1: {
         type: String,
@@ -90,10 +73,6 @@ const orderSchema = mongoose.Schema(
     orderNotes: {
       type: String,
       trim: true,
-    },
-    isReviewed: {
-      type: Boolean,
-      default: false,
     },
   },
   { timestamps: true }

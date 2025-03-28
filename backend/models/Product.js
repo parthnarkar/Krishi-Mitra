@@ -35,32 +35,9 @@ const productSchema = mongoose.Schema(
       trim: true,
       maxlength: [200, 'Description cannot exceed 200 characters'],
     },
-    images: [
-      {
-        url: {
-          type: String,
-          required: [true, 'Image URL is required'],
-        },
-        altText: {
-          type: String,
-          trim: true,
-          default: 'Product Image',
-        },
-      },
-    ],
     isAvailable: {
       type: Boolean,
       default: true,
-    },
-    discount: {
-      type: Number,
-      min: [0, 'Discount cannot be less than 0'],
-      max: [100, 'Discount cannot exceed 100%'],
-      default: 0,
-    },
-    finalPrice: {
-      type: Number,
-      required: true,
     },
     farmer: {
       type: mongoose.Schema.Types.ObjectId,
@@ -70,16 +47,6 @@ const productSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// ✅ Auto-calculate final price after applying discount
-productSchema.pre('save', function (next) {
-  if (this.discount > 0) {
-    this.finalPrice = this.pricePerKg - (this.pricePerKg * this.discount) / 100;
-  } else {
-    this.finalPrice = this.pricePerKg;
-  }
-  next();
-});
 
 // ✅ Check stock availability before processing orders
 productSchema.methods.checkStockAvailability = function (quantity) {

@@ -1,8 +1,19 @@
 const express = require('express');
-const { getOrderReports } = require('../controllers/reportController');
+const {
+  getSalesReportByFarmer,
+  getStockReport,
+  getOrderSummaryReport,
+} = require('../controllers/reportController');
+
 const router = express.Router();
 
-// GET /api/reports/orders - Fetch order reports
-router.get('/orders', getOrderReports);
+// Get sales report by farmer ID
+router.get('/sales/:farmerId', getSalesReportByFarmer);
+
+// Get stock report for all products (using Product schema)
+router.get('/stock', getStockReport);
+
+// Get order summary report
+router.get('/orders', getOrderSummaryReport);
 
 module.exports = router;

@@ -1,26 +1,49 @@
 const express = require('express');
-const router = express.Router();
 const {
   getFarmers,
-  createFarmer,
   getFarmerById,
+  createFarmer,
   updateFarmer,
   deleteFarmer,
+  addProductToFarmer,
+  verifyFarmer,
 } = require('../controllers/farmerController');
 
-// Get all farmers
+const router = express.Router();
+
+// @route GET /api/farmers
+// @desc Get all farmers
+// @access Public
 router.get('/', getFarmers);
 
-// Create a new farmer
-router.post('/', createFarmer);
-
-// Get farmer by ID
+// @route GET /api/farmers/:id
+// @desc Get a single farmer by ID
+// @access Public
 router.get('/:id', getFarmerById);
 
-// Update farmer details
+// @route POST /api/farmers
+// @desc Create a new farmer
+// @access Public
+router.post('/', createFarmer);
+
+// @route PUT /api/farmers/:id
+// @desc Update farmer details
+// @access Public
 router.put('/:id', updateFarmer);
 
-// Delete farmer
+// @route DELETE /api/farmers/:id
+// @desc Delete a farmer
+// @access Public
 router.delete('/:id', deleteFarmer);
+
+// @route POST /api/farmers/:id/add-product
+// @desc Add a product to a farmer's list
+// @access Public
+router.post('/:id/add-product', addProductToFarmer);
+
+// @route PUT /api/farmers/:id/verify
+// @desc Verify a farmer (admin)
+// @access Admin
+router.put('/:id/verify', verifyFarmer);
 
 module.exports = router;
