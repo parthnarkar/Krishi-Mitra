@@ -1,5 +1,5 @@
 const express = require('express');
-const { getPricing } = require('../controllers/pricingController');
+const { getPricing } = require('../controllers/pricingControllers');
 const router = express.Router();
 
 router.get('/', getPricing);
