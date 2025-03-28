@@ -1,42 +1,109 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* General body styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #eef2f7; /* Light background for better contrast */
+  margin: 0;
+  padding: 0;
+}
+
+/* Main container styles */
+.app {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Header styles */
+h1 {
+  color: #3b82f6; /* Blue shade for better contrast */
+  margin-bottom: 20px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Form styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #374151; /* Dark grey for readability */
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #cbd5e1; /* Light grey border */
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+/* Input focus effect */
+input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+}
+
+/* Button styles */
+button {
+  padding: 12px 20px;
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+/* Button hover effect */
+button:hover {
+  background-color: #2563eb;
+}
+
+/* Result display styles */
+.result {
+  margin-top: 20px;
+  background-color: #e0f2fe; /* Light blue for success message */
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #3b82f6;
+  font-weight: bold;
+  color: #1e40af;
+}
+
+/* Error message styles */
+.error {
+  color: #ef4444;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+  .app {
+    margin: 20px;
+    padding: 15px;
   }
-  to {
-    transform: rotate(360deg);
+
+  h1 {
+    font-size: 20px;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  button {
+    font-size: 14px;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
