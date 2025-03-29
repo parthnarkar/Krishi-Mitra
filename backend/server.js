@@ -38,6 +38,18 @@ app.use('/api/chatbot', chatbotRoutes);
 const protectedRoutes = require('./routes/protectedRoutes');
 app.use('/api/protected', protectedRoutes);
 
+// Upload Routes
+const uploadRoutes = require('./routes/uploadRoutes');
+app.use('/api/upload', uploadRoutes);
+
+// Cold Storage Routes
+const coldStorageRoutes = require('./routes/coldStorageRoutes');
+app.use('/api/cold-storage', coldStorageRoutes);
+
+// Bulk Buy Routes
+const bulkBuyRoutes = require('./routes/bulkBuyRoutes');
+app.use('/api/bulk-buy', bulkBuyRoutes);
+
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

@@ -1,0 +1,539 @@
+.cold-storage-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.cold-storage-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Loading State */
+.cold-storage-container.loading,
+.cold-storage-container.error {
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #d9534f;
+}
+
+.error-message svg {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-message button {
+  margin-top: 1rem;
+  padding: 0.5rem 1.5rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Facilities List */
+.facilities-list {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 800px;
+  overflow-y: auto;
+}
+
+.facilities-list h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.facility-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.facility-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.facility-card.selected {
+  border: 2px solid #3498db;
+}
+
+.facility-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.facility-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.rating {
+  color: #f39c12;
+  font-weight: 600;
+}
+
+.facility-details {
+  margin-bottom: 1rem;
+}
+
+.facility-details p {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.facility-details svg {
+  margin-right: 0.5rem;
+  color: #3498db;
+}
+
+.location svg {
+  color: #e74c3c;
+}
+
+.temperature svg {
+  color: #9b59b6;
+}
+
+.capacity svg {
+  color: #2ecc71;
+}
+
+.price {
+  font-weight: 600;
+  color: #333;
+}
+
+.facility-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.feature-tag {
+  background: #ebf5fb;
+  color: #3498db;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.select-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.select-btn:hover {
+  background: #2980b9;
+}
+
+/* Booking Section */
+.booking-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.booking-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  min-height: 300px;
+  color: #777;
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+  color: #bdc3c7;
+  margin-bottom: 1rem;
+}
+
+.booking-placeholder h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.booking-placeholder ul {
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.booking-placeholder li {
+  margin-bottom: 0.5rem;
+}
+
+.booking-form-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.booking-form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+  border-color: #e74c3c;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.form-group small {
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 0.25rem;
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.cost-summary {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+}
+
+.cost-summary h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.cost-details {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.cost-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cost-item.total {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #ddd;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.cancel-btn {
+  padding: 0.75rem 1.5rem;
+  background: #f1f1f1;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #e1e1e1;
+}
+
+.submit-btn {
+  padding: 0.75rem 1.5rem;
+  background: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover {
+  background: #27ae60;
+}
+
+/* Booking Success */
+.booking-success {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.booking-success svg {
+  font-size: 3rem;
+  color: #2ecc71;
+  margin-bottom: 1rem;
+}
+
+.booking-success h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.booking-success ul {
+  text-align: left;
+  margin: 1rem auto;
+  max-width: 300px;
+}
+
+.booking-success li {
+  margin-bottom: 0.5rem;
+}
+
+.booking-success button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* My Bookings Section */
+.my-bookings {
+  margin-top: 3rem;
+}
+
+.my-bookings h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.no-bookings {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  color: #777;
+}
+
+.bookings-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.booking-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.booking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.booking-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.confirmed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.booking-details {
+  margin-bottom: 1rem;
+}
+
+.booking-details p {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.booking-details svg {
+  margin-right: 0.5rem;
+  color: #3498db;
+}
+
+.booking-details .awaiting {
+  color: #f39c12;
+}
+
+.booking-details .paid {
+  color: #2ecc71;
+}
+
+.booking-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.booking-actions button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.cancel-booking {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.pay-now {
+  background: #2ecc71;
+  color: white;
+}
+
+.details-btn {
+  background: #f1f1f1;
+  color: #333;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .cold-storage-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .facilities-list {
+    max-height: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cold-storage-container {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.75rem;
+  }
+  
+  .facility-card {
+    padding: 1rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .form-actions button {
+    width: 100%;
+  }
+  
+  .booking-card {
+    padding: 1rem;
+  }
+  
+  .booking-actions {
+    flex-wrap: wrap;
+  }
+} 

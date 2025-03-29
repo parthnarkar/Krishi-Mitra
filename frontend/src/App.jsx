@@ -1,49 +1,43 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import AuthPage from "./components/AuthPage";
-import Dashboard from "./components/Dashboard";
-import ProductDetail from "./components/ProductDetail";
-import Cart from "./components/Cart";
-import Checkout from "./components/Checkout";
-import UserProfile from "./components/UserProfile";
-import CategoryPage from "./components/CategoryPage";
-import Blog from "./components/Blog";
-import Support from "./components/Support";
-import AboutUs from "./components/AboutUs";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+import Home from './components/home/Home';
+import Products from './components/products/Products';
+import ProductDetail from './components/products/ProductDetail';
+import Cart from './components/cart/Cart';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import Profile from './components/user/Profile';
+import Dashboard from './components/dashboard/Dashboard';
+import ColdStorage from './components/coldStorage/ColdStorage';
+import BulkBuy from './components/bulkBuy/BulkBuy';
+import Orders from './components/orders/Orders';
+import ChatbotDialog from './components/chatbot/ChatbotDialog';
+import './App.css';
 
 function App() {
-  const isAuthenticated = !!localStorage.getItem("token");
-
-  // Protected route component
-  const ProtectedRoute = ({ children }) => {
-    return isAuthenticated ? children : <Navigate to="/login" />;
-  };
-
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/login" element={<AuthPage isLogin={true} />} />
-        <Route path="/register" element={<AuthPage isLogin={false} />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/category/:categoryName" element={<CategoryPage />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/support" element={<Support />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <UserProfile />
-          </ProtectedRoute>
-        } />
-        <Route path="/orders" element={
-          <ProtectedRoute>
-            <UserProfile activeTab="orders" />
-          </ProtectedRoute>
-        } />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      <div className="app">
+        <Navbar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/cold-storage" element={<ColdStorage />} />
+            <Route path="/bulk-buy" element={<BulkBuy />} />
+            <Route path="/orders" element={<Orders />} />
+          </Routes>
+        </main>
+        <Footer />
+        <ChatbotDialog />
+      </div>
     </Router>
   );
 }
