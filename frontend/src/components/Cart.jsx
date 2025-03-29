@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 import { getLocalCart, updateLocalCartQuantity, removeFromLocalCart } from '../utils/cartUtils';
@@ -15,6 +15,7 @@ const Cart = () => {
   const [discountAmount, setDiscountAmount] = useState(0);
 
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCart();
@@ -333,7 +334,7 @@ const Cart = () => {
 
                 <button 
                   className="w-full bg-green-600 text-white py-3 rounded-md font-medium hover:bg-green-700 transition"
-                  onClick={() => alert('Checkout feature coming soon!')}
+                  onClick={() => navigate('/checkout')}
                 >
                   Proceed to Checkout
                 </button>

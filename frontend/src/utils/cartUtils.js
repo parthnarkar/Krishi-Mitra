@@ -188,4 +188,46 @@ export const getCartCount = () => {
     console.error('Error getting cart count:', error);
     return 0;
   }
+};
+
+/**
+ * Calculate detailed cart information including subtotal, shipping, etc.
+ * @returns {Object} Cart calculation details
+ */
+export const calculateCart = () => {
+  try {
+    const cart = getCartItems();
+    
+    // Calculate subtotal
+    const subtotal = cart.reduce((total, item) => {
+      const product = item.productId;
+      const price = (typeof product === 'object' && product !== null)
+        ? (product.discountPrice || product.price)
+        : 0;
+      return total + (price * item.quantity);
+    }, 0);
+    
+    // Calculate shipping (free over ₹500)
+    const shippingFee = subtotal > 500 ? 0 : 40;
+    
+    // Calculate total items
+    const totalItems = cart.reduce((count, item) => count + item.quantity, 0);
+    
+    return {
+      subtotal,
+      shippingFee,
+      total: subtotal + shippingFee,
+      totalItems,
+      items: cart
+    };
+  } catch (error) {
+    console.error('Error calculating cart details:', error);
+    return {
+      subtotal: 0,
+      shippingFee: 0,
+      total: 0,
+      totalItems: 0,
+      items: []
+    };
+  }
 }; 

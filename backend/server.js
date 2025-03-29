@@ -31,6 +31,10 @@ app.use('/api/orders', orderRoutes);
 const pricingRoutes = require('./routes/pricingRoutes');
 app.use('/api/pricing', pricingRoutes);
 
+// Chatbot Routes
+const chatbotRoutes = require('./routes/chatbotRoutes');
+app.use('/api/chatbot', chatbotRoutes);
+
 const protectedRoutes = require('./routes/protectedRoutes');
 app.use('/api/protected', protectedRoutes);
 

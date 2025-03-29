@@ -141,6 +141,23 @@ exports.getCart = async (req, res) => {
   }
 };
 
+// Clear cart
+exports.clearCart = async (req, res) => {
+  try {
+    // Find user and clear their cart
+    const user = await User.findById(req.user.id);
+    
+    // Empty the cart array
+    user.cart = [];
+    await user.save();
+    
+    res.status(200).json({ message: 'Cart cleared successfully', cart: [] });
+  } catch (error) {
+    console.error('Error clearing cart:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // Add to wishlist
 exports.addToWishlist = async (req, res) => {
   try {

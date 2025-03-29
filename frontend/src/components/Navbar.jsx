@@ -1,26 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getCartItems } from '../utils/cartUtils';
+import { getCart } from '../utils/cartApi';
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
   useEffect(() => {
     // Update cart count
-    const updateCartCount = () => {
-      const localCart = getCartItems();
-      setCartCount(localCart.length);
+    const updateCartCount = async () => {
+      if (isAuthenticated) {
+        try {
+          const cartItems = await getCart();
+          setCartCount(cartItems.length);
+        } catch (error) {
+          console.error('Error fetching cart count:', error);
+          setCartCount(0);
+        }
+      } else {
+        setCartCount(0);
+      }
     };
 
     // Initial cart count
     updateCartCount();
 
-    // Listen for storage changes (for cart updates)
-    window.addEventListener('storage', updateCartCount);
+    // Listen for cart updates
     window.addEventListener('cartUpdated', updateCartCount);
 
     // Get user info if logged in
@@ -30,10 +39,9 @@ const Navbar = () => {
     }
 
     return () => {
-      window.removeEventListener('storage', updateCartCount);
       window.removeEventListener('cartUpdated', updateCartCount);
     };
-  }, [token]);
+  }, [token, isAuthenticated]);
 
   const handleSearch = (e) => {
     e.preventDefault();

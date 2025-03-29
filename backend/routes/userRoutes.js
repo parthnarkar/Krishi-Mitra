@@ -5,6 +5,7 @@ const {
   addToCart,
   removeFromCart,
   getCart,
+  clearCart,
   addToWishlist,
   removeFromWishlist,
   getWishlist
@@ -21,6 +22,7 @@ router.put('/profile', protect, updateUserProfile);
 router.get('/cart', protect, getCart);
 router.post('/cart', protect, addToCart);
 router.delete('/cart/:productId', protect, removeFromCart);
+router.delete('/cart', protect, clearCart);
 
 // Wishlist routes
 router.get('/wishlist', protect, getWishlist);

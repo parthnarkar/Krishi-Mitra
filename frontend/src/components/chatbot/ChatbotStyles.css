@@ -1,0 +1,71 @@
+/* Google Gemini Chatbot Styles */
+.gemini-header {
+  background: linear-gradient(120deg, #1a73e8, #8430ce);
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.gemini-logo {
+  display: flex;
+  align-items: center;
+}
+
+.gemini-gradient-text {
+  background: linear-gradient(120deg, #1a73e8, #8430ce);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+}
+
+.gemini-bot-message {
+  background-color: #f0f4ff;
+  border-left: 3px solid #1a73e8;
+}
+
+.gemini-user-message {
+  background: linear-gradient(120deg, #1a73e8, #8430ce);
+  color: white;
+}
+
+.gemini-send-button {
+  background: linear-gradient(120deg, #1a73e8, #8430ce);
+  color: white;
+  transition: all 0.3s;
+}
+
+.gemini-send-button:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.gemini-typing-indicator {
+  display: flex;
+  align-items: center;
+}
+
+.gemini-typing-dot {
+  width: 8px;
+  height: 8px;
+  margin: 0 2px;
+  border-radius: 50%;
+  background: linear-gradient(120deg, #1a73e8, #8430ce);
+  animation: geminiTypingAnimation 1.4s infinite ease-in-out both;
+}
+
+.gemini-typing-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.gemini-typing-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes geminiTypingAnimation {
+  0%, 80%, 100% { 
+    transform: scale(0.6);
+  }
+  40% { 
+    transform: scale(1);
+  }
+} 
