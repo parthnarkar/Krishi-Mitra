@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const reportRoutes = require('./routes/reportRoutes');
 const productRoutes = require('./routes/productRoutes');
 const farmerRoutes = require('./routes/farmerRoutes');
@@ -11,6 +12,10 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174'], // Allow both ports
+  credentials: true
+}));
 
 // Routes
 app.use('/api/reports', reportRoutes);
