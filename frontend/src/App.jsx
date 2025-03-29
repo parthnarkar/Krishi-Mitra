@@ -37,7 +37,7 @@ const App = () => {
       try {
         const response = await axios.get('http://localhost:5001/regions');
         setAllRegions(response.data);
-      } catch (err) {
+    } catch (err) {
         console.error('Error fetching regions:', err);
       }
     };
@@ -75,7 +75,7 @@ const App = () => {
       console.error('Error fetching data:', err);
       setError(err.response?.data?.error || err.message || 'Error fetching data. Please try again.');
     } finally {
-      setLoading(false);
+    setLoading(false);
     }
   };
 
@@ -98,11 +98,11 @@ const App = () => {
         <div className="card-body">
           <div className="form-group">
             <label htmlFor="city">City:</label>
-            <input
+          <input
               id="city"
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+            type="text"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
               className="form-control"
               placeholder="Enter city name (e.g., Mumbai, Delhi, Bangalore)"
             />
@@ -121,15 +121,15 @@ const App = () => {
                     ))}
                   </div>
                 </details>
-              </div>
+        </div>
             )}
-          </div>
+        </div>
           <div className="form-group">
             <label htmlFor="month">Month:</label>
             <select
               id="month"
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
               className="form-control"
             >
               <option value="">Select Month</option>
@@ -137,7 +137,7 @@ const App = () => {
                 <option key={m.value} value={m.value}>{m.label}</option>
               ))}
             </select>
-          </div>
+        </div>
 
           {/* Error Message */}
           {error && (
@@ -302,7 +302,7 @@ const App = () => {
                     </div>
                   </div>
                 ))}
-              </div>
+          </div>
               
               <div className="alert alert-warning" style={{marginTop: '20px'}}>
                 <div className="alert-icon">📝</div>
