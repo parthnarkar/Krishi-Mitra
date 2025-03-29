@@ -1,4 +1,4 @@
-# 🌾 **KrishiMitra: Direct Farmer-to-Consumer E-Commerce Platform**  
+# 🌾 **Krishi-Connect: Direct Farmer-to-Consumer E-Commerce Platform**  
 🚀 **Empowering Indian Farmers | Eliminating Middlemen | Ensuring Fair Pricing**  
 
 ---
@@ -8,7 +8,7 @@
 ---
 
 ## 📌 Overview  
-KrishiMitra is a **Direct Farmer-to-Consumer E-Commerce Platform** that aims to:  
+Krishi-Connect is a **Direct Farmer-to-Consumer E-Commerce Platform** that aims to:  
 - ✅ **Eliminate middlemen** to provide farmers with better profits.  
 - ✅ **Enhance accessibility** through multilingual voice assistance.  
 - ✅ **Ensure price transparency** with real-time market pricing.  
@@ -41,6 +41,16 @@ Our platform provides a **seamless connection between farmers and consumers** by
 ### 🤖 **Chatbot Integration for Farmer & Consumer Support**  
 - 🔹 **AI Chatbot** – Assists with queries, recommendations, and order support.  
 - 🔹 **24/7 Customer Support** – Multilingual support for easy understanding.  
+
+---
+
+## 🎥 **Demo Videos**
+
+📹 **AI Crop Recommendation & Demand Forecasting**  
+🔗 [Watch Demo](https://youtu.be/RKvJytfsF1Y)  
+
+📹 **Payment Gateway Integration**  
+🔗 [Watch Demo](https://youtu.be/IJM45JDJntQ)  
 
 ---
 
@@ -168,5 +178,10 @@ We welcome **developers, agricultural experts, and AI enthusiasts** to collabora
 
 ---
 
-## 🌾 **KrishiMitra: Empowering Farmers with AI-Driven Solutions**  
+## 🌾 **Krishi-Connect: Empowering Farmers with AI-Driven Solutions**  
 📍 **Team: Krishi Mitra** | 🏫 **Institute: Vivekanand Education Society’s Institute of Technology**  
+
+---
+
+✅ **Happy Coding!** 🤝  
+
