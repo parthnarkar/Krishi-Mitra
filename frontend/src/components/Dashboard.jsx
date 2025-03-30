@@ -469,7 +469,7 @@ const Dashboard = () => {
         
         {/* Add FarmingAssistant Section after the Farmer Spotlight */}
         <FarmingAssistant />
-
+        
         {/* Categories Section */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6">Shop by Category</h2>
@@ -607,12 +607,12 @@ const Dashboard = () => {
                     {product.isOrganic && (
                       <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
                         Organic
-                      </span>
+        </span>
                     )}
                     {product.discountPrice && (
                       <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
                         {Math.round(((product.price - product.discountPrice) / product.price) * 100)}% OFF
-                      </span>
+          </span>
                     )}
                   </Link>
                   <div className="p-4">

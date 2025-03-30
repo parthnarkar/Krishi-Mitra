@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Navbar';
 import { getCart, updateCartQuantity, removeFromCart } from '../../utils/cartApi';
-import { FaArrowLeft, FaTrash, FaCreditCard, FaMoneyBill } from 'react-icons/fa';
 import './Cart.css';
 
 const API_URL = 'http://localhost:5000/api';
 
-const Cart = () => {
+function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [couponCode, setCouponCode] = useState('');
@@ -16,8 +15,6 @@ const Cart = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
-  const [discountApplied, setDiscountApplied] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchCartItems();
@@ -94,15 +91,19 @@ const Cart = () => {
   };
 
   const applyCoupon = () => {
-    if (!couponCode) return;
-    
-    setIsLoading(true);
-    
-    // Simulate API call for coupon validation
-    setTimeout(() => {
-      setDiscountApplied(true);
-      setIsLoading(false);
-    }, 800);
+    // Simple coupon validation for demo
+    if (couponCode.toUpperCase() === 'KRISHI10') {
+      setDiscount(10);
+      setSuccess('Coupon applied successfully!');
+      setTimeout(() => setSuccess(''), 2000);
+    } else if (couponCode.toUpperCase() === 'ORGANIC20') {
+      setDiscount(20);
+      setSuccess('Coupon applied successfully!');
+      setTimeout(() => setSuccess(''), 2000);
+    } else {
+      setError('Invalid coupon code');
+      setTimeout(() => setError(''), 3000);
+    }
   };
 
   const calculateSubtotal = () => {
@@ -112,13 +113,9 @@ const Cart = () => {
     }, 0);
   };
 
-  const calculateDiscount = () => {
-    return discountApplied ? calculateSubtotal() * 0.1 : 0;
-  };
-
   const calculateTotal = () => {
     const subtotal = calculateSubtotal();
-    const discountAmount = calculateDiscount();
+    const discountAmount = subtotal * (discount / 100);
     return subtotal - discountAmount;
   };
 
@@ -126,12 +123,7 @@ const Cart = () => {
     <div className="cart-page">
       <Navbar />
       <div className="cart-container">
-        <div className="cart-header">
-          <Link to="/products" className="back-to-shopping">
-            <FaArrowLeft /> Continue Shopping
-          </Link>
-          <h1>Your Cart ({cartItems.length} items)</h1>
-        </div>
+        <h1>Your Cart</h1>
         
         {loading ? (
           <div className="loading-spinner">Loading...</div>
@@ -193,10 +185,10 @@ const Cart = () => {
                 <span>Subtotal:</span>
                 <span>₹{calculateSubtotal()}</span>
               </div>
-              {discountApplied && (
+              {discount > 0 && (
                 <div className="summary-row discount">
-                  <span>Discount (10%):</span>
-                  <span>-₹{calculateDiscount()}</span>
+                  <span>Discount ({discount}%):</span>
+                  <span>-₹{(calculateSubtotal() * (discount / 100)).toFixed(2)}</span>
                 </div>
               )}
               <div className="summary-row total">
@@ -212,16 +204,10 @@ const Cart = () => {
                     placeholder="Enter coupon code" 
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
-                    disabled={discountApplied || isLoading}
                   />
-                  <button 
-                    onClick={applyCoupon}
-                    disabled={!couponCode || discountApplied || isLoading}
-                  >
-                    {isLoading ? 'Applying...' : 'Apply'}
-                  </button>
+                  <button onClick={applyCoupon}>Apply</button>
                 </div>
-                {discountApplied && <div className="success-message">{success}</div>}
+                {success && <div className="success-message">{success}</div>}
                 {error && <div className="error-message">{error}</div>}
                 <div className="available-coupons">
                   <p>Available Coupons:</p>
@@ -232,31 +218,14 @@ const Cart = () => {
                 </div>
               </div>
               
-              <div className="checkout-options">
-                <h3>Payment Methods</h3>
-                <div className="payment-methods">
-                  <div className="payment-method">
-                    <input type="radio" id="card" name="payment" checked readOnly />
-                    <label htmlFor="card">
-                      <FaCreditCard /> Credit/Debit Card
-                    </label>
-                  </div>
-                  <div className="payment-method">
-                    <input type="radio" id="cash" name="payment" />
-                    <label htmlFor="cash">
-                      <FaMoneyBill /> Cash on Delivery
-                    </label>
-                  </div>
-                </div>
-                
-                <button className="checkout-btn">Proceed to Checkout</button>
-              </div>
+              <button className="checkout-btn">Proceed to Checkout</button>
+              <Link to="/" className="continue-shopping">Continue Shopping</Link>
             </div>
           </div>
         )}
       </div>
     </div>
   );
-};
+}
 
 export default Cart; 

@@ -32,7 +32,7 @@ const BulkBuy = () => {
       },
       category: 'Vegetables',
       description: 'Premium quality farm-fresh tomatoes. Ideal for restaurants and food processing businesses.',
-      image: 'https://images.unsplash.com/photo-1592924357236-864f0aecab26?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dG9tYXRvZXN8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+      image: 'https://unsplash.com/photos/red-tomatoes-on-brown-wooden-table-eb26eV-ys_k',
       unit: 'kg',
       minQuantity: 500,
       price: 40,
@@ -350,19 +350,19 @@ const BulkBuy = () => {
 
   return (
     <div className="bulk-buy-container">
-      <h1 className="page-title">Bulk Buy Negotiation</h1>
+      <h1 className="page-title pt-10">Bulk Buy Negotiation</h1>
       
       <div className="bulk-buy-content">
         <div className="products-list">
-          <h2>Products Available for Bulk Purchase</h2>
+          <h2 className='text-4xl font-bold '>Products Available for Bulk Purchase</h2>
           {products.map(product => (
             <div 
               key={product._id} 
-              className={`product-card ${selectedProduct && selectedProduct._id === product._id ? 'selected' : ''}`}
+              className={`border-2 border-gray-300 rounded-lg p-5 gap-4 pt-10 product-card ${selectedProduct && selectedProduct._id === product._id ? 'selected' : ''}`}
               onClick={() => handleProductSelect(product)}
             >
               <div className="product-image">
-                <img src={product.image} alt={product.name} />
+                <img className='rounded-lg ' src={product.image} alt={product.name} />
               </div>
               
               <div className="product-details">
@@ -398,7 +398,7 @@ const BulkBuy = () => {
                 </div>
                 
                 <button 
-                  className="negotiate-btn"
+                  className="negotiate-btn bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleProductSelect(product);

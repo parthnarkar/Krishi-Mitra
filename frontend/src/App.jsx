@@ -12,15 +12,14 @@ import Dashboard from './components/dashboard/Dashboard';
 import ColdStorage from './components/coldStorage/ColdStorage';
 import BulkBuy from './components/bulkBuy/BulkBuy';
 import Orders from './components/orders/Orders';
-import ChatbotDialog from './components/chatbot/ChatbotDialog';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <div className="app">
+      <div className="app min-h-screen flex flex-col bg-neutral-50">
         <Navbar />
-        <main className="main-content">
+        <main className="main-content flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
@@ -36,7 +35,6 @@ function App() {
           </Routes>
         </main>
         <Footer />
-        <ChatbotDialog />
       </div>
     </Router>
   );
