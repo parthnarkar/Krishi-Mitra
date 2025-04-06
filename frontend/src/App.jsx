@@ -1,43 +1,51 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './components/home/Home';
-import Products from './components/products/Products';
-import ProductDetail from './components/products/ProductDetail';
-import Cart from './components/cart/Cart';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
 import Profile from './components/user/Profile';
-import Dashboard from './components/dashboard/Dashboard';
 import ColdStorage from './components/coldStorage/ColdStorage';
 import BulkBuy from './components/bulkBuy/BulkBuy';
 import Orders from './components/orders/Orders';
+import ProductsPage from './pages/ProductsPage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
+import CartPage from './pages/CartPage';
+import AboutPage from './pages/AboutPage';
+import { CartProvider } from './context/CartContext';
+import ChatbotButton from './components/chatbot/ChatbotButton';
 import './App.css';
 
-function App() {
+const App = () => {
   return (
-    <Router>
-      <div className="app min-h-screen flex flex-col bg-neutral-50">
-        <Navbar />
-        <main className="main-content flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/cold-storage" element={<ColdStorage />} />
-            <Route path="/bulk-buy" element={<BulkBuy />} />
-            <Route path="/orders" element={<Orders />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <CartProvider>
+      <Router>
+        <div className="app min-h-screen flex flex-col bg-neutral-50">
+          <Navbar />
+          <main className="main-content flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/products" element={<ProductsPage />} />
+              <Route path="/products/:id" element={<ProductDetailsPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/cold-storage" element={<ColdStorage />} />
+              <Route path="/bulk-buy" element={<BulkBuy />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/about" element={<AboutPage />} />
+            </Routes>
+          </main>
+          <Footer />
+          <ChatbotButton />
+        </div>
+      </Router>
+    </CartProvider>
   );
-}
+};
 
 export default App;

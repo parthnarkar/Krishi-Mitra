@@ -73,9 +73,9 @@ export const updateCartQuantity = async (productId, quantity) => {
       throw new Error('Authentication required');
     }
     
-    const response = await axios.post(
-      `${API_URL}/users/cart`,
-      { productId, quantity },
+    const response = await axios.put(
+      `${API_URL}/users/cart/${productId}`,
+      { quantity },
       { headers: { Authorization: `Bearer ${token}` } }
     );
     

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from './Navbar';
 import { getLocalCart, updateLocalCartQuantity, removeFromLocalCart } from '../utils/cartUtils';
 
 const API_URL = 'http://localhost:5000/api';
@@ -71,15 +70,15 @@ const Cart = () => {
 
       // Update on server if authenticated
       if (token) {
-        await axios.post(
-          `${API_URL}/users/cart`,
-          { productId, quantity: newQuantity },
+        await axios.put(
+          `${API_URL}/users/cart/${productId}`,
+          { quantity: newQuantity },
           { headers: { Authorization: `Bearer ${token}` } }
         );
       }
     } catch (error) {
       console.error('Error updating quantity:', error);
-      alert('Failed to update quantity');
+      setError('Failed to update quantity. Please try again.');
       // Refresh cart to sync with stored state
       fetchCart();
     }
@@ -106,7 +105,7 @@ const Cart = () => {
       }
     } catch (error) {
       console.error('Error removing item:', error);
-      alert('Failed to remove item');
+      setError('Failed to remove item. Please try again.');
       // Refresh cart to sync with stored state
       fetchCart();
     }
@@ -120,7 +119,8 @@ const Cart = () => {
       setDiscountApplied(true);
       setDiscountAmount(calculateSubtotal() * 0.2); // 20% discount
     } else {
-      alert('Invalid coupon code');
+      setError('Invalid coupon code');
+      setTimeout(() => setError(null), 3000);
     }
   };
 
@@ -143,10 +143,23 @@ const Cart = () => {
     return subtotal + shippingFee - discountAmount;
   };
 
+  const handleCheckout = () => {
+    if (!token) {
+      setError('Please login to proceed with checkout');
+      setTimeout(() => setError(null), 3000);
+      return;
+    }
+    if (cartItems.length === 0) {
+      setError('Your cart is empty');
+      setTimeout(() => setError(null), 3000);
+      return;
+    }
+    navigate('/checkout');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navbar />
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
         </div>
@@ -156,7 +169,6 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold">Shopping Cart</h1>
@@ -248,9 +260,7 @@ const Cart = () => {
                               >
                                 −
                               </button>
-                              <span className="px-3 py-1 border-l border-r border-gray-300">
-                                {item.quantity}
-                              </span>
+                              <span className="px-3 py-1">{item.quantity}</span>
                               <button
                                 onClick={() => updateQuantity(productId, item.quantity + 1)}
                                 className="px-3 py-1 hover:bg-gray-100"
@@ -262,9 +272,7 @@ const Cart = () => {
                               onClick={() => removeFromCart(productId)}
                               className="text-red-500 hover:text-red-700"
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                              </svg>
+                              Remove
                             </button>
                           </div>
                         </div>
@@ -278,87 +286,63 @@ const Cart = () => {
             {/* Order Summary */}
             <div className="lg:w-1/3">
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-bold mb-4">Order Summary</h2>
-                
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span>₹{calculateSubtotal().toFixed(2)}</span>
-                  </div>
-                  
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping</span>
-                    <span>{calculateSubtotal() > 500 ? 'Free' : '₹40.00'}</span>
-                  </div>
-                  
-                  {discountApplied && (
-                    <div className="flex justify-between text-green-600">
-                      <span>Discount</span>
-                      <span>-₹{discountAmount.toFixed(2)}</span>
-                    </div>
-                  )}
-                  
-                  <div className="border-t pt-3 mt-3">
-                    <div className="flex justify-between font-bold">
-                      <span>Total</span>
-                      <span>₹{calculateTotal().toFixed(2)}</span>
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Including GST
-                    </div>
-                  </div>
-                </div>
+                <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
                 
                 {/* Coupon Code */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Apply Coupon Code
-                  </label>
-                  <div className="flex">
+                <div className="mb-4">
+                  <div className="flex gap-2">
                     <input
                       type="text"
-                      className="flex-1 border border-gray-300 rounded-l px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500"
-                      placeholder="Enter code"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Enter coupon code"
+                      className="flex-1 px-3 py-2 border rounded-md"
                     />
                     <button
-                      className="bg-gray-200 text-gray-800 px-4 py-2 rounded-r hover:bg-gray-300"
                       onClick={handleCouponApply}
+                      disabled={discountApplied}
+                      className={`px-4 py-2 rounded-md ${
+                        discountApplied
+                          ? 'bg-gray-300 cursor-not-allowed'
+                          : 'bg-green-600 text-white hover:bg-green-700'
+                      }`}
                     >
                       Apply
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Try "KRISHI10" for 10% off or "CONNECT20" for 20% off</p>
                 </div>
 
-                <button 
-                  className="w-full bg-green-600 text-white py-3 rounded-md font-medium hover:bg-green-700 transition"
-                  onClick={() => navigate('/checkout')}
+                {/* Price Breakdown */}
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>₹{calculateSubtotal()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shipping</span>
+                    <span>{calculateSubtotal() > 500 ? 'Free' : '₹40'}</span>
+                  </div>
+                  {discountApplied && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Discount</span>
+                      <span>-₹{discountAmount}</span>
+                    </div>
+                  )}
+                  <div className="border-t pt-2 font-semibold">
+                    <div className="flex justify-between">
+                      <span>Total</span>
+                      <span>₹{calculateTotal()}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Checkout Button */}
+                <button
+                  onClick={handleCheckout}
+                  className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700"
                 >
                   Proceed to Checkout
                 </button>
-
-                <div className="mt-6 space-y-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                    Secure checkout
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                    Multiple payment options
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    Free delivery above ₹500
-                  </div>
-                </div>
               </div>
             </div>
           </div>

@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaUser, FaSearch, FaLeaf, FaBars, FaTimes, FaRobot } from 'react-icons/fa';
 import ChatbotDialog from '../chatbot/ChatbotDialog';
+import { useCart } from '../../context/CartContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
 
   // Handle scroll effect
   useEffect(() => {
@@ -69,11 +72,16 @@ const Navbar = () => {
               />
               <FaSearch className="absolute left-3 top-2.5 text-neutral-400" />
             </div>
-            <Link to="/cart" className="relative text-neutral-600 hover:text-primary-color transition-colors">
+            <Link
+              to="/cart"
+              className="relative text-neutral-600 hover:text-primary-color transition-colors"
+            >
               <FaShoppingCart className="text-xl hover:scale-110 transition-transform duration-300" />
-              <span className="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-fade-in">
-                3
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-fade-in">
+                  {cartCount}
+                </span>
+              )}
             </Link>
             <Link to="/profile" className="text-neutral-600 hover:text-primary-color transition-colors">
               <FaUser className="text-xl hover:scale-110 transition-transform duration-300" />
@@ -151,11 +159,16 @@ const Navbar = () => {
               </div>
             </div>
             <div className="flex items-center space-x-5 px-4 py-3 border-t border-neutral-100 pt-4">
-              <Link to="/cart" className="relative text-neutral-600 hover:text-primary-color transition-colors">
+              <Link
+                to="/cart"
+                className="relative text-neutral-600 hover:text-primary-color transition-colors"
+              >
                 <FaShoppingCart className="text-xl" />
-                <span className="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  3
-                </span>
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-primary-color text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
               <Link to="/profile" className="text-neutral-600 hover:text-primary-color transition-colors">
                 <FaUser className="text-xl" />

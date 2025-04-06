@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Navbar';
 import { getCart, updateCartQuantity, removeFromCart } from '../../utils/cartApi';
@@ -15,6 +15,7 @@ function Cart() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCartItems();
@@ -54,6 +55,8 @@ function Cart() {
         
         // Update in MongoDB
         await updateCartQuantity(productId, newQuantity);
+        setSuccess('Cart updated successfully');
+        setTimeout(() => setSuccess(''), 2000);
       } else {
         setError('Please log in to update your cart');
       }
@@ -88,6 +91,23 @@ function Cart() {
       // Refresh cart to sync with server state
       fetchCartItems();
     }
+  };
+
+  const handleCheckout = () => {
+    if (!isAuthenticated) {
+      setError('Please log in to proceed to checkout');
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
+    
+    if (cartItems.length === 0) {
+      setError('Your cart is empty');
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
+    
+    // Navigate to checkout page
+    navigate('/checkout');
   };
 
   const applyCoupon = () => {
@@ -218,7 +238,7 @@ function Cart() {
                 </div>
               </div>
               
-              <button className="checkout-btn">Proceed to Checkout</button>
+              <button className="checkout-btn" onClick={handleCheckout}>Proceed to Checkout</button>
               <Link to="/" className="continue-shopping">Continue Shopping</Link>
             </div>
           </div>
