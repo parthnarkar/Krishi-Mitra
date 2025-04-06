@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaTruck, FaShieldAlt, FaLeaf, FaStar, FaShoppingCart, FaMinus, FaPlus, FaHeart } from 'react-icons/fa';
+import { addToCart } from '../../utils/cartUtils';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -8,6 +9,8 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState('description');
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Simulate API call to fetch product details
@@ -15,7 +18,7 @@ const ProductDetail = () => {
     setTimeout(() => {
       // Sample product data
       const productData = {
-        id: parseInt(id),
+        _id: id,
         name: 'Organic Alphonso Mangoes',
         price: 300,
         discountPrice: 250,
@@ -100,6 +103,18 @@ Our mangoes are directly sourced from farmers, ensuring they receive fair prices
   const decrementQuantity = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product, quantity);
+      setAddedToCart(true);
+      
+      // Reset the added to cart message after 3 seconds
+      setTimeout(() => {
+        setAddedToCart(false);
+      }, 3000);
     }
   };
 
@@ -219,6 +234,12 @@ Our mangoes are directly sourced from farmers, ensuring they receive fair prices
                 </div>
               </div>
               
+              {addedToCart && (
+                <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-md animate-fade-in">
+                  Product added to cart successfully!
+                </div>
+              )}
+              
               <div className="flex flex-col sm:flex-row gap-4 mb-8 animate-fade-in">
                 <div className="flex items-center border border-neutral-200 rounded-lg">
                   <button 
@@ -240,7 +261,10 @@ Our mangoes are directly sourced from farmers, ensuring they receive fair prices
                   </button>
                 </div>
                 
-                <button className="btn btn-primary px-8 py-3 rounded-lg shadow-sm">
+                <button 
+                  className="btn btn-primary px-8 py-3 rounded-lg shadow-sm"
+                  onClick={handleAddToCart}
+                >
                   <FaShoppingCart className="mr-2" />
                   Add to Cart
                 </button>

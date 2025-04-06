@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaThermometerHalf, FaWarehouse, FaTruck, FaCalendarAlt, FaMapMarkerAlt, FaStar, FaCheckCircle } from 'react-icons/fa';
 import MumbaiMap from '../components/MumbaiMap';
 
 const ColdStoragePage = () => {
@@ -115,10 +116,10 @@ const ColdStoragePage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-gray-50 p-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
             <p className="mt-4 text-gray-600">Loading cold storage facilities...</p>
           </div>
         </div>
@@ -128,13 +129,13 @@ const ColdStoragePage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-gray-50 p-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
-            <div className="text-red-600">{error}</div>
+            <div className="text-red-600 mb-4">{error}</div>
             <button 
               onClick={() => window.location.reload()}
-              className="mt-4 bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90"
+              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md"
             >
               Try Again
             </button>
@@ -145,15 +146,19 @@ const ColdStoragePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Cold Storage Facilities</h1>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">Cold Storage Facilities</h1>
+            <p className="text-gray-600">Find and book temperature-controlled storage for your produce</p>
+          </div>
           <button
             onClick={() => navigate('/bulk-buy')}
-            className="bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90"
+            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center gap-2"
           >
+            <FaTruck className="text-lg" />
             Back to Bulk Buy
           </button>
         </div>
@@ -161,46 +166,76 @@ const ColdStoragePage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Map Section */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Location Map</h2>
-              <div className="h-[500px] bg-gray-100 rounded-lg mb-6">
-                {isMapLoading && (
+            <div className="bg-white rounded-xl shadow-lg p-6 transition-all duration-200 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <FaMapMarkerAlt className="text-green-600" />
+                Location Map
+              </h2>
+              <div className="h-[500px] bg-gray-100 rounded-lg overflow-hidden">
+                {isMapLoading ? (
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="text-gray-600">Loading map...</div>
                   </div>
+                ) : (
+                  <MumbaiMap />
                 )}
-                <MumbaiMap />
               </div>
             </div>
           </div>
 
           {/* Facilities List */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Available Facilities</h2>
-              <div className="space-y-4">
+            <div className="bg-white rounded-xl shadow-lg p-6 transition-all duration-200 hover:shadow-xl">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <FaWarehouse className="text-green-600" />
+                Available Facilities
+              </h2>
+              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                 {facilities.map(facility => (
                   <div
                     key={facility.id}
-                    className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
                       selectedFacility?.id === facility.id
-                        ? 'border-primary bg-primary/5'
-                        : 'border-gray-200 hover:border-primary/50'
+                        ? 'border-green-600 bg-green-50'
+                        : 'border-gray-200 hover:border-green-400'
                     }`}
                     onClick={() => handleFacilitySelect(facility)}
                   >
-                    <h3 className="font-semibold text-lg">{facility.name}</h3>
-                    <p className="text-gray-600">{facility.location}</p>
-                    <div className="mt-2 flex items-center">
-                      <span className="text-yellow-400">★</span>
-                      <span className="ml-1">{facility.rating}</span>
-                      <span className="ml-2 text-gray-500">({facility.reviews} reviews)</span>
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold text-lg text-gray-800">{facility.name}</h3>
+                      <div className="flex items-center text-yellow-500">
+                        <FaStar />
+                        <span className="ml-1 text-gray-700">{facility.rating}</span>
+                        <span className="ml-2 text-sm text-gray-500">({facility.reviews})</span>
+                      </div>
                     </div>
-                    <div className="mt-2 text-sm text-gray-600">
-                      <p>Capacity: {facility.capacity}</p>
-                      <p>Available: {facility.available}</p>
-                      <p>Temperature: {facility.temperature}</p>
-                      <p>Price: {facility.price}</p>
+                    <div className="space-y-2 text-sm">
+                      <p className="flex items-center gap-2 text-gray-600">
+                        <FaMapMarkerAlt className="text-green-600" />
+                        {facility.location}
+                      </p>
+                      <p className="flex items-center gap-2 text-gray-600">
+                        <FaThermometerHalf className="text-green-600" />
+                        Temperature: {facility.temperature}
+                      </p>
+                      <p className="flex items-center gap-2 text-gray-600">
+                        <FaWarehouse className="text-green-600" />
+                        Available: {facility.available}
+                      </p>
+                      <p className="font-medium text-green-700 mt-2">
+                        {facility.price}
+                      </p>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {facility.features.map((feature, index) => (
+                        <span 
+                          key={index}
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                        >
+                          <FaCheckCircle className="mr-1" />
+                          {feature}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -211,78 +246,102 @@ const ColdStoragePage = () => {
 
         {/* Booking Form */}
         {selectedFacility && (
-          <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Book Storage Space</h2>
-            <form onSubmit={handleBookingSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="mt-8 bg-white rounded-xl shadow-lg p-6 transition-all duration-200 hover:shadow-xl">
+            <h2 className="text-xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
+              <FaCalendarAlt className="text-green-600" />
+              Book Storage Space
+            </h2>
+            <form onSubmit={handleBookingSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Quantity (tons)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Quantity (tons)</label>
                   <input
                     type="number"
                     value={bookingDetails.quantity}
                     onChange={(e) => setBookingDetails(prev => ({ ...prev, quantity: e.target.value }))}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Duration (days)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Duration (days)</label>
                   <input
                     type="number"
                     value={bookingDetails.duration}
                     onChange={(e) => setBookingDetails(prev => ({ ...prev, duration: e.target.value }))}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Transport Type</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Transport Type</label>
                   <select
                     value={bookingDetails.transportType}
                     onChange={(e) => setBookingDetails(prev => ({ ...prev, transportType: e.target.value }))}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
                   >
                     <option value="road">Road Transport</option>
                     <option value="rail">Rail Transport</option>
-                    <option value="air">Air Transport</option>
+                    <option value="self">Self Arranged</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Delivery Date</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
                   <input
                     type="date"
                     value={bookingDetails.date}
                     onChange={(e) => setBookingDetails(prev => ({ ...prev, date: e.target.value }))}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
                     required
                   />
                 </div>
               </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Additional Notes</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
                 <textarea
                   value={bookingDetails.notes}
                   onChange={(e) => setBookingDetails(prev => ({ ...prev, notes: e.target.value }))}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
                   rows="3"
-                />
+                  className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
+                  placeholder="Any special requirements or instructions..."
+                ></textarea>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-semibold mb-2">Booking Summary</h3>
-                <div className="space-y-2">
-                  <p>Facility: {selectedFacility.name}</p>
-                  <p>Price per ton per day: {selectedFacility.price}</p>
-                  <p className="text-lg font-semibold text-primary">
-                    Total Cost: ₹{calculateTotalCost().toLocaleString()}
+
+              <div className="bg-green-50 p-6 rounded-lg border-2 border-green-100">
+                <h3 className="font-semibold text-lg text-gray-800 mb-4">Booking Summary</h3>
+                <div className="space-y-2 text-gray-600">
+                  <p className="flex justify-between">
+                    <span>Facility:</span>
+                    <span className="font-medium text-gray-800">{selectedFacility.name}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span>Price per ton per day:</span>
+                    <span className="font-medium text-gray-800">{selectedFacility.price}</span>
+                  </p>
+                  <div className="border-t border-green-200 my-4"></div>
+                  <p className="flex justify-between text-lg">
+                    <span className="font-semibold">Total Cost:</span>
+                    <span className="font-bold text-green-700">₹{calculateTotalCost().toLocaleString()}</span>
                   </p>
                 </div>
               </div>
-              <button
-                type="submit"
-                className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-opacity-90 transition-colors"
-              >
-                Confirm Booking
-              </button>
+
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setSelectedFacility(null)}
+                  className="flex-1 px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors duration-200 shadow-md"
+                >
+                  Confirm Booking
+                </button>
+              </div>
             </form>
           </div>
         )}

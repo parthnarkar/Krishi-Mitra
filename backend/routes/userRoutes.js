@@ -21,6 +21,7 @@ router.put('/profile', protect, updateUserProfile);
 // Cart routes
 router.get('/cart', protect, getCart);
 router.post('/cart', protect, addToCart);
+router.put('/cart/:productId', protect, addToCart);
 router.delete('/cart/:productId', protect, removeFromCart);
 router.delete('/cart', protect, clearCart);
 

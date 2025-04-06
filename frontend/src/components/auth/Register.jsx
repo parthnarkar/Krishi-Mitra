@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+import { registerUser } from '../../utils/authApi';
+import Input from '../Input';
 import './Register.css';
 
 const Register = () => {
@@ -10,13 +12,14 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    phone: '',
+    phoneNumber: '',
     address: '',
-    userType: 'buyer' // Default to buyer
+    role: 'consumer' // Default to consumer
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState('');
+  const [apiError, setApiError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +33,10 @@ const Register = () => {
         ...prev,
         [name]: ''
       }));
+    }
+    // Clear API error when user starts typing
+    if (apiError) {
+      setApiError('');
     }
   };
 
@@ -56,10 +63,10 @@ const Register = () => {
       newErrors.confirmPassword = 'Passwords do not match';
     }
     
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = 'Phone number must be 10 digits';
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = 'Phone number is required';
+    } else if (!/^\d{10}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = 'Phone number must be 10 digits';
     }
     
     if (!formData.address.trim()) {
@@ -79,22 +86,28 @@ const Register = () => {
     
     setIsLoading(true);
     setSuccess('');
+    setApiError('');
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Prepare data for API
+      const userData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phoneNumber: formData.phoneNumber,
+        address: formData.address,
+        role: formData.role
+      };
       
-      // In a real app, you would make an API call here
-      console.log('Registration data:', formData);
+      // Call API to register user
+      const response = await registerUser(userData);
       
       setSuccess('Registration successful! Redirecting to login...');
       setTimeout(() => {
         navigate('/login');
       }, 2000);
     } catch (error) {
-      setErrors({
-        submit: 'Registration failed. Please try again.'
-      });
+      setApiError(error.message || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -109,85 +122,64 @@ const Register = () => {
         </div>
         
         <form onSubmit={handleSubmit} className="register-form">
-          <div className="form-group">
-            <label htmlFor="name">
-              <FaUser /> Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={errors.name ? 'error' : ''}
-              placeholder="Enter your full name"
-            />
-            {errors.name && <span className="error-message">{errors.name}</span>}
-          </div>
+          <Input
+            label="Full Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            error={errors.name}
+            icon={<FaUser />}
+            placeholder="Enter your full name"
+            required
+          />
           
-          <div className="form-group">
-            <label htmlFor="email">
-              <FaEnvelope /> Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={errors.email ? 'error' : ''}
-              placeholder="Enter your email"
-            />
-            {errors.email && <span className="error-message">{errors.email}</span>}
-          </div>
+          <Input
+            label="Email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            error={errors.email}
+            icon={<FaEnvelope />}
+            placeholder="Enter your email"
+            required
+          />
           
-          <div className="form-group">
-            <label htmlFor="password">
-              <FaLock /> Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className={errors.password ? 'error' : ''}
-              placeholder="Create a password"
-            />
-            {errors.password && <span className="error-message">{errors.password}</span>}
-          </div>
+          <Input
+            label="Password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            error={errors.password}
+            icon={<FaLock />}
+            placeholder="Create a password"
+            required
+          />
           
-          <div className="form-group">
-            <label htmlFor="confirmPassword">
-              <FaLock /> Confirm Password
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className={errors.confirmPassword ? 'error' : ''}
-              placeholder="Confirm your password"
-            />
-            {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-          </div>
+          <Input
+            label="Confirm Password"
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            error={errors.confirmPassword}
+            icon={<FaLock />}
+            placeholder="Confirm your password"
+            required
+          />
           
-          <div className="form-group">
-            <label htmlFor="phone">
-              <FaPhone /> Phone Number
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className={errors.phone ? 'error' : ''}
-              placeholder="Enter your phone number"
-            />
-            {errors.phone && <span className="error-message">{errors.phone}</span>}
-          </div>
+          <Input
+            label="Phone Number"
+            type="tel"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            error={errors.phoneNumber}
+            icon={<FaPhone />}
+            placeholder="Enter your phone number"
+            required
+          />
           
           <div className="form-group">
             <label htmlFor="address">
@@ -198,11 +190,14 @@ const Register = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className={errors.address ? 'error' : ''}
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                errors.address ? 'border-red-500' : 'border-gray-300'
+              }`}
               placeholder="Enter your address"
               rows="3"
+              required
             />
-            {errors.address && <span className="error-message">{errors.address}</span>}
+            {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
           </div>
           
           <div className="form-group">
@@ -211,28 +206,28 @@ const Register = () => {
               <label className="radio-label">
                 <input
                   type="radio"
-                  name="userType"
-                  value="buyer"
-                  checked={formData.userType === 'buyer'}
+                  name="role"
+                  value="consumer"
+                  checked={formData.role === 'consumer'}
                   onChange={handleChange}
                 />
-                Buyer
+                Consumer
               </label>
               <label className="radio-label">
                 <input
                   type="radio"
-                  name="userType"
-                  value="seller"
-                  checked={formData.userType === 'seller'}
+                  name="role"
+                  value="farmer"
+                  checked={formData.role === 'farmer'}
                   onChange={handleChange}
                 />
-                Seller
+                Farmer
               </label>
             </div>
           </div>
           
-          {errors.submit && (
-            <div className="error-message submit-error">{errors.submit}</div>
+          {apiError && (
+            <div className="error-message submit-error">{apiError}</div>
           )}
           
           {success && (
@@ -249,7 +244,17 @@ const Register = () => {
         </form>
         
         <div className="register-footer">
-          <p>Already have an account? <Link to="/login">Log in</Link></p>
+          <p>
+            Already have an account? 
+            <Link to="/login" className="login-link"> Login</Link>
+          </p>
+        </div>
+      </div>
+      
+      <div className="register-image">
+        <div className="image-overlay">
+          <h2>Farm to Table</h2>
+          <p>Supporting farmers, empowering communities</p>
         </div>
       </div>
     </div>

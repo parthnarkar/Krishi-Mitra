@@ -1,47 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaWarehouse, FaHandshake, FaShoppingCart, FaArrowRight, FaLeaf, FaTruck, FaCheckCircle, FaStar } from 'react-icons/fa';
+import { FaWarehouse, FaHandshake, FaShoppingCart, FaArrowRight, FaLeaf, FaTruck, FaCheckCircle, FaStar, FaBox } from 'react-icons/fa';
+import { getAllProducts } from '../../utils/productApi';
 
 const Home = () => {
-  // Sample featured products
-  const featuredProducts = [
-    {
-      id: 1,
-      name: 'Organic Tomatoes',
-      price: 40,
-      image: 'https://images.unsplash.com/photo-1592924357236-864f0aecab26?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dG9tYXRvZXN8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      category: 'Vegetables',
-      seller: 'Green Farms Ltd.',
-      rating: 4.8
-    },
-    {
-      id: 2,
-      name: 'Fresh Potatoes',
-      price: 25,
-      image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cG90YXRvZXN8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      category: 'Vegetables',
-      seller: 'Organic Harvest Co.',
-      rating: 4.5
-    },
-    {
-      id: 3,
-      name: 'Alphonso Mangoes',
-      price: 300,
-      image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bWFuZ298ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      category: 'Fruits',
-      seller: 'Konkan Fruit Exports',
-      rating: 5.0
-    },
-    {
-      id: 4,
-      name: 'Organic Rice',
-      price: 80,
-      image: 'https://images.unsplash.com/photo-1586201375761-83865001e8ac?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmljZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      category: 'Grains',
-      seller: 'Pure Harvest Farms',
-      rating: 4.6
-    }
-  ];
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        setLoading(true);
+        const products = await getAllProducts();
+        // Select 4 random products to feature
+        const shuffled = [...products].sort(() => 0.5 - Math.random());
+        setFeaturedProducts(shuffled.slice(0, 4));
+      } catch (err) {
+        setError(err.message || 'Failed to load featured products');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -157,46 +140,55 @@ const Home = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 px-4">
-            {featuredProducts.map(product => (
-              <div
-                key={product.id}
-                className="card bg-white rounded-xl overflow-hidden hover:translate-y-1 border border-neutral-100"
-              >
-                <div className="relative h-60">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-4 right-4 badge badge-primary px-3 py-1 rounded-full text-sm font-medium shadow-sm">
-                    Fresh
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
+            </div>
+          ) : error ? (
+            <div className="text-center text-red-600">
+              {error}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 px-4">
+              {featuredProducts.map((product) => (
+                <Link
+                  key={product._id}
+                  to={`/products/${product._id}`}
+                  className="bg-white rounded-xl overflow-hidden hover:translate-y-1 border border-neutral-100"
+                >
+                  <div className="relative h-60">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-4 right-4 badge badge-primary px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                      Fresh
+                    </div>
                   </div>
-                </div>
-                <div className="p-8">
-                  <div className="flex items-center gap-1 mb-2">
-                    <FaStar className="text-secondary-color" />
-                    <span className="text-neutral-600 text-sm">{product.rating}</span>
+                  <div className="p-8">
+                    <div className="flex items-center gap-1 mb-2">
+                      <FaStar className="text-secondary-color" />
+                      <span className="text-neutral-600 text-sm">{product.rating}</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-neutral-800 mb-3">{product.name}</h3>
+                    <p className="text-neutral-600 mb-3">by {product.seller?.name || 'Unknown Seller'}</p>
+                    <p className="text-neutral-600 flex items-center mb-6">
+                      <FaLeaf className="mr-2 text-primary-color" />
+                      {product.category}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-2xl font-bold text-neutral-800">
+                        ₹{product.price}
+                        <span className="text-sm font-normal text-neutral-600">/{product.unit}</span>
+                      </span>
+                      <span className="text-sm text-gray-500">{product.quantity} {product.unit}</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-neutral-800 mb-3">{product.name}</h3>
-                  <p className="text-neutral-600 mb-3">by {product.seller}</p>
-                  <p className="text-neutral-600 flex items-center mb-6">
-                    <FaLeaf className="mr-2 text-primary-color" />
-                    {product.category}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-neutral-800">
-                      ₹{product.price}
-                      <span className="text-sm font-normal text-neutral-600">/kg</span>
-                    </span>
-                    <button className="btn btn-primary px-6 py-2 rounded-lg text-white shadow-sm hover:shadow-md">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
