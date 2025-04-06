@@ -50,6 +50,10 @@ app.use('/api/cold-storage', coldStorageRoutes);
 const bulkBuyRoutes = require('./routes/bulkBuyRoutes');
 app.use('/api/bulk-buy', bulkBuyRoutes);
 
+// Cold Storage Booking Routes
+const coldStorageBookingsRoutes = require('./routes/coldStorageBookings');
+app.use('/api/cold-storage-bookings', coldStorageBookingsRoutes);
+
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

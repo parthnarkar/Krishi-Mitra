@@ -1,54 +1,85 @@
 const mongoose = require('mongoose');
 
-const ColdStorageBookingSchema = new mongoose.Schema({
-  userId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User',
+const coldStorageBookingSchema = new mongoose.Schema({
+  storageName: {
+    type: String,
     required: true
   },
-  storageId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'ColdStorage',
-    required: true
-  },
-  quantity: { 
-    type: Number, 
-    required: true 
-  },
-  duration: { 
-    type: Number, 
-    required: true 
-  },
-  transportType: { 
-    type: String, 
-    enum: ['road', 'rail', 'air'],
-    default: 'road'
-  },
-  deliveryDate: { 
-    type: Date, 
-    required: true 
-  },
-  notes: { 
-    type: String 
-  },
-  totalPrice: { 
-    type: Number, 
-    required: true 
-  },
-  status: { 
-    type: String, 
-    enum: ['pending', 'confirmed', 'canceled', 'completed'],
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'cancelled'],
     default: 'pending'
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  startDate: {
+    type: Date,
+    required: true
+  },
+  endDate: {
+    type: Date,
+    required: true
+  },
+  totalPrice: {
+    type: Number,
+    required: true,
+    min: 0
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'paid', 'failed'],
-    default: 'pending'
+    enum: ['awaiting', 'paid'],
+    default: 'awaiting'
   },
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
+  provider: {
+    name: {
+      type: String,
+      required: true
+    },
+    contact: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true
+    }
+  },
+  ratePerTon: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  duration: {
+    type: Number,
+    required: true,
+    min: 1
+  },
+  location: {
+    type: String,
+    required: true
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
   }
 });
 
-module.exports = mongoose.model('ColdStorageBooking', ColdStorageBookingSchema); 
+// Update the updatedAt timestamp before saving
+coldStorageBookingSchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
+
+module.exports = mongoose.model('ColdStorageBooking', coldStorageBookingSchema); 
