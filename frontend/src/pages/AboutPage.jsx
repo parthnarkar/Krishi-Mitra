@@ -1,7 +1,14 @@
-import React from 'react';
-import { FaLeaf, FaHandshake, FaTruck, FaUsers } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaLeaf, FaHandshake, FaTruck, FaUsers, FaSearch, FaFilter, FaEnvelope, FaArrowRight } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import ArticleCard from '../components/about/ArticleCard';
+import articles from '../data/articles';
+import { Link } from 'react-router-dom';
 
 const AboutPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  
   const features = [
     {
       id: 'direct-sourcing',
@@ -29,11 +36,27 @@ const AboutPage = () => {
     }
   ];
 
+  // Filter articles based on search term and category
+  const filteredArticles = articles.filter(article => {
+    const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         article.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  // Get unique categories for filter dropdown
+  const categories = ['all', ...new Set(articles.map(article => article.category))];
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             About KrishiMitra
           </h1>
@@ -41,14 +64,20 @@ const AboutPage = () => {
             Empowering farmers and consumers through direct farm-to-table connections,
             promoting sustainable agriculture and fair trade practices.
           </p>
-        </div>
+        </motion.div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
+        >
           {features.map((feature) => (
-            <div
+            <motion.div
               key={feature.id}
-              className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+              whileHover={{ y: -5 }}
+              className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-all duration-300"
             >
               <div className="flex flex-col items-center text-center">
                 <div className="mb-4">
@@ -61,12 +90,17 @@ const AboutPage = () => {
                   {feature.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Mission Statement */}
-        <div className="bg-white rounded-xl shadow-sm p-8 mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="bg-white rounded-xl shadow-sm p-8 mb-16"
+        >
           <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
             Our Mission
           </h2>
@@ -76,21 +110,139 @@ const AboutPage = () => {
             ensures fair prices for farmers while providing consumers with access to
             fresh, high-quality produce at reasonable prices.
           </p>
-        </div>
+        </motion.div>
+
+        {/* Knowledge Hub Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mb-16"
+        >
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+            Knowledge Hub
+          </h2>
+          <p className="text-gray-600 text-center max-w-3xl mx-auto mb-8">
+            Explore our collection of articles, guides, and resources designed to empower farmers
+            and educate consumers about sustainable agriculture, market trends, and best practices.
+          </p>
+
+          {/* Search and Filter */}
+          <div className="bg-white rounded-xl shadow-sm p-6 mb-8 flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search articles..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary-color focus:ring-2 focus:ring-primary-color/20 transition-all duration-300"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <FaFilter className="text-gray-400" />
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary-color focus:ring-2 focus:ring-primary-color/20 transition-all duration-300"
+              >
+                {categories.map(category => (
+                  <option key={category} value={category}>
+                    {category === 'all' ? 'All Categories' : category}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Articles Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredArticles.map(article => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
+
+          {filteredArticles.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg">
+                No articles found matching your criteria. Try adjusting your search or filter.
+              </p>
+            </div>
+          )}
+        </motion.div>
 
         {/* Contact Section */}
-        <div className="bg-primary-color rounded-xl shadow-sm p-8 text-white text-center">
-          <h2 className="text-2xl font-bold mb-4">Get in Touch</h2>
-          <p className="mb-6">
-            Have questions or suggestions? We'd love to hear from you!
-          </p>
-          <a
-            href="mailto:contact@krishimitra.com"
-            className="inline-block bg-white text-primary-color px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="relative overflow-hidden"
+        >
+          <motion.div 
+            className="bg-gradient-to-br from-green-900 via-green-800 to-green-600 rounded-2xl shadow-lg p-12 text-white text-center relative overflow-hidden group cursor-pointer"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
           >
-            Contact Us
-          </a>
-        </div>
+            {/* Floating Elements */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.2 }}
+              transition={{ duration: 1 }}
+              className="absolute top-10 right-10 w-32 h-32 bg-green-400 rounded-full mix-blend-multiply filter blur-2xl"
+            />
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.2 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="absolute bottom-10 left-10 w-40 h-40 bg-yellow-400 rounded-full mix-blend-multiply filter blur-2xl"
+            />
+
+            <Link to="/contact" className="block relative z-10">
+              <motion.div
+                initial="initial"
+                whileHover="hover"
+                className="relative"
+              >
+                <motion.div
+                  className="mb-8"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mx-auto backdrop-blur-sm">
+                    <FaEnvelope className="text-4xl text-white" />
+                  </div>
+                </motion.div>
+
+                <h2 className="text-3xl font-bold mb-4 drop-shadow-md">Get in Touch</h2>
+                <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
+                  Have questions or suggestions? We'd love to hear from you! 
+                  Let's start a conversation about how we can help.
+                </p>
+
+                <motion.div
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-xl bg-white text-green-800 shadow-lg group-hover:shadow-xl transition-all duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  Contact Us
+                  <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                </motion.div>
+              </motion.div>
+            </Link>
+
+            {/* Decorative dots */}
+            <div className="absolute top-8 right-8 w-24 h-24 grid grid-cols-3 gap-2 opacity-20">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className="w-2 h-2 bg-white rounded-full"></div>
+              ))}
+            </div>
+            <div className="absolute bottom-8 left-8 w-24 h-24 grid grid-cols-3 gap-2 opacity-20">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className="w-2 h-2 bg-white rounded-full"></div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

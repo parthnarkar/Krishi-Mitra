@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaThermometerHalf, FaWarehouse, FaTruck, FaCalendarAlt, FaMapMarkerAlt, FaStar, FaCheckCircle, FaFilter, FaSearch, FaListAlt, FaTimesCircle } from 'react-icons/fa';
+import { FaThermometerHalf, FaWarehouse, FaTruck, FaCalendarAlt, FaMapMarkerAlt, FaStar, FaCheckCircle, FaFilter, FaSearch, FaListAlt, FaTimesCircle, FaArrowRight, FaMoneyBillWave, FaEye } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import MumbaiMap from '../components/MumbaiMap';
 import { toast } from 'react-hot-toast';
 import BookingManagement from '../coldStorage/BookingManagement';
@@ -26,6 +27,20 @@ const ColdStoragePage = () => {
     date: '',
     notes: ''
   });
+
+  const fadeInUp = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6 }
+  };
+
+  const staggerContainer = {
+    animate: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
 
   useEffect(() => {
     fetchFacilities();
@@ -197,11 +212,11 @@ const ColdStoragePage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-gray-50 p-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading cold storage facilities...</p>
+      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-600">
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+            <p className="mt-4 text-white/90">Loading cold storage facilities...</p>
           </div>
         </div>
       </div>
@@ -210,13 +225,13 @@ const ColdStoragePage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-gray-50 p-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center py-12">
-            <div className="text-red-600 mb-4">{error}</div>
+      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-600">
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="text-center">
+            <div className="text-red-300 mb-4">{error}</div>
             <button 
               onClick={() => window.location.reload()}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md"
+              className="bg-white text-green-800 px-6 py-3 rounded-xl hover:bg-green-50 transition-all duration-300 shadow-lg"
             >
               Try Again
             </button>
@@ -227,29 +242,93 @@ const ColdStoragePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Cold Storage Management</h1>
-            <p className="text-gray-600">Find, book and manage your cold storage facilities</p>
-          </div>
-          <button
-            onClick={() => navigate('/bulk-buy')}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center gap-2"
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="relative h-[40vh] bg-gradient-to-br from-green-900 via-green-800 to-green-600 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581349485608-9469926a8e5e?q=80&w=1470')] bg-cover bg-center opacity-10"></div>
+        
+        {/* Floating Elements */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.2 }}
+          transition={{ duration: 1 }}
+          className="absolute top-20 right-10 w-64 h-64 bg-green-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"
+        ></motion.div>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.2 }}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="absolute bottom-20 left-10 w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"
+        ></motion.div>
+        
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-4 h-full flex items-center">
+          <motion.div 
+            initial="initial"
+            animate="animate"
+            variants={fadeInUp}
+            className="text-white max-w-2xl"
           >
-            <FaTruck className="text-lg" />
-            Back to Bulk Buy
-          </button>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-block mb-4 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium"
+            >
+              <span className="flex items-center">
+                <FaWarehouse className="mr-2 text-green-300" />
+                Cold Storage Management
+              </span>
+            </motion.div>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-4xl md:text-5xl font-bold mb-4 leading-tight drop-shadow-lg"
+            >
+              Store Your Produce with Confidence
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="text-xl text-white/90 leading-relaxed drop-shadow-md mb-8"
+            >
+              Find, book and manage your cold storage facilities with ease
+            </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <button
+                onClick={() => navigate('/bulk-buy')}
+                className="group inline-flex items-center justify-center px-6 py-3 text-lg font-medium rounded-xl bg-white text-green-800 shadow-lg hover:shadow-xl hover:bg-green-50 transition-all duration-300"
+              >
+                <FaTruck className="mr-2 group-hover:translate-x-1 transition-transform" />
+                Back to Bulk Buy
+              </button>
+            </motion.div>
+          </motion.div>
         </div>
+        
+        {/* Bottom Wave */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 to-transparent"></div>
+      </section>
 
+      <div className="max-w-7xl mx-auto px-4 py-8 -mt-12 relative z-10">
         {/* Tabs */}
-        <div className="flex border-b border-gray-200 mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-2xl shadow-lg p-2 mb-8 inline-flex"
+        >
           <button
-            className={`px-6 py-3 font-medium text-sm transition-colors duration-200 relative ${
+            className={`px-6 py-3 font-medium text-sm transition-all duration-300 rounded-xl ${
               activeTab === 'search'
-                ? 'text-green-600 border-b-2 border-green-600'
+                ? 'bg-green-600 text-white shadow-md'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
             onClick={() => setActiveTab('search')}
@@ -260,9 +339,9 @@ const ColdStoragePage = () => {
             </span>
           </button>
           <button
-            className={`px-6 py-3 font-medium text-sm transition-colors duration-200 relative ${
+            className={`px-6 py-3 font-medium text-sm transition-all duration-300 rounded-xl ${
               activeTab === 'bookings'
-                ? 'text-green-600 border-b-2 border-green-600'
+                ? 'bg-green-600 text-white shadow-md'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
             onClick={() => setActiveTab('bookings')}
@@ -272,13 +351,17 @@ const ColdStoragePage = () => {
               My Bookings
             </span>
           </button>
-        </div>
+        </motion.div>
 
         {activeTab === 'search' ? (
           <>
             {/* Search and Filter Section */}
-            <div className="mb-8">
-              <div className="bg-white rounded-xl shadow-lg p-4 flex flex-col md:flex-row gap-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8"
+            >
+              <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <div className="relative">
                     <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -287,7 +370,7 @@ const ColdStoragePage = () => {
                       placeholder="Search by name or location..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
                     />
                   </div>
                 </div>
@@ -296,26 +379,35 @@ const ColdStoragePage = () => {
                   <select
                     value={filterTemp}
                     onChange={(e) => setFilterTemp(e.target.value)}
-                    className="px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                    className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
                   >
                     <option value="all">All Temperatures</option>
                     <option value="frozen">Frozen (≤ 0°C)</option>
                     <option value="cold">Cold (0-5°C)</option>
-                    <option value="cool">Cool (> 5°C)</option>
+                    <option value="cool">Cool (&gt; 5°C)</option>
                   </select>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Map Section */}
-              <div className="lg:col-span-2">
-                <div className="bg-white rounded-xl shadow-lg p-6 transition-all duration-200 hover:shadow-xl">
+              <motion.div 
+                variants={staggerContainer}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true }}
+                className="lg:col-span-2"
+              >
+                <motion.div 
+                  variants={fadeInUp}
+                  className="bg-white rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl"
+                >
                   <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
                     <FaMapMarkerAlt className="text-green-600" />
                     Location Map
                   </h2>
-                  <div className="h-[500px] bg-gray-100 rounded-lg overflow-hidden">
+                  <div className="h-[500px] bg-gray-100 rounded-xl overflow-hidden">
                     {isMapLoading ? (
                       <div className="w-full h-full flex items-center justify-center">
                         <div className="text-gray-600">Loading map...</div>
@@ -324,24 +416,35 @@ const ColdStoragePage = () => {
                       <MumbaiMap />
                     )}
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
 
               {/* Facilities List */}
-              <div className="lg:col-span-1">
-                <div className="bg-white rounded-xl shadow-lg p-6 transition-all duration-200 hover:shadow-xl">
+              <motion.div 
+                variants={staggerContainer}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true }}
+                className="lg:col-span-1"
+              >
+                <motion.div 
+                  variants={fadeInUp}
+                  className="bg-white rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl"
+                >
                   <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
                     <FaWarehouse className="text-green-600" />
                     Available Facilities
                   </h2>
                   <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                     {filteredFacilities.map(facility => (
-                      <div
+                      <motion.div
                         key={facility.id}
-                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
+                        variants={fadeInUp}
+                        whileHover={{ y: -5 }}
+                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
                           selectedFacility?.id === facility.id
-                            ? 'border-green-600 bg-green-50'
-                            : 'border-gray-200 hover:border-green-400'
+                            ? 'border-green-600 bg-green-50 shadow-md'
+                            : 'border-gray-200 hover:border-green-400 hover:shadow-md'
                         }`}
                         onClick={() => handleFacilitySelect(facility)}
                       >
@@ -360,37 +463,30 @@ const ColdStoragePage = () => {
                           </p>
                           <p className="flex items-center gap-2 text-gray-600">
                             <FaThermometerHalf className="text-green-600" />
-                            Temperature: {facility.temperature}
+                            Temperature: {facility.temperature} degrees Celsius
                           </p>
                           <p className="flex items-center gap-2 text-gray-600">
                             <FaWarehouse className="text-green-600" />
-                            Available: {facility.available}
+                            Available: {facility.available} tons
                           </p>
                           <p className="font-medium text-green-700 mt-2">
-                            {facility.price}
+                            ₹{facility.price}/ton/day
                           </p>
                         </div>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {facility.features.map((feature, index) => (
-                            <span 
-                              key={index}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                            >
-                              <FaCheckCircle className="mr-1" />
-                              {feature}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
 
             {/* Booking Form */}
             {selectedFacility && (
-              <div className="mt-8 bg-white rounded-xl shadow-lg p-6 transition-all duration-200 hover:shadow-xl">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-8 bg-white rounded-2xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl"
+              >
                 <h2 className="text-xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
                   <FaCalendarAlt className="text-green-600" />
                   Book Storage Space
@@ -403,7 +499,7 @@ const ColdStoragePage = () => {
                         type="number"
                         value={bookingDetails.quantity}
                         onChange={(e) => setBookingDetails(prev => ({ ...prev, quantity: e.target.value }))}
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
                         required
                       />
                     </div>
@@ -413,7 +509,19 @@ const ColdStoragePage = () => {
                         type="number"
                         value={bookingDetails.duration}
                         onChange={(e) => setBookingDetails(prev => ({ ...prev, duration: e.target.value }))}
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                      <input
+                        type="date"
+                        value={bookingDetails.date}
+                        onChange={(e) => setBookingDetails(prev => ({ ...prev, date: e.target.value }))}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
                         required
                       />
                     </div>
@@ -422,78 +530,54 @@ const ColdStoragePage = () => {
                       <select
                         value={bookingDetails.transportType}
                         onChange={(e) => setBookingDetails(prev => ({ ...prev, transportType: e.target.value }))}
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
                       >
                         <option value="road">Road Transport</option>
                         <option value="rail">Rail Transport</option>
-                        <option value="self">Self Arranged</option>
+                        <option value="self">Self Transport</option>
                       </select>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                      <input
-                        type="date"
-                        value={bookingDetails.date}
-                        onChange={(e) => setBookingDetails(prev => ({ ...prev, date: e.target.value }))}
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
-                        required
-                      />
-                    </div>
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
                     <textarea
                       value={bookingDetails.notes}
                       onChange={(e) => setBookingDetails(prev => ({ ...prev, notes: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
                       rows="3"
-                      className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors duration-200"
-                      placeholder="Any special requirements or instructions..."
                     ></textarea>
                   </div>
-
-                  <div className="bg-green-50 p-6 rounded-lg border-2 border-green-100">
-                    <h3 className="font-semibold text-lg text-gray-800 mb-4">Booking Summary</h3>
-                    <div className="space-y-2 text-gray-600">
-                      <p className="flex justify-between">
-                        <span>Facility:</span>
-                        <span className="font-medium text-gray-800">{selectedFacility.name}</span>
-                      </p>
-                      <p className="flex justify-between">
-                        <span>Price per ton per day:</span>
-                        <span className="font-medium text-gray-800">{selectedFacility.price}</span>
-                      </p>
-                      <div className="border-t border-green-200 my-4"></div>
-                      <p className="flex justify-between text-lg">
-                        <span className="font-semibold">Total Cost:</span>
-                        <span className="font-bold text-green-700">₹{calculateTotalCost().toLocaleString()}</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4">
+                  <div className="flex justify-end gap-4">
                     <button
                       type="button"
                       onClick={() => setSelectedFacility(null)}
-                      className="flex-1 px-6 py-3 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                      className="px-6 py-3 rounded-xl border-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-300"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 px-6 py-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors duration-200 shadow-md"
+                      className="px-6 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 transition-all duration-300 shadow-md hover:shadow-lg"
                     >
-                      Confirm Booking
+                      Proceed to Payment
                     </button>
                   </div>
                 </form>
-              </div>
+              </motion.div>
             )}
 
             {/* Confirmation Modal */}
             {showConfirmModal && selectedFacility && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-xl"
+                >
                   <h3 className="text-xl font-semibold mb-4">Confirm Booking</h3>
                   <div className="space-y-2 mb-6">
                     <p><span className="font-medium">Facility:</span> {selectedFacility.name}</p>
@@ -505,19 +589,19 @@ const ColdStoragePage = () => {
                   <div className="flex gap-4">
                     <button
                       onClick={() => setShowConfirmModal(false)}
-                      className="flex-1 px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50"
+                      className="flex-1 px-4 py-3 rounded-xl border-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-300"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={confirmBooking}
-                      className="flex-1 px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                      className="flex-1 px-4 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 transition-all duration-300 shadow-md"
                     >
                       Confirm
                     </button>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             )}
           </>
         ) : (

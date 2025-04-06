@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaWarehouse, FaHandshake, FaShoppingCart, FaArrowRight, FaLeaf, FaTruck, FaCheckCircle, FaStar, FaBox, FaSeedling, FaUsers, FaChartLine } from 'react-icons/fa';
+import { FaWarehouse, FaHandshake, FaShoppingCart, FaArrowRight, FaLeaf, FaTruck, FaCheckCircle, FaStar, FaBox, FaSeedling, FaUsers, FaChartLine, FaSearch } from 'react-icons/fa';
 import { getAllProducts } from '../../utils/productApi';
 import { motion } from 'framer-motion';
 
@@ -110,7 +110,7 @@ const Home = () => {
             >
               <Link
                 to="/products"
-                className="group inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-xl bg-black text-white-800 shadow-lg hover:shadow-xl hover:bg-green-50 transition-all duration-300"
+                className="group inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-xl bg-blue-500 text-white shadow-lg hover:shadow-xl hover:bg-blue-600 transition-all duration-300"
               >
                 Shop Now 
                 <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
@@ -120,6 +120,7 @@ const Home = () => {
                 className="group inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-xl border-2 border-white text-white hover:bg-white hover:text-green-800 transition-all duration-300"
               >
                 Farmer Dashboard
+                <FaArrowRight className="ml-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
               </Link>
             </motion.div>
           </motion.div>
@@ -139,7 +140,11 @@ const Home = () => {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
-            <motion.div variants={fadeInUp} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -5 }}
+              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+            >
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
                   <FaUsers className="text-2xl text-green-600" />
@@ -150,7 +155,11 @@ const Home = () => {
                 </div>
               </div>
             </motion.div>
-            <motion.div variants={fadeInUp} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+            <motion.div 
+              variants={fadeInUp}
+              whileHover={{ y: -5 }}
+              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+            >
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
                   <FaShoppingCart className="text-2xl text-green-600" />
@@ -161,7 +170,11 @@ const Home = () => {
                 </div>
               </div>
             </motion.div>
-            <motion.div variants={fadeInUp} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+            <motion.div 
+              variants={fadeInUp}
+              whileHover={{ y: -5 }}
+              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+            >
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
                   <FaChartLine className="text-2xl text-green-600" />
@@ -192,7 +205,7 @@ const Home = () => {
               Empowering Agriculture
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Discover how KrishiConnect is revolutionizing the way farmers and consumers connect
+              Discover how KrishiMitra is revolutionizing the way farmers and consumers connect
             </p>
           </motion.div>
           
@@ -203,7 +216,11 @@ const Home = () => {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-3 gap-10"
           >
-            <motion.div variants={fadeInUp} className="group bg-white p-10 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8 }}
+              className="group bg-white p-10 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+            >
               <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-green-200 transition-colors duration-300">
                 <FaWarehouse className="text-3xl text-green-600" />
               </div>
@@ -219,7 +236,11 @@ const Home = () => {
               </Link>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="group bg-white p-10 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1">
+            <motion.div 
+              variants={fadeInUp}
+              whileHover={{ y: -8 }}
+              className="group bg-white p-10 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+            >
               <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-green-200 transition-colors duration-300">
                 <FaHandshake className="text-3xl text-green-600" />
               </div>
@@ -235,7 +256,11 @@ const Home = () => {
               </Link>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="group bg-white p-10 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1">
+            <motion.div 
+              variants={fadeInUp}
+              whileHover={{ y: -8 }}
+              className="group bg-white p-10 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+            >
               <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-green-200 transition-colors duration-300">
                 <FaShoppingCart className="text-3xl text-green-600" />
               </div>
@@ -285,7 +310,7 @@ const Home = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
             </div>
           ) : error ? (
-            <div className="text-center text-red-600">
+            <div className="text-center text-red-600 bg-red-50 p-4 rounded-xl">
               {error}
             </div>
           ) : (
@@ -300,7 +325,7 @@ const Home = () => {
                 <motion.div
                   key={product._id}
                   variants={fadeInUp}
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -8 }}
                   className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
                 >
                   <Link to={`/products/${product._id}`}>
@@ -354,7 +379,7 @@ const Home = () => {
               Simple Process
             </span>
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              How KrishiConnect Works
+              How KrishiMitra Works
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Simple steps to connect farmers and consumers
@@ -394,7 +419,12 @@ const Home = () => {
                 icon: <FaCheckCircle className="text-white text-lg" />
               }
             ].map((step, index) => (
-              <motion.div key={index} variants={fadeInUp} className="relative">
+              <motion.div 
+                key={index} 
+                variants={fadeInUp}
+                whileHover={{ y: -8 }}
+                className="relative"
+              >
                 <div className="bg-white p-10 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 text-center">
                   <div className="w-16 h-16 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-md">
                     {step.icon}
@@ -441,20 +471,22 @@ const Home = () => {
             Ready to get started?
           </h2>
           <p className="text-xl md:text-2xl text-white/90 mb-16 max-w-3xl mx-auto drop-shadow-sm">
-            Join thousands of farmers and consumers already using KrishiConnect.
+            Join thousands of farmers and consumers already using KrishiMitra.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-8">
             <Link
               to="/register"
               className="group inline-flex items-center justify-center px-10 py-5 text-lg font-medium rounded-xl bg-white text-green-800 shadow-lg hover:shadow-xl hover:bg-green-50 transition-all duration-300"
             >
-              Sign Up Now
+              Register Now
+              <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              to="/products"
+              to="/about"
               className="group inline-flex items-center justify-center px-10 py-5 text-lg font-medium rounded-xl border-2 border-white text-white hover:bg-white hover:text-green-800 transition-all duration-300"
             >
-              Browse Products
+              Learn More
+              <FaArrowRight className="ml-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
             </Link>
           </div>
         </motion.div>
