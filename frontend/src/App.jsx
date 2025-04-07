@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './components/home/Home';
@@ -20,6 +21,8 @@ import ScrollToTop from './components/utils/ScrollToTop';
 import articles from './data/articles';
 import { CartProvider } from './context/CartContext';
 import ChatbotButton from './components/chatbot/ChatbotButton';
+import Checkout from './pages/Checkout';
+import OrderConfirmation from './pages/OrderConfirmation';
 import './App.css';
 
 const App = () => {
@@ -35,6 +38,8 @@ const App = () => {
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/products/:id" element={<ProductDetailsPage />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/profile" element={<Profile />} />
@@ -49,6 +54,31 @@ const App = () => {
           </main>
           <Footer />
           <ChatbotButton />
+          <Toaster position="top-right" toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#40bf40',
+              color: '#fff',
+              borderRadius: '8px',
+              padding: '16px',
+              fontFamily: 'Poppins, sans-serif',
+            },
+            success: {
+              iconTheme: {
+                primary: '#fff',
+                secondary: '#40bf40',
+              },
+            },
+            error: {
+              style: {
+                background: '#F44336',
+              },
+              iconTheme: {
+                primary: '#fff',
+                secondary: '#F44336',
+              },
+            },
+          }} />
         </div>
       </Router>
     </CartProvider>

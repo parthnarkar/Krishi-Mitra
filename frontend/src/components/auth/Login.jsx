@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaLock, FaFacebookF, FaGoogle } from 'react-icons/fa';
+import { FaUser, FaLock, FaLeaf, FaSpinner } from 'react-icons/fa';
 import { loginUser, setToken } from '../../utils/authApi';
 import Input from '../Input';
-import './Login.css';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
+  const [loginMethod, setLoginMethod] = useState('password'); // 'password' or 'otp'
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -40,14 +41,21 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
+    if (loginMethod === 'password') {
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email is required';
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = 'Email is invalid';
+      }
+      
+      if (!formData.password) {
+        newErrors.password = 'Password is required';
+      }
+    } else {
+      // OTP validation
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email or Mobile Number is required';
+      }
     }
     
     setErrors(newErrors);
@@ -74,106 +82,148 @@ const Login = () => {
       // Save token to localStorage
       setToken(response.token);
       
+      // Show success toast
+      toast.success('Login successful! Welcome to KrishiMitra');
+      
       // Redirect to dashboard
       navigate('/dashboard');
     } catch (error) {
       setApiError(error.message || 'Login failed. Please check your credentials.');
+      toast.error('Login failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const toggleLoginMethod = () => {
+    setLoginMethod(loginMethod === 'password' ? 'otp' : 'password');
+    setErrors({});
+    setApiError('');
+  };
+
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="login-header">
-          <h2>Welcome Back</h2>
-          <p>Sign in to access your account</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-earth-green-50 to-earth-brown-50 px-4 py-12">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="relative">
+          {/* Background pattern */}
+          <div className="absolute inset-0 bg-earth-green-50 opacity-20">
+            <div className="absolute inset-0" style={{ 
+              backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+              backgroundSize: '30px 30px'
+            }}></div>
+          </div>
+          
+          {/* Header with logo and welcome text */}
+          <div className="relative p-8 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-earth-green-100 mb-4">
+              <FaLeaf className="text-earth-green-600 text-3xl" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2 font-poppins">Welcome to KrishiMitra</h1>
+            <p className="text-gray-600 font-poppins">Connect with farmers and consumers</p>
+          </div>
         </div>
         
-        <form onSubmit={handleSubmit} className="login-form">
-          <Input
-            label="Email Address"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            error={errors.email}
-            icon={<FaUser />}
-            placeholder="Enter your email"
-            required
-          />
-          
-          <Input
-            label="Password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            error={errors.password}
-            icon={<FaLock />}
-            placeholder="Enter your password"
-            required
-          />
-          
-          <div className="form-options">
-            <div className="remember-me">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                name="rememberMe"
-                checked={formData.rememberMe}
+        <div className="p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email/Mobile Input */}
+            <div className="mb-6">
+              <Input
+                label="Email or Mobile Number"
+                type={loginMethod === 'password' ? 'email' : 'text'} 
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
+                error={errors.email}
+                placeholder={loginMethod === 'password' ? "Enter your email" : "Enter email or mobile number"}
+                required
+                className="w-full"
               />
-              <label htmlFor="rememberMe">Remember me</label>
+            </div>
+
+            {/* Password Input */}
+            {loginMethod === 'password' && (
+              <div className="mb-6">
+                <Input
+                  label="Password"
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  error={errors.password}
+                  placeholder="Enter your password"
+                  required
+                  className="w-full"
+                />
+              </div>
+            )}
+
+            {/* Remember Me & Forgot Password */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  name="rememberMe"
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
+                  className="h-4 w-4 text-earth-green-600 focus:ring-earth-green-500 border-gray-300 rounded cursor-pointer"
+                />
+                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700 font-poppins cursor-pointer">
+                  Remember me
+                </label>
+              </div>
+              
+              <Link 
+                to="/forgot-password" 
+                className="text-sm font-medium text-earth-green-600 hover:text-earth-green-500 font-poppins transition-colors duration-200"
+              >
+                Forgot Password?
+              </Link>
             </div>
             
-            <Link to="/forgot-password" className="forgot-password">
-              Forgot Password?
-            </Link>
-          </div>
-          
-          {apiError && (
-            <div className="error-message">{apiError}</div>
-          )}
-          
-          <button 
-            type="submit" 
-            className="login-btn"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Signing In...' : 'Sign In'}
-          </button>
-          
-          <div className="login-divider">
-            <span>or sign in with</span>
-          </div>
-          
-          <div className="social-login">
-            <button type="button" className="social-btn facebook">
-              <FaFacebookF />
-              <span>Facebook</span>
+            {/* Error Message */}
+            {apiError && (
+              <div className="p-4 mb-6 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm font-poppins">
+                {apiError}
+              </div>
+            )}
+            
+            {/* Submit Button */}
+            <button 
+              type="submit" 
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 font-poppins disabled:opacity-70 disabled:cursor-not-allowed"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <FaSpinner className="animate-spin mr-3 h-5 w-5" />
+                  Signing In...
+                </>
+              ) : (
+                'Sign In'
+              )}
             </button>
             
-            <button type="button" className="social-btn google">
-              <FaGoogle />
-              <span>Google</span>
-            </button>
+            {/* Toggle Login Method */}
+            <div className="text-center mt-4">
+              <button 
+                type="button" 
+                onClick={toggleLoginMethod}
+                className="text-sm text-earth-green-600 hover:text-earth-green-500 focus:outline-none font-poppins transition-colors duration-200 underline"
+              >
+                {loginMethod === 'password' ? 'Login with OTP instead' : 'Login with password instead'}
+              </button>
+            </div>
+          </form>
+          
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600 font-poppins">
+              New to KrishiMitra?{' '}
+              <Link to="/register" className="font-medium text-earth-green-600 hover:text-earth-green-500">
+                Register here
+              </Link>
+            </p>
           </div>
-        </form>
-        
-        <div className="login-footer">
-          <p>
-            Don't have an account? 
-            <Link to="/register" className="register-link"> Register</Link>
-          </p>
-        </div>
-      </div>
-      
-      <div className="login-image">
-        <div className="image-overlay">
-          <h2>Farm to Table</h2>
-          <p>Supporting farmers, empowering communities</p>
         </div>
       </div>
     </div>

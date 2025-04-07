@@ -187,4 +187,63 @@ exports.addProductReview = async (req, res) => {
     console.error('Error adding review:', error);
     res.status(500).json({ message: 'Server error' });
   }
+};
+
+// Bulk upload products
+exports.bulkUploadProducts = async (req, res) => {
+  try {
+    const products = req.body;
+    
+    if (!Array.isArray(products)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Request body must be an array of products'
+      });
+    }
+
+    // Validate each product
+    const validatedProducts = products.map(product => ({
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      image: product.image,
+      category: product.category,
+      quantity: product.quantity,
+      unit: product.unit,
+      farmer: product.farmer,
+      location: product.location,
+      isOrganic: product.isOrganic || false,
+      harvestDate: product.harvestDate || new Date(),
+      rating: product.rating || 0,
+      reviews: product.reviews || 0
+    }));
+
+    // Use bulkWrite with ordered: false to continue processing even if some documents fail
+    const result = await Product.bulkWrite(
+      validatedProducts.map(product => ({
+        updateOne: {
+          filter: { name: product.name, farmer: product.farmer },
+          update: { $set: product },
+          upsert: true
+        }
+      })),
+      { ordered: false }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Products uploaded successfully',
+      data: {
+        inserted: result.upsertedCount,
+        modified: result.modifiedCount
+      }
+    });
+  } catch (error) {
+    console.error('Error in bulkUploadProducts:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error uploading products',
+      error: error.message
+    });
+  }
 }; 

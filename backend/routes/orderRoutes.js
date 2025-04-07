@@ -4,23 +4,32 @@ const {
   getUserOrders,
   getOrderDetails,
   getFarmerOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  getOrderById
 } = require('../controllers/orderController');
 const { protect, restrictTo } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
+// Public routes (for demo purposes)
+router.post('/', createOrder);
+router.patch('/:id/status', updateOrderStatus);
+
+// Protected routes
 // Consumer routes
-router.post('/', protect, restrictTo('consumer'), createOrder);
 router.get('/user', protect, getUserOrders);
+// router.post('/', protect, restrictTo('consumer'), createOrder);
 
 // General protected routes
-router.get('/:id', protect, getOrderDetails);
+// router.get('/:id', protect, getOrderDetails);
 
 // Farmer routes
-router.get('/farmer', protect, restrictTo('farmer'), getFarmerOrders);
+// router.get('/farmer', protect, restrictTo('farmer'), getFarmerOrders);
 
 // Admin routes
-router.put('/:id/status', protect, restrictTo('admin'), updateOrderStatus);
+// router.put('/:id/status', protect, restrictTo('admin'), updateOrderStatus);
+
+// This should be last to avoid catching other routes
+router.get('/:id', getOrderById);
 
 module.exports = router; 

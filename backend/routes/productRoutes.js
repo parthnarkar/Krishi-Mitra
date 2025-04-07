@@ -6,7 +6,8 @@ const {
   updateProduct,
   deleteProduct,
   getFarmerProducts,
-  addProductReview
+  addProductReview,
+  bulkUploadProducts
 } = require('../controllers/productController');
 const { protect, restrictTo } = require('../middleware/authMiddleware');
 
@@ -22,5 +23,8 @@ router.put('/:id', protect, restrictTo('farmer'), updateProduct);
 router.delete('/:id', protect, restrictTo('farmer'), deleteProduct);
 router.get('/farmer/products', protect, restrictTo('farmer'), getFarmerProducts);
 router.post('/:id/reviews', protect, restrictTo('consumer'), addProductReview);
+
+// Bulk upload products
+router.post('/bulk', bulkUploadProducts);
 
 module.exports = router; 

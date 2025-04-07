@@ -22,8 +22,8 @@ const Footer = () => {
           {/* Company Info */}
           <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 rounded-full bg-primary-bg flex items-center justify-center">
-                <div className="text-2xl font-bold text-primary-color">K</div>
+              <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center">
+                <div className="text-2xl font-bold text-white">K</div>
               </div>
               <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-color to-primary-light">
                 KrishiConnect
@@ -140,8 +140,8 @@ const Footer = () => {
                   <FaMapMarkerAlt />
                 </div>
                 <span className="text-neutral-300">
-                  123 Farmer's Lane, <br />
-                  AgriTech Hub, <br />
+                  D10A , 5th Floor <br />
+                  514 , VESIT <br />
                   Maharashtra, India
                 </span>
               </li>
@@ -149,13 +149,13 @@ const Footer = () => {
                 <div className="mr-3 w-8 h-8 rounded-full bg-neutral-700 flex items-center justify-center text-primary-color">
                   <FaPhone />
                 </div>
-                <span className="text-neutral-300">+91 98765 43210</span>
+                <span className="text-neutral-300">+91 81044 39075</span>
               </li>
               <li className="flex items-center">
                 <div className="mr-3 w-8 h-8 rounded-full bg-neutral-700 flex items-center justify-center text-primary-color">
                   <FaEnvelope />
                 </div>
-                <span className="text-neutral-300">info@krishiconnect.com</span>
+                <span className="text-neutral-300">krishiconnect@gmail.com</span>
               </li>
             </ul>
           </div>

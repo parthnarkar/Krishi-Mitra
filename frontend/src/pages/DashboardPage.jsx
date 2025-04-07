@@ -23,7 +23,8 @@ const DashboardPage = () => {
 
         // Fetch orders
         const ordersData = await getUserOrders();
-        setOrders(ordersData);
+        // Make sure we're setting the orders array, not the entire response
+        setOrders(ordersData.orders || []);
       } catch (err) {
         setError(err.message || 'Failed to load dashboard data');
         if (err.message === 'No token found') {
@@ -118,16 +119,20 @@ const DashboardPage = () => {
             </Link>
           </div>
 
-          {orders.length === 0 ? (
+          {!orders || orders.length === 0 ? (
             <div className="text-center py-8">
               <FaBox className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600">No orders found</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {orders.slice(0, 5).map((order) => (
+              {Array.isArray(orders) ? orders.slice(0, 5).map((order) => (
                 <OrderCard key={order._id} order={order} />
-              ))}
+              )) : (
+                <div className="text-center py-4">
+                  <p className="text-gray-600">Error loading orders</p>
+                </div>
+              )}
             </div>
           )}
         </div>

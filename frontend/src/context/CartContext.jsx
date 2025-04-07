@@ -26,6 +26,11 @@ export const CartProvider = ({ children }) => {
       return;
     }
 
+    if (!product.seller || !product.seller._id) {
+      console.error('Missing or invalid seller information for product:', product.name);
+      return;
+    }
+
     setCart(currentCart => {
       const existingItem = currentCart.find(item => item._id === product._id);
       
@@ -37,15 +42,23 @@ export const CartProvider = ({ children }) => {
         );
       }
 
-      return [...currentCart, {
+      const newCartItem = {
         _id: product._id,
         name: product.name,
         price: product.price,
         image: product.image,
-        seller: product.seller,
+        seller: {
+          _id: product.seller._id,
+          name: product.seller.name,
+          email: product.seller.email,
+          location: product.seller.location
+        },
         unit: product.unit,
         quantity: quantity
-      }];
+      };
+
+      console.log('Adding to cart:', newCartItem);
+      return [...currentCart, newCartItem];
     });
   };
 

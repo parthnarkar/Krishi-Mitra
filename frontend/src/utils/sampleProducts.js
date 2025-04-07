@@ -7,8 +7,9 @@ export const sampleProducts = [
     quantity: 100,
     unit: 'kg',
     description: 'Fresh, organic tomatoes grown without pesticides. Perfect for salads, cooking, or making sauces. These tomatoes are rich in vitamins and antioxidants.',
-    image: 'https://images.unsplash.com/photo-1607305387299-a3d9611cd469?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60',
+    image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     seller: {
+      _id: 'f1',
       name: 'Green Valley Farms',
       email: 'contact@greenvalleyfarms.com',
       location: 'Pune, Maharashtra'
@@ -28,6 +29,7 @@ export const sampleProducts = [
     description: 'Nutrient-rich spinach leaves, freshly harvested. Great for salads, smoothies, or cooking. High in iron and vitamins.',
     image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
     seller: {
+      _id: 'f2',
       name: 'Fresh Leaf Farms',
       email: 'info@freshleaffarms.com',
       location: 'Nashik, Maharashtra'
@@ -47,6 +49,7 @@ export const sampleProducts = [
     description: 'Fresh, organic potatoes perfect for all your cooking needs. These potatoes are grown in rich, organic soil without any chemical fertilizers.',
     image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
     seller: {
+      _id: 'f3',
       name: 'Root Farm Co.',
       email: 'contact@rootfarm.com',
       location: 'Kolhapur, Maharashtra'
@@ -66,6 +69,7 @@ export const sampleProducts = [
     description: 'Sweet and crunchy carrots, rich in beta-carotene. Perfect for salads, juicing, or cooking. These carrots are grown using sustainable farming practices.',
     image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
     seller: {
+      _id: 'f4',
       name: 'Sunny Fields Farm',
       email: 'info@sunnyfields.com',
       location: 'Nagpur, Maharashtra'
@@ -85,6 +89,7 @@ export const sampleProducts = [
     description: 'Fresh, organic onions with a perfect balance of sweetness and pungency. These onions are grown without any chemical pesticides.',
     image: 'https://images.unsplash.com/photo-1508747703725-719777637510?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
     seller: {
+      _id: 'f5',
       name: 'Green Earth Farms',
       email: 'contact@greenearthfarms.com',
       location: 'Aurangabad, Maharashtra'
@@ -104,6 +109,7 @@ export const sampleProducts = [
     description: 'Crisp and colorful capsicums, perfect for salads, stir-fries, or stuffing. These capsicums are grown in controlled environments to ensure consistent quality.',
     image: 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
     seller: {
+      _id: 'f6',
       name: 'Rainbow Farms',
       email: 'info@rainbowfarms.com',
       location: 'Mumbai, Maharashtra'
@@ -123,6 +129,7 @@ export const sampleProducts = [
     description: 'Sweet and tender green peas, perfect for curries, rice dishes, or as a side. These peas are grown using organic farming methods.',
     image: 'https://images.unsplash.com/photo-1587735243615-c03f25aaff15?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60',
     seller: {
+      _id: 'f1',
       name: 'Green Valley Farms',
       email: 'contact@greenvalleyfarms.com',
       location: 'Pune, Maharashtra'
@@ -142,6 +149,7 @@ export const sampleProducts = [
     description: 'Fresh, white cauliflower heads, perfect for curries, soups, or as a low-carb rice alternative. These cauliflowers are grown in nutrient-rich soil.',
     image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
     seller: {
+      _id: 'f2',
       name: 'Fresh Leaf Farms',
       email: 'info@freshleaffarms.com',
       location: 'Nashik, Maharashtra'
@@ -161,6 +169,7 @@ export const sampleProducts = [
     description: 'Fresh, organic ginger root with intense flavor and aroma. Perfect for teas, cooking, or medicinal purposes. These ginger roots are grown without any chemical fertilizers.',
     image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60',
     seller: {
+      _id: 'f7',
       name: 'Spice Garden',
       email: 'contact@spicegarden.com',
       location: 'Kerala'
@@ -180,6 +189,7 @@ export const sampleProducts = [
     description: 'Fresh, aromatic garlic bulbs. These garlic cloves are known for their strong flavor and medicinal properties. Grown using traditional farming methods.',
     image: 'https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60',
     seller: {
+      _id: 'f7',
       name: 'Spice Garden',
       email: 'contact@spicegarden.com',
       location: 'Kerala'

@@ -381,7 +381,7 @@ const ProductDetail = () => {
                 </div>
                 
                 <button 
-                  className="flex-1 bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="flex-1 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
                 >

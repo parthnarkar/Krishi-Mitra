@@ -31,4 +31,13 @@ export const getProductById = async (id) => {
   } catch (error) {
     throw error.response?.data?.message || 'Failed to fetch product details';
   }
+};
+
+export const bulkUploadProducts = async (products) => {
+  try {
+    const response = await axios.post(`${API_URL}/products/bulk`, products);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.message || 'Failed to upload products';
+  }
 }; 

@@ -216,7 +216,7 @@ const ChatbotDialog = ({ onClose }) => {
           </svg>
           <div>
             <h3 className="font-semibold">KrishiMitra - Farming Assistant</h3>
-            <p className="text-xs opacity-80">Powered by Google Gemini</p>
+            <p className="text-xs opacity-80">Powered by Krishi-Mitra</p>
           </div>
         </div>
 
