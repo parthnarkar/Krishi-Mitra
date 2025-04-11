@@ -52,6 +52,10 @@ const Navbar = () => {
               Bulk Buy
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
             </Link>
+            <Link to="/crop-recommendation" className="text-neutral-600 hover:text-primary-color transition-colors relative group py-2">
+              AI Crop Guide
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
+            </Link>
             <Link to="/about" className="text-neutral-600 hover:text-primary-color transition-colors relative group py-2">
               About
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
@@ -135,6 +139,12 @@ const Navbar = () => {
               className="block px-4 py-3 text-neutral-600 hover:text-primary-color hover:bg-neutral-50 rounded-lg transition-colors"
             >
               Bulk Buy
+            </Link>
+            <Link
+              to="/crop-recommendation"
+              className="block px-4 py-3 text-neutral-600 hover:text-primary-color hover:bg-neutral-50 rounded-lg transition-colors"
+            >
+              AI Crop Guide
             </Link>
             <Link
               to="/about"

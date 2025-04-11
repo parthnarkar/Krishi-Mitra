@@ -23,6 +23,7 @@ import { CartProvider } from './context/CartContext';
 import ChatbotButton from './components/chatbot/ChatbotButton';
 import Checkout from './pages/Checkout';
 import OrderConfirmation from './pages/OrderConfirmation';
+import AICropRecommendation from './components/AICropRecommendation';
 import './App.css';
 
 const App = () => {
@@ -50,6 +51,7 @@ const App = () => {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/about/article/:id" element={<ArticleDetail articles={articles} />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/crop-recommendation" element={<AICropRecommendation />} />
             </Routes>
           </main>
           <Footer />
