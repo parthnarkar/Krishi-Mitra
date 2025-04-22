@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaShoppingCart, FaLeaf, FaStar, FaUpload } from 'react-icons/fa';
+import { FaShoppingCart, FaLeaf, FaStar, FaUpload, FaStore, FaBoxOpen } from 'react-icons/fa';
 import { getAllProducts, bulkUploadProducts } from '../utils/productApi';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-hot-toast';
@@ -65,16 +65,19 @@ const ProductsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
+      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-xl shadow-lg">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FaBoxOpen className="h-8 w-8 text-red-600" />
+          </div>
           <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
           <p className="text-gray-600">{error}</p>
         </div>
@@ -83,58 +86,69 @@ const ProductsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Our Products</h1>
-          <button
-            onClick={handleUploadToDatabase}
-            disabled={isUploading}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-color hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color disabled:opacity-50"
-          >
-            <FaUpload className="mr-2" />
-            {isUploading ? 'Uploading...' : 'Upload to Database'}
-          </button>
+        <div className="text-center mb-12 animate-fade-in-up">
+          <div className="inline-block mb-4 p-2 bg-green-100 rounded-full">
+            <FaStore className="h-12 w-12 text-green-600" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-poppins tracking-tight">
+            Fresh Farm Products
+          </h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Direct from farmers to your doorstep. Fresh, organic, and sustainably grown produce.
+          </p>
         </div>
+
+      
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product) => (
             <div
               key={product._id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] border-t-4 border-green-500 overflow-hidden"
             >
               <Link to={`/products/${product._id}`}>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-48 object-cover"
-                />
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                  />
+                  {product.isOrganic && (
+                    <div className="absolute top-4 right-4 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                      Organic
+                    </div>
+                  )}
+                </div>
               </Link>
-              <div className="p-4">
+              <div className="p-6">
                 <Link
                   to={`/products/${product._id}`}
-                  className="text-lg font-semibold text-gray-900 hover:text-primary-color"
+                  className="text-xl font-semibold text-gray-900 hover:text-green-600 transition-colors duration-300"
                 >
                   {product.name}
                 </Link>
-                <div className="mt-2 flex items-center justify-between">
-                  <span className="text-xl font-bold text-primary-color">
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-2xl font-bold text-green-600">
                     ₹{product.price}
                   </span>
-                  <div className="flex items-center">
-                    <FaStar className="text-yellow-400 mr-1" />
-                    <span className="text-sm text-gray-600">
+                  <div className="flex items-center bg-amber-100 px-3 py-1 rounded-full">
+                    <FaStar className="text-amber-600 mr-1" />
+                    <span className="text-amber-800 font-medium">
                       {product.rating} ({product.reviews})
                     </span>
                   </div>
                 </div>
-                <div className="mt-2 flex items-center text-sm text-gray-500">
-                  <FaLeaf className="mr-1" />
+                <div className="mt-4 flex items-center text-gray-600">
+                  <div className="p-2 bg-green-100 rounded-lg mr-3">
+                    <FaLeaf className="h-4 w-4 text-green-600" />
+                  </div>
                   <span>{product.seller.name}</span>
                 </div>
                 <button
                   onClick={() => handleAddToCart(product)}
-                  className="mt-4 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600"
+                  className="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
                 >
                   <FaShoppingCart className="mr-2" />
                   Add to Cart

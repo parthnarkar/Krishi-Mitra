@@ -7,6 +7,8 @@ from pytrends.request import TrendReq
 from datetime import datetime, timedelta
 import logging
 import random
+import json
+import sys
 from city_region_mapping import get_region_from_city, get_region_code
 
 # Configure logging
@@ -14,8 +16,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Load trained model
-with open('crop_model.pkl', 'rb') as f:
-    model = pickle.load(f)
+try:
+    logger.info("Loading model from crop_model.pkl")
+    with open('crop_model.pkl', 'rb') as f:
+        model = pickle.load(f)
+    logger.info("Model loaded successfully")
+except Exception as e:
+    logger.error(f"Error loading model: {str(e)}", exc_info=True)
+    model = None
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -49,17 +57,21 @@ def get_weather_data(city):
         # Extract weather data
         temperature = data['main']['temp']
         humidity = data['main']['humidity']
+        description = data['weather'][0]['description']
         
-        # Extract rainfall if available
-        rainfall = data.get('rain', {}).get('1h', 0)  # Rain in last 1 hour, default to 0
-
+        # Get rainfall data (if available)
+        rainfall = 0
+        if 'rain' in data and '1h' in data['rain']:
+            rainfall = data['rain']['1h']
+        
         return {
             'temperature': temperature,
             'humidity': humidity,
-            'rainfall': rainfall
+            'rainfall': rainfall,
+            'description': description
         }
     except Exception as e:
-        logger.error(f"Weather data error: {str(e)}")
+        logger.error(f"Error fetching weather data: {str(e)}")
         return {'error': str(e)}
 
 def get_market_price_trends(crop, region):
@@ -99,15 +111,15 @@ def get_market_price_trends(crop, region):
         
         # Apply regional multiplier if available
         region_mult = region_multipliers.get(region, {}).get(crop_lower, 1.0)
-        data['trend'] = min(0.95, data['trend'] * region_mult)
+        trend = min(0.95, data['trend'] * region_mult)
         
         return {
             'market_price': data['price'],
-            'market_trend': data['trend']
+            'market_trend': trend
         }
     except Exception as e:
         logger.error(f"Market price trends error: {str(e)}")
-        return {'market_trend': 0.5, 'market_price': 2000}
+        return {'market_price': 2000, 'market_trend': 0.5}
 
 def get_demand_trends(crop, region):
     """Fetch demand trends for a crop using Google Trends."""
@@ -157,36 +169,44 @@ def get_weather():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
+        logger.info("Starting prediction request")
         data = request.json
         city = data['city']
         month = int(data['month'])
 
+        logger.info(f"Received request for city: {city}, month: {month}")
+
         # Validate inputs
         if not city or not month:
+            logger.warning("Missing required fields")
             return jsonify({'error': 'Missing required fields'})
 
         if month < 1 or month > 12:
+            logger.warning(f"Invalid month: {month}")
             return jsonify({'error': 'Invalid month'})
 
         # Get region from city
         region = get_region_from_city(city)
+        logger.info(f"Determined region: {region}")
         if region == 'Unknown':
             logger.warning(f"Unknown city: {city}. Using default region.")
             region = 'North India'  # Default to North India
 
-        # Log region detected
-        logger.info(f"City: {city}, Region detected: {region}")
-
         # Get weather data
+        logger.info("Fetching weather data")
         weather_data = get_weather_data(city)
         if 'error' in weather_data:
+            logger.error(f"Weather data error: {weather_data['error']}")
             return jsonify({'error': weather_data['error']})
+        logger.info(f"Weather data received: {weather_data}")
 
         # Get demand trends
+        logger.info("Fetching demand trends")
         demand_trend = get_demand_trends('agriculture', region)
+        logger.info(f"Demand trends received: {demand_trend}")
 
         # Prepare feature vector for prediction
-        # We don't use region in our model now, but keeping the code structure for flexibility
+        logger.info("Preparing feature vector")
         features = np.array([
             weather_data['temperature'],
             weather_data['humidity'],
@@ -196,13 +216,17 @@ def predict():
             40,     # market_price (default value based on dataset)
             demand_trend['demand_trend']  # demand_trend
         ]).reshape(1, -1)
+        logger.info(f"Feature vector prepared: {features}")
 
         # Make predictions
+        logger.info("Making model predictions")
         predictions = model.predict(features)
         primary_recommendation = predictions[0]
+        logger.info(f"Primary recommendation: {primary_recommendation}")
 
         # Get regional crop recommendations
         regional_crops = get_typical_crops_for_region(region)
+        logger.info(f"Regional crops: {regional_crops}")
         
         # Filter out the primary recommendation from regional crops
         alternative_crops = [crop for crop in regional_crops if crop.lower() != primary_recommendation.lower()]
@@ -211,6 +235,7 @@ def predict():
         recommendations = [primary_recommendation]
         if alternative_crops:
             recommendations.extend(alternative_crops[:2])  # Add up to 2 alternative crops
+        logger.info(f"Final recommendations: {recommendations}")
         
         # Get market and demand data for each recommended crop
         crop_details = []
@@ -218,19 +243,25 @@ def predict():
             market_data = get_market_price_trends(crop, region)
             demand_data = get_demand_trends(crop, region)
             
-            crop_details.append({
-                'name': crop,
-                'marketPrice': market_data['market_price'],
-                'marketTrend': market_data['market_trend'],
-                'demandTrend': demand_data['demand_trend'],
-                'score': calculate_crop_score(
+            try:
+                score = calculate_crop_score(
                     weather_data, 
                     month, 
-                    market_data['market_trend'], 
-                    demand_data['demand_trend'],
+                    market_data['market_trend'],  # Pass the trend value directly
+                    demand_data['demand_trend'],  # Pass the trend value directly
                     crop,
                     region
                 )
+            except Exception as e:
+                logger.error(f"Error calculating score for {crop}: {str(e)}")
+                score = 50  # Default score
+            
+            crop_details.append({
+                'name': crop,
+                'score': score,
+                'marketPrice': market_data['market_price'],
+                'marketTrend': market_data['market_trend'],
+                'demandTrend': demand_data['demand_trend']
             })
         
         # Sort crops by score
@@ -254,13 +285,20 @@ def predict():
             'demand_trend': demand_trend['demand_trend']
         }
 
+        logger.info("Successfully generated recommendations")
         return jsonify(detailed_recommendation)
     except Exception as e:
-        logger.error(f"Prediction error: {str(e)}")
+        logger.error(f"Prediction error: {str(e)}", exc_info=True)
         return jsonify({'error': str(e)})
 
 def calculate_crop_score(weather, month, market_trend, demand_trend, crop, region):
     """Calculate a score for each crop based on all factors."""
+    logger.info(f"Calculating score for {crop} in {region}")
+    logger.info(f"Weather data: {weather}")
+    logger.info(f"Month: {month}")
+    logger.info(f"Market trend: {market_trend} (type: {type(market_trend)})")
+    logger.info(f"Demand trend: {demand_trend} (type: {type(demand_trend)})")
+    
     # Base score from weather suitability (temperature, humidity, rainfall)
     weather_score = 0.6  # Default moderate score
     
@@ -286,6 +324,7 @@ def calculate_crop_score(weather, month, market_trend, demand_trend, crop, regio
         
         weather_score = 1.0 - (temp_diff * 0.4 + humidity_diff * 0.3 + rainfall_diff * 0.3)
         weather_score = max(0.3, min(0.9, weather_score))  # Keep within reasonable bounds
+        logger.info(f"Weather score: {weather_score}")
     
     # Factor in season/month suitability
     month_score = 0.7  # Default
@@ -303,16 +342,25 @@ def calculate_crop_score(weather, month, market_trend, demand_trend, crop, regio
     
     if crop_lower in crop_seasons and month in crop_seasons[crop_lower]:
         month_score = 0.9
+    logger.info(f"Month score: {month_score}")
     
-    # Calculate final score (weighted average)
-    final_score = (
-        weather_score * 0.35 +  # Weather conditions
-        month_score * 0.25 +    # Seasonal suitability
-        market_trend * 0.20 +   # Market trends
-        demand_trend * 0.20     # Demand trends
-    )
-    
-    return round(final_score * 100)  # Return as percentage
+    try:
+        # Extract trend values from dictionaries if necessary
+        market_trend_value = market_trend['market_trend'] if isinstance(market_trend, dict) else float(market_trend)
+        demand_trend_value = demand_trend['demand_trend'] if isinstance(demand_trend, dict) else float(demand_trend)
+        
+        # Calculate final score (weighted average)
+        final_score = (
+            weather_score * 0.35 +  # Weather conditions
+            month_score * 0.25 +    # Seasonal suitability
+            market_trend_value * 0.20 +   # Market trends
+            demand_trend_value * 0.20     # Demand trends
+        )
+        logger.info(f"Final score: {final_score}")
+        return round(final_score * 100)  # Return as percentage
+    except Exception as e:
+        logger.error(f"Error calculating final score: {str(e)}")
+        return 50  # Return default score
 
 def get_typical_crops_for_region(region):
     """Return typical crops for a given region."""
@@ -401,5 +449,83 @@ def get_regions():
     ]
     return jsonify(regions)
 
+def predict_crop(city, month):
+    """Predict crop based on city and month."""
+    try:
+        # Get region from city
+        region = get_region_from_city(city)
+        if not region:
+            return {'error': f'City {city} not found in our database'}
+        
+        # Get weather data
+        weather_data = get_weather_data(city)
+        if 'error' in weather_data:
+            return {'error': f'Error fetching weather data: {weather_data["error"]}'}
+        
+        # Get region details
+        region_code = get_region_code(region)
+        climate = get_climate_for_region(region)
+        typical_crops = get_typical_crops_for_region(region)
+        
+        # Get all possible crops
+        all_crops = [
+            'rice', 'wheat', 'maize', 'jowar', 'bajra', 'ragi', 'pulses', 
+            'sugarcane', 'oilseeds', 'cotton', 'jute', 'mesta', 'tobacco', 
+            'fruits', 'vegetables', 'spices', 'flowers', 'medicinal plants', 
+            'aromatic plants', 'bamboo', 'mushroom', 'honey', 'dairy', 'poultry'
+        ]
+        
+        # Calculate scores for each crop
+        crop_scores = []
+        for crop in all_crops:
+            # Get market trends
+            market_trend = get_market_price_trends(crop, region)
+            
+            # Get demand trends
+            demand_trend_data = get_demand_trends(crop, region)
+            demand_trend = demand_trend_data.get('demand_trend', 0.5)
+            
+            # Calculate score
+            score = calculate_crop_score(weather_data, month, market_trend, demand_trend, crop, region)
+            
+            # Get market price (simplified)
+            market_price = random.randint(1000, 5000)  # Placeholder
+            
+            crop_scores.append({
+                'name': crop.capitalize(),
+                'score': score,
+                'marketPrice': market_price,
+                'marketTrend': market_trend.get('market_trend', 0.5),
+                'demandTrend': demand_trend
+            })
+        
+        # Sort by score
+        crop_scores.sort(key=lambda x: x['score'], reverse=True)
+        
+        # Return top 5 crops
+        return {
+            'allCrops': crop_scores[:5],
+            'weatherData': weather_data,
+            'demand_trend': demand_trend,
+            'region': region,
+            'regionDetails': {
+                'climate': climate,
+                'typicalCrops': typical_crops
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error in prediction: {str(e)}")
+        return {'error': str(e)}
+
+# Command-line interface
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    if len(sys.argv) > 1:
+        # Command-line mode
+        city = sys.argv[1]
+        month = int(sys.argv[2]) if len(sys.argv) > 2 else datetime.now().month
+        
+        result = predict_crop(city, month)
+        print(json.dumps(result))
+    else:
+        # Flask server mode
+        app.run(host='0.0.0.0', port=5000, debug=True)

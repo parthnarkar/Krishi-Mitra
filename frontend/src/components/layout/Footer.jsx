@@ -4,20 +4,19 @@ import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaFacebook, FaTwitter, FaInstagram
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-br from-neutral-800 to-neutral-900 text-white relative">
+    <footer className="bg-[#1B1B1B] text-white relative mt-8">
       {/* Top Curves */}
-      <div className="absolute top-0 left-0 right-0 h-8 overflow-hidden">
-        <div className="absolute inset-0 bg-neutral-50"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="absolute bottom-0 w-full h-auto transform translate-y-1/2">
+      <div className="absolute -top-8 left-0 right-0 h-8 overflow-hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="absolute bottom-0 w-full h-auto">
           <path 
-            fill="rgb(31, 41, 55)" 
+            fill="#1B1B1B"
             fillOpacity="1" 
             d="M0,192L48,186.7C96,181,192,171,288,186.7C384,203,480,245,576,245.3C672,245,768,203,864,186.7C960,171,1056,181,1152,186.7C1248,192,1344,192,1392,192L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
           ></path>
         </svg>
       </div>
       
-      <div className="container mx-auto px-6 pt-24 pb-16">
+      <div className="container mx-auto px-6 pt-16 pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 animate-fade-in">
           {/* Company Info */}
           <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
@@ -25,7 +24,7 @@ const Footer = () => {
               <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center">
                 <div className="text-2xl font-bold text-white">K</div>
               </div>
-              <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-color to-primary-light">
+              <h2 className="text-2xl font-bold text-white hover:text-emerald-400 transition-colors duration-300 cursor-pointer">
                 KrishiConnect
               </h2>
             </div>
@@ -163,7 +162,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-neutral-700 py-6">
+      <div className="border-t border-neutral-800 py-6">
         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-neutral-400 text-sm mb-4 md:mb-0">
             © {new Date().getFullYear()} KrishiConnect. All rights reserved.

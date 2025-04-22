@@ -170,7 +170,7 @@ const BulkBuy = () => {
       },
       category: 'Vegetables',
       description: 'Fresh green peas harvested at peak ripeness. Perfect for frozen food manufacturers and canning industries.',
-      image: 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVhc3xlbnwwfHwwfHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+      image: 'https://images.unsplash.com/photo-1690023852149-0c69ac74734f?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       unit: 'kg',
       minQuantity: 300,
       price: 35,
@@ -518,16 +518,21 @@ const BulkBuy = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-12 animate-fade-in-up"
         >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Bulk Agricultural Marketplace</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="inline-block mb-4 p-2 bg-green-100 rounded-full">
+            <FaHandshake className="h-12 w-12 text-green-600" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-brown-800 font-poppins mb-4 tracking-tight">
+            Bulk Agricultural Marketplace
+          </h1>
+          <p className="text-lg text-brown-600 max-w-3xl mx-auto leading-relaxed">
             Connect directly with farmers and suppliers for bulk purchases of high-quality agricultural products.
             Negotiate prices, arrange delivery, and secure the best deals for your business.
           </p>
@@ -551,7 +556,7 @@ const BulkBuy = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.1 }}
-              className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 transform hover:scale-[1.02] border-t-4 border-green-500"
             >
               <div className={`inline-flex items-center justify-center p-3 rounded-lg bg-${stat.color}-100 text-${stat.color}-600 mb-4`}>
                 <stat.icon className="h-6 w-6" />
@@ -567,17 +572,17 @@ const BulkBuy = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-xl shadow-sm p-6 mb-8"
+          className="bg-white rounded-xl shadow-lg hover:shadow-xl p-6 mb-8 border-t-4 border-green-500"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaSearch className="h-5 w-5 text-gray-400" />
+                <FaSearch className="h-5 w-5 text-brown-400" />
               </div>
               <input
                 type="text"
                 placeholder="Search products..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                className="block w-full pl-10 pr-3 py-2 border border-amber-200 rounded-lg leading-5 bg-white placeholder-brown-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -585,10 +590,10 @@ const BulkBuy = () => {
             
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaFilter className="h-5 w-5 text-gray-400" />
+                <FaFilter className="h-5 w-5 text-brown-400" />
               </div>
               <select
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                className="block w-full pl-10 pr-3 py-2 border border-amber-200 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                 value={filters.category}
                 onChange={(e) => setFilters({...filters, category: e.target.value})}
               >
@@ -602,10 +607,10 @@ const BulkBuy = () => {
             
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaMapMarkerAlt className="h-5 w-5 text-gray-400" />
+                <FaMapMarkerAlt className="h-5 w-5 text-brown-400" />
               </div>
               <select
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                className="block w-full pl-10 pr-3 py-2 border border-amber-200 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                 value={filters.location}
                 onChange={(e) => setFilters({...filters, location: e.target.value})}
               >
@@ -619,10 +624,10 @@ const BulkBuy = () => {
             
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaSort className="h-5 w-5 text-gray-400" />
+                <FaSort className="h-5 w-5 text-brown-400" />
               </div>
               <select
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                className="block w-full pl-10 pr-3 py-2 border border-amber-200 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
@@ -640,14 +645,14 @@ const BulkBuy = () => {
               <input
                 type="number"
                 placeholder="Min Price"
-                className="block w-full px-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                className="block w-full px-3 py-2 border border-amber-200 rounded-lg leading-5 bg-white placeholder-brown-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                 value={filters.minPrice}
                 onChange={(e) => setFilters({...filters, minPrice: e.target.value})}
               />
               <input
                 type="number"
                 placeholder="Max Price"
-                className="block w-full px-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                className="block w-full px-3 py-2 border border-amber-200 rounded-lg leading-5 bg-white placeholder-brown-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                 value={filters.maxPrice}
                 onChange={(e) => setFilters({...filters, maxPrice: e.target.value})}
               />
@@ -655,10 +660,10 @@ const BulkBuy = () => {
             
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaLeaf className="h-5 w-5 text-gray-400" />
+                <FaLeaf className="h-5 w-5 text-brown-400" />
               </div>
               <select
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                className="block w-full pl-10 pr-3 py-2 border border-amber-200 rounded-lg leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                 value={filters.qualityGrade}
                 onChange={(e) => setFilters({...filters, qualityGrade: e.target.value})}
               >
@@ -671,7 +676,7 @@ const BulkBuy = () => {
             </div>
             
             <button
-              className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-color hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color transition-colors duration-200"
+              className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105"
               onClick={() => setFilters({
                 category: 'all',
                 location: 'all',
@@ -700,7 +705,7 @@ const BulkBuy = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 transform hover:scale-[1.02]"
+                className="bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 border-t-4 border-green-500"
               >
                 <div className="relative h-48">
                   <img 
@@ -708,31 +713,31 @@ const BulkBuy = () => {
                     alt={product.name} 
                     className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110"
                   />
-                  <div className="absolute top-2 right-2 bg-primary-color text-white text-xs font-bold px-2 py-1 rounded-full">
+                  <div className="absolute top-2 right-2 bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-full border border-green-200">
                     {product.qualityGrade}
                   </div>
                 </div>
                 
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-semibold text-gray-900">{product.name}</h3>
-                    <div className="flex items-center bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm">
+                    <h3 className="text-xl font-semibold text-brown-800">{product.name}</h3>
+                    <div className="flex items-center bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-sm border border-amber-200">
                       <FaStar className="h-4 w-4 mr-1" />
                       <span className="font-medium">{product.seller.rating}</span>
                     </div>
                   </div>
                   
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
+                  <p className="text-brown-600 text-sm mb-4 line-clamp-2">{product.description}</p>
                   
-                  <div className="flex items-center text-sm text-gray-500 mb-4">
+                  <div className="flex items-center text-sm text-brown-600 mb-4">
                     <FaMapMarkerAlt className="h-4 w-4 mr-1" />
                     <span>{product.seller.location}</span>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <p className="text-xs text-gray-500">Price per {product.unit}</p>
-                      <p className="text-lg font-bold text-gray-900">
+                    <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                      <p className="text-xs text-brown-600">Price per {product.unit}</p>
+                      <p className="text-lg font-bold text-brown-800">
                         <FaRupeeSign className="inline-block h-3 w-3" />
                         {product.price}
                       </p>
@@ -741,10 +746,10 @@ const BulkBuy = () => {
                         {product.bulkPrice}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Min. Order</p>
-                      <p className="text-lg font-bold text-gray-900">{product.minQuantity} {product.unit}</p>
-                      <p className="text-sm text-gray-500">
+                    <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                      <p className="text-xs text-brown-600">Min. Order</p>
+                      <p className="text-lg font-bold text-brown-800">{product.minQuantity} {product.unit}</p>
+                      <p className="text-sm text-brown-600">
                         Available: {product.availableQuantity} {product.unit}
                       </p>
                     </div>
@@ -752,14 +757,14 @@ const BulkBuy = () => {
                   
                   <div className="flex space-x-2">
                     <button
-                      className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-300 flex items-center justify-center"
+                      className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
                       onClick={() => handleProductSelect(product)}
                     >
                       <FaHandshake className="mr-2" />
                       Negotiate
                     </button>
                     <button
-                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center"
+                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
                     >
                       <FaComments className="mr-2" />
                       Contact
@@ -779,16 +784,16 @@ const BulkBuy = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="bg-white rounded-xl shadow-sm p-6 mb-8"
+              className="bg-white rounded-xl shadow-lg hover:shadow-xl p-6 mb-8 border-t-4 border-green-500"
             >
               <div className="flex items-center mb-6">
                 <FaHandshake className="h-6 w-6 text-green-600 mr-2" />
-                <h2 className="text-2xl font-bold text-gray-900">Negotiate Bulk Purchase</h2>
+                <h2 className="text-2xl font-bold text-brown-800 font-poppins">Negotiate Bulk Purchase</h2>
               </div>
               
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-1">
-                  <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
                     <div className="flex items-center mb-4">
                       <img 
                         src={selectedProduct.image} 
@@ -796,33 +801,33 @@ const BulkBuy = () => {
                         className="w-16 h-16 object-cover rounded-md mr-4"
                       />
                       <div>
-                        <h3 className="font-semibold text-gray-900">{selectedProduct.name}</h3>
-                        <p className="text-sm text-gray-500">{selectedProduct.seller.name}</p>
+                        <h3 className="font-semibold text-brown-800">{selectedProduct.name}</h3>
+                        <p className="text-sm text-brown-600">{selectedProduct.seller.name}</p>
                       </div>
                     </div>
                     
                     <div className="space-y-2 mb-4">
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-500">Regular Price:</span>
-                        <span className="text-sm font-medium">
+                        <span className="text-sm text-brown-600">Regular Price:</span>
+                        <span className="text-sm font-medium text-brown-800">
                           <FaRupeeSign className="inline-block h-3 w-3" />
                           {selectedProduct.price} per {selectedProduct.unit}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-500">Bulk Price:</span>
+                        <span className="text-sm text-brown-600">Bulk Price:</span>
                         <span className="text-sm font-medium text-green-600">
                           <FaRupeeSign className="inline-block h-3 w-3" />
                           {selectedProduct.bulkPrice} per {selectedProduct.unit}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-500">Min. Order:</span>
-                        <span className="text-sm font-medium">{selectedProduct.minQuantity} {selectedProduct.unit}</span>
+                        <span className="text-sm text-brown-600">Min. Order:</span>
+                        <span className="text-sm font-medium text-brown-800">{selectedProduct.minQuantity} {selectedProduct.unit}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-500">Available:</span>
-                        <span className="text-sm font-medium">{selectedProduct.availableQuantity} {selectedProduct.unit}</span>
+                        <span className="text-sm text-brown-600">Available:</span>
+                        <span className="text-sm font-medium text-brown-800">{selectedProduct.availableQuantity} {selectedProduct.unit}</span>
                       </div>
                     </div>
                   </div>
@@ -846,7 +851,7 @@ const BulkBuy = () => {
                     <form onSubmit={handleNegotiationSubmit} className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-brown-700 mb-1">
                             Quantity ({selectedProduct.unit})
                           </label>
                           <input
@@ -854,7 +859,7 @@ const BulkBuy = () => {
                             name="quantity"
                             value={negotiationForm.quantity}
                             onChange={handleInputChange}
-                            className={`block w-full px-3 py-2 border ${formErrors.quantity ? 'border-red-300' : 'border-gray-300'} rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200`}
+                            className={`block w-full px-3 py-2 border ${formErrors.quantity ? 'border-red-300' : 'border-amber-200'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300`}
                           />
                           {formErrors.quantity && (
                             <p className="mt-1 text-sm text-red-600">{formErrors.quantity}</p>
@@ -862,7 +867,7 @@ const BulkBuy = () => {
                         </div>
                         
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-brown-700 mb-1">
                             Proposed Price (₹ per {selectedProduct.unit})
                           </label>
                           <input
@@ -870,7 +875,7 @@ const BulkBuy = () => {
                             name="proposedPrice"
                             value={negotiationForm.proposedPrice}
                             onChange={handleInputChange}
-                            className={`block w-full px-3 py-2 border ${formErrors.proposedPrice ? 'border-red-300' : 'border-gray-300'} rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200`}
+                            className={`block w-full px-3 py-2 border ${formErrors.proposedPrice ? 'border-red-300' : 'border-amber-200'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300`}
                           />
                           {formErrors.proposedPrice && (
                             <p className="mt-1 text-sm text-red-600">{formErrors.proposedPrice}</p>
@@ -880,7 +885,7 @@ const BulkBuy = () => {
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-brown-700 mb-1">
                             Delivery Date
                           </label>
                           <input
@@ -888,7 +893,7 @@ const BulkBuy = () => {
                             name="deliveryDate"
                             value={negotiationForm.deliveryDate}
                             onChange={handleInputChange}
-                            className={`block w-full px-3 py-2 border ${formErrors.deliveryDate ? 'border-red-300' : 'border-gray-300'} rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200`}
+                            className={`block w-full px-3 py-2 border ${formErrors.deliveryDate ? 'border-red-300' : 'border-amber-200'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300`}
                           />
                           {formErrors.deliveryDate && (
                             <p className="mt-1 text-sm text-red-600">{formErrors.deliveryDate}</p>
@@ -896,14 +901,14 @@ const BulkBuy = () => {
                         </div>
                         
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-brown-700 mb-1">
                             Transport Type
                           </label>
                           <select
                             name="transportType"
                             value={negotiationForm.transportType}
                             onChange={handleInputChange}
-                            className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                            className="block w-full px-3 py-2 border border-amber-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                           >
                             <option value="seller">Seller Arranged</option>
                             <option value="buyer">Buyer Arranged</option>
@@ -913,7 +918,7 @@ const BulkBuy = () => {
                       </div>
                       
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-brown-700 mb-1">
                           Additional Notes
                         </label>
                         <textarea
@@ -921,21 +926,21 @@ const BulkBuy = () => {
                           value={negotiationForm.notes}
                           onChange={handleInputChange}
                           rows="3"
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                          className="block w-full px-3 py-2 border border-amber-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                           placeholder="Any special requirements or questions..."
                         ></textarea>
                       </div>
                       
-                      <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
                         <div className="flex justify-between mb-2">
-                          <span className="text-sm font-medium text-gray-700">Total Amount:</span>
-                          <span className="text-lg font-bold text-gray-900">
+                          <span className="text-sm font-medium text-brown-700">Total Amount:</span>
+                          <span className="text-lg font-bold text-brown-800">
                             <FaRupeeSign className="inline-block h-4 w-4" />
                             {calculateTotalAmount().toLocaleString()}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm font-medium text-gray-700">Discount:</span>
+                          <span className="text-sm font-medium text-brown-700">Discount:</span>
                           <span className="text-sm font-medium text-green-600">{calculateDiscount()}%</span>
                         </div>
                       </div>
@@ -943,7 +948,7 @@ const BulkBuy = () => {
                       <div className="flex justify-end">
                         <button
                           type="submit"
-                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-primary-color hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color transition-colors duration-200"
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105"
                         >
                           Submit Negotiation
                         </button>
@@ -961,23 +966,23 @@ const BulkBuy = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-white rounded-xl shadow-sm p-6"
+          className="bg-white rounded-xl shadow-lg hover:shadow-xl p-6 border-t-4 border-green-500"
         >
           <div className="flex items-center mb-6">
             <FaHandshake className="h-6 w-6 text-green-600 mr-2" />
-            <h2 className="text-2xl font-bold text-gray-900">Your Negotiations</h2>
+            <h2 className="text-2xl font-bold text-brown-800 font-poppins">Your Negotiations</h2>
           </div>
           
           {negotiations.length === 0 ? (
             <div className="text-center py-8">
-              <FaHandshake className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">You haven't initiated any negotiations yet.</p>
+              <FaHandshake className="h-12 w-12 text-amber-400 mx-auto mb-4" />
+              <p className="text-brown-600">You haven't initiated any negotiations yet.</p>
             </div>
           ) : (
             <div className="space-y-4">
               {negotiations.map(negotiation => (
-                <div key={negotiation._id} className="border rounded-lg overflow-hidden">
-                  <div className="bg-gray-50 px-4 py-3 flex justify-between items-center">
+                <div key={negotiation._id} className="border rounded-lg overflow-hidden border-amber-200">
+                  <div className="bg-amber-50 px-4 py-3 flex justify-between items-center">
                     <div className="flex items-center">
                       <img 
                         src={negotiation.image} 
@@ -985,8 +990,8 @@ const BulkBuy = () => {
                         className="w-10 h-10 object-cover rounded-md mr-3"
                       />
                       <div>
-                        <h3 className="font-medium text-gray-900">{negotiation.productName}</h3>
-                        <p className="text-sm text-gray-500">{negotiation.sellerName}</p>
+                        <h3 className="font-medium text-brown-800">{negotiation.productName}</h3>
+                        <p className="text-sm text-brown-600">{negotiation.sellerName}</p>
                       </div>
                     </div>
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeClass(negotiation.status)}`}>
@@ -996,19 +1001,19 @@ const BulkBuy = () => {
                   
                   <div className="p-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                      <div>
-                        <p className="text-xs text-gray-500">Quantity</p>
-                        <p className="font-medium">{negotiation.quantity}</p>
+                      <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                        <p className="text-xs text-brown-600">Quantity</p>
+                        <p className="font-medium text-brown-800">{negotiation.quantity}</p>
                       </div>
-                      <div>
-                        <p className="text-xs text-gray-500">Original Price</p>
-                        <p className="font-medium">
+                      <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                        <p className="text-xs text-brown-600">Original Price</p>
+                        <p className="font-medium text-brown-800">
                           <FaRupeeSign className="inline-block h-3 w-3" />
                           {negotiation.originalPrice}
                         </p>
                       </div>
-                      <div>
-                        <p className="text-xs text-gray-500">Proposed Price</p>
+                      <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                        <p className="text-xs text-brown-600">Proposed Price</p>
                         <p className="font-medium text-green-600">
                           <FaRupeeSign className="inline-block h-3 w-3" />
                           {negotiation.proposedPrice}
@@ -1017,7 +1022,7 @@ const BulkBuy = () => {
                     </div>
                     
                     {negotiation.counterOffer && (
-                      <div className="bg-blue-50 p-3 rounded-lg mb-4">
+                      <div className="bg-blue-50 p-3 rounded-lg mb-4 border border-blue-200">
                         <p className="text-sm font-medium text-blue-800 mb-1">Counter Offer</p>
                         <p className="text-sm text-blue-700">
                           <FaRupeeSign className="inline-block h-3 w-3" />
@@ -1028,26 +1033,26 @@ const BulkBuy = () => {
                     
                     {negotiation.notes && (
                       <div className="mb-4">
-                        <p className="text-xs text-gray-500 mb-1">Notes</p>
-                        <p className="text-sm text-gray-700">{negotiation.notes}</p>
+                        <p className="text-xs text-brown-600 mb-1">Notes</p>
+                        <p className="text-sm text-brown-700">{negotiation.notes}</p>
                       </div>
                     )}
                     
                     <div className="flex justify-between items-center">
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-brown-600">
                         Created: {formatDateTime(negotiation.createdAt)}
                       </p>
                       
                       {negotiation.status === 'countered' && (
                         <div className="flex space-x-2">
                           <button 
-                            className="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors duration-200"
+                            className="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105"
                             onClick={() => handleCounterOffer(negotiation, 'accepted')}
                           >
                             Accept
                           </button>
                           <button 
-                            className="px-3 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors duration-200"
+                            className="px-3 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
                             onClick={() => handleCounterOffer(negotiation, 'rejected')}
                           >
                             Reject

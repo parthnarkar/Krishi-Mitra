@@ -45,19 +45,10 @@ def train_model():
     print("Crop recommendation data:", crop_data['recommended_crops'].unique()[:10])
     print("APY data:", apy_data['Crop'].unique()[:10])
     
-    # Get month input from user
-    while True:
-        try:
-            month = int(input("\nEnter current month (1-12): "))
-            if 1 <= month <= 12:
-                break
-            else:
-                print("Please enter a number between 1 and 12")
-        except ValueError:
-            print("Please enter a valid month number")
-    
+    # Use default month value
+    month = 5  # May
     season = get_season(month)
-    print(f"\nMonth {month} is in {season} season")
+    print(f"\nUsing month {month} ({season} season)")
     
     # Process APY Data
     try:
@@ -154,21 +145,10 @@ def train_model():
     # ======================================================================
     
     try:
-X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42, stratify=y
-)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-model = RandomForestClassifier(
-            n_estimators=200,
-            max_depth=25,
-            min_samples_split=5,
-            min_samples_leaf=1,
-            max_features='sqrt',
-            random_state=42,
-            n_jobs=-1
-        )
-        
-model.fit(X_train, y_train)
+        model = RandomForestClassifier(n_estimators=200, max_depth=25, min_samples_split=5, min_samples_leaf=1, max_features='sqrt', random_state=42, n_jobs=-1)
+        model.fit(X_train, y_train)
 
         # Evaluation
         y_pred = model.predict(X_test)
@@ -179,8 +159,8 @@ model.fit(X_train, y_train)
         print(classification_report(y_test, y_pred))
         
         # Save model
-with open('crop_model.pkl', 'wb') as f:
-    pickle.dump(model, f)
+        with open('crop_model.pkl', 'wb') as f:
+            pickle.dump(model, f)
 
         print("\n💾 Model saved as crop_model.pkl")
         

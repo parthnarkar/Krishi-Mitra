@@ -362,16 +362,21 @@ const ColdStorage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-12 animate-fade-in-up"
         >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Cold Storage Facilities</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="inline-block mb-4 p-2 bg-green-100 rounded-full">
+            <FaWarehouse className="h-12 w-12 text-green-600" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-brown-800 font-poppins mb-4 tracking-tight">
+            Cold Storage Facilities
+          </h1>
+          <p className="text-lg text-brown-600 max-w-3xl mx-auto leading-relaxed">
             Secure temperature-controlled storage solutions for your agricultural produce. 
             Book space, track inventory, and ensure product freshness.
           </p>
@@ -395,7 +400,7 @@ const ColdStorage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.1 }}
-              className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 transform hover:scale-[1.02] border-t-4 border-green-500"
             >
               <div className={`inline-flex items-center justify-center p-3 rounded-lg bg-${stat.color}-100 text-${stat.color}-600 mb-4`}>
                 <stat.icon className="h-6 w-6" />
@@ -406,15 +411,15 @@ const ColdStorage = () => {
           ))}
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Facilities List */}
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="space-y-6"
-          >
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Available Facilities</h2>
+        {/* Facilities List */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12"
+        >
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-brown-800 mb-6 font-poppins">Available Facilities</h2>
             <AnimatePresence>
               {facilities.map((facility, index) => (
                 <motion.div
@@ -423,20 +428,20 @@ const ColdStorage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`bg-white rounded-xl shadow-sm p-6 cursor-pointer transform transition-all duration-300 hover:shadow-md hover:scale-[1.02] ${
-                    selectedFacility && selectedFacility._id === facility._id ? 'ring-2 ring-green-500' : ''
+                  className={`bg-white rounded-xl shadow-lg hover:shadow-xl p-6 cursor-pointer transform transition-all duration-300 hover:scale-[1.02] border-l-4 ${
+                    selectedFacility && selectedFacility._id === facility._id ? 'border-green-500' : 'border-brown-300'
                   }`}
                   onClick={() => handleFacilitySelect(facility)}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{facility.name}</h3>
-                      <div className="flex items-center text-gray-500 mb-2">
+                      <h3 className="text-xl font-semibold text-brown-800 mb-2">{facility.name}</h3>
+                      <div className="flex items-center text-brown-600 mb-2">
                         <FaMapMarkerAlt className="h-4 w-4 mr-2" />
                         <span>{facility.location}</span>
                       </div>
                     </div>
-                    <div className="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                    <div className="flex items-center bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium">
                       <FaStar className="h-4 w-4 mr-1" />
                       {facility.rating} ({facility.reviews})
                     </div>
@@ -448,8 +453,8 @@ const ColdStorage = () => {
                         <FaThermometerHalf className="h-5 w-5 text-blue-600" />
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Temperature</p>
-                        <p className="font-medium">{facility.temperature}°C</p>
+                        <p className="text-sm text-brown-600">Temperature</p>
+                        <p className="font-medium text-brown-800">{facility.temperature}°C</p>
                       </div>
                     </div>
                     <div className="flex items-center">
@@ -457,8 +462,8 @@ const ColdStorage = () => {
                         <FaWarehouse className="h-5 w-5 text-green-600" />
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Available</p>
-                        <p className="font-medium">{facility.available}/{facility.capacity} tons</p>
+                        <p className="text-sm text-brown-600">Available</p>
+                        <p className="font-medium text-brown-800">{facility.available}/{facility.capacity} tons</p>
                       </div>
                     </div>
                   </div>
@@ -467,7 +472,7 @@ const ColdStorage = () => {
                     {facility.features.map((feature, i) => (
                       <span 
                         key={i}
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800"
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-amber-50 text-brown-700 border border-amber-200"
                       >
                         {feature}
                       </span>
@@ -476,15 +481,15 @@ const ColdStorage = () => {
 
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-sm text-gray-500">Price per ton/day</p>
-                      <p className="text-xl font-bold text-gray-900">₹{facility.pricePerTonPerDay}</p>
+                      <p className="text-sm text-brown-600">Price per ton/day</p>
+                      <p className="text-xl font-bold text-brown-800">₹{facility.pricePerTonPerDay}</p>
                     </div>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleFacilitySelect(facility);
                       }}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105"
                     >
                       Book Now
                     </button>
@@ -492,7 +497,7 @@ const ColdStorage = () => {
                 </motion.div>
               ))}
             </AnimatePresence>
-          </motion.div>
+          </div>
 
           {/* Booking Section */}
           <motion.div
@@ -509,39 +514,39 @@ const ColdStorage = () => {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="bg-white rounded-xl shadow-sm p-8"
+                    className="bg-white rounded-xl shadow-lg hover:shadow-xl p-8 border-t-4 border-green-500"
                   >
                     <div className="text-center">
                       <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
                         <FaCheckCircle className="h-6 w-6 text-green-600" />
                       </div>
-                      <h3 className="mt-4 text-xl font-medium text-gray-900">Booking Confirmed!</h3>
-                      <p className="mt-2 text-gray-500">
+                      <h3 className="mt-4 text-xl font-medium text-brown-800">Booking Confirmed!</h3>
+                      <p className="mt-2 text-brown-600">
                         Your storage space has been reserved at {selectedFacility.name}
                       </p>
-                      <div className="mt-6 bg-gray-50 rounded-lg p-4">
+                      <div className="mt-6 bg-amber-50 rounded-lg p-4 border border-amber-200">
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <p className="text-sm text-gray-500">Quantity</p>
-                            <p className="font-medium">{bookingForm.quantity} tons</p>
+                            <p className="text-sm text-brown-600">Quantity</p>
+                            <p className="font-medium text-brown-800">{bookingForm.quantity} tons</p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-500">Duration</p>
-                            <p className="font-medium">{bookingForm.startDate} to {bookingForm.endDate}</p>
+                            <p className="text-sm text-brown-600">Duration</p>
+                            <p className="font-medium text-brown-800">{bookingForm.startDate} to {bookingForm.endDate}</p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-500">Transport</p>
-                            <p className="font-medium capitalize">{bookingForm.transportType}</p>
+                            <p className="text-sm text-brown-600">Transport</p>
+                            <p className="font-medium text-brown-800 capitalize">{bookingForm.transportType}</p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-500">Total Cost</p>
-                            <p className="font-medium">₹{calculateTotalCost().toLocaleString()}</p>
+                            <p className="text-sm text-brown-600">Total Cost</p>
+                            <p className="font-medium text-brown-800">₹{calculateTotalCost().toLocaleString()}</p>
                           </div>
                         </div>
                       </div>
                       <button
                         onClick={() => setSelectedFacility(null)}
-                        className="mt-6 w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700"
+                        className="mt-6 w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition-all duration-300 transform hover:scale-105"
                       >
                         Book Another Facility
                       </button>
@@ -553,12 +558,12 @@ const ColdStorage = () => {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="bg-white rounded-xl shadow-sm p-8"
+                    className="bg-white rounded-xl shadow-lg hover:shadow-xl p-8 border-t-4 border-green-500"
                   >
-                    <h3 className="text-xl font-bold text-gray-900 mb-6">Book Storage Space</h3>
+                    <h3 className="text-xl font-bold text-brown-800 mb-6 font-poppins">Book Storage Space</h3>
                     <form onSubmit={handleBookingSubmit} className="space-y-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-brown-700 mb-1">
                           Quantity (tons)
                         </label>
                         <input
@@ -568,19 +573,19 @@ const ColdStorage = () => {
                           onChange={handleInputChange}
                           min="1"
                           max={selectedFacility.available}
-                          className={`block w-full px-3 py-2 border ${formErrors.quantity ? 'border-red-300' : 'border-gray-300'} rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200`}
+                          className={`block w-full px-3 py-2 border ${formErrors.quantity ? 'border-red-300' : 'border-amber-200'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300`}
                         />
                         {formErrors.quantity && (
                           <p className="mt-1 text-sm text-red-600">{formErrors.quantity}</p>
                         )}
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-brown-500">
                           Available: {selectedFacility.available} tons
                         </p>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-brown-700 mb-1">
                             Start Date
                           </label>
                           <input
@@ -589,7 +594,7 @@ const ColdStorage = () => {
                             value={bookingForm.startDate}
                             onChange={handleInputChange}
                             min={formatDate(new Date())}
-                            className={`block w-full px-3 py-2 border ${formErrors.startDate ? 'border-red-300' : 'border-gray-300'} rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200`}
+                            className={`block w-full px-3 py-2 border ${formErrors.startDate ? 'border-red-300' : 'border-amber-200'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300`}
                           />
                           {formErrors.startDate && (
                             <p className="mt-1 text-sm text-red-600">{formErrors.startDate}</p>
@@ -597,7 +602,7 @@ const ColdStorage = () => {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-brown-700 mb-1">
                             End Date
                           </label>
                           <input
@@ -606,7 +611,7 @@ const ColdStorage = () => {
                             value={bookingForm.endDate}
                             onChange={handleInputChange}
                             min={bookingForm.startDate}
-                            className={`block w-full px-3 py-2 border ${formErrors.endDate ? 'border-red-300' : 'border-gray-300'} rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200`}
+                            className={`block w-full px-3 py-2 border ${formErrors.endDate ? 'border-red-300' : 'border-amber-200'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300`}
                           />
                           {formErrors.endDate && (
                             <p className="mt-1 text-sm text-red-600">{formErrors.endDate}</p>
@@ -615,14 +620,14 @@ const ColdStorage = () => {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-brown-700 mb-1">
                           Transportation
                         </label>
                         <select
                           name="transportType"
                           value={bookingForm.transportType}
                           onChange={handleInputChange}
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200"
+                          className="block w-full px-3 py-2 border border-amber-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                         >
                           <option value="self">Self-arranged</option>
                           <option value="provided">Provided by storage facility (+₹1000)</option>
@@ -630,7 +635,7 @@ const ColdStorage = () => {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-brown-700 mb-1">
                           Additional Notes
                         </label>
                         <textarea
@@ -638,21 +643,21 @@ const ColdStorage = () => {
                           value={bookingForm.notes}
                           onChange={handleInputChange}
                           rows="3"
-                          className={`block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-color focus:border-primary-color sm:text-sm transition-colors duration-200`}
+                          className="block w-full px-3 py-2 border border-amber-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all duration-300"
                           placeholder="Any special requirements or information..."
                         ></textarea>
                       </div>
 
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <h4 className="text-sm font-medium text-gray-700 mb-3">Cost Summary</h4>
+                      <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
+                        <h4 className="text-sm font-medium text-brown-700 mb-3">Cost Summary</h4>
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Storage Rate</span>
-                            <span className="font-medium">₹{selectedFacility.pricePerTonPerDay}/ton/day</span>
+                            <span className="text-brown-600">Storage Rate</span>
+                            <span className="font-medium text-brown-800">₹{selectedFacility.pricePerTonPerDay}/ton/day</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Duration</span>
-                            <span className="font-medium">
+                            <span className="text-brown-600">Duration</span>
+                            <span className="font-medium text-brown-800">
                               {bookingForm.startDate && bookingForm.endDate
                                 ? Math.ceil((new Date(bookingForm.endDate) - new Date(bookingForm.startDate)) / (1000 * 60 * 60 * 24))
                                 : 0} days
@@ -660,13 +665,13 @@ const ColdStorage = () => {
                           </div>
                           {bookingForm.transportType === 'provided' && (
                             <div className="flex justify-between text-sm">
-                              <span className="text-gray-500">Transport Fee</span>
-                              <span className="font-medium">₹1,000</span>
+                              <span className="text-brown-600">Transport Fee</span>
+                              <span className="font-medium text-brown-800">₹1,000</span>
                             </div>
                           )}
-                          <div className="pt-2 border-t border-gray-200">
+                          <div className="pt-2 border-t border-amber-200">
                             <div className="flex justify-between">
-                              <span className="font-medium text-gray-900">Total Cost</span>
+                              <span className="font-medium text-brown-800">Total Cost</span>
                               <span className="font-bold text-green-600">₹{calculateTotalCost().toLocaleString()}</span>
                             </div>
                           </div>
@@ -677,13 +682,13 @@ const ColdStorage = () => {
                         <button
                           type="button"
                           onClick={() => setSelectedFacility(null)}
-                          className="flex-1 px-4 py-3 border-2 border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-200"
+                          className="flex-1 px-4 py-3 border-2 border-amber-200 text-brown-700 rounded-lg hover:bg-amber-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-200 transition-all duration-300"
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
-                          className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+                          className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105"
                         >
                           Confirm Booking
                         </button>
@@ -696,13 +701,13 @@ const ColdStorage = () => {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-xl shadow-sm p-8 text-center"
+                className="bg-white rounded-xl shadow-lg hover:shadow-xl p-8 text-center border-t-4 border-green-500"
               >
-                <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <FaWarehouse className="h-8 w-8 text-gray-400" />
+                <div className="mx-auto w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mb-4">
+                  <FaWarehouse className="h-8 w-8 text-amber-600" />
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Select a Facility</h3>
-                <p className="text-gray-500 mb-6">
+                <h3 className="text-xl font-medium text-brown-800 mb-2">Select a Facility</h3>
+                <p className="text-brown-600 mb-6">
                   Choose a cold storage facility from the list to start your booking.
                 </p>
                 <div className="grid grid-cols-2 gap-4 text-center">
@@ -712,16 +717,16 @@ const ColdStorage = () => {
                     { icon: FaBolt, text: "Power Backup" },
                     { icon: FaTruck, text: "Loading Docks" }
                   ].map((feature, index) => (
-                    <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                      <feature.icon className="h-6 w-6 text-gray-400 mx-auto mb-2" />
-                      <p className="text-sm text-gray-600">{feature.text}</p>
+                    <div key={index} className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                      <feature.icon className="h-6 w-6 text-amber-600 mx-auto mb-2" />
+                      <p className="text-sm text-brown-600">{feature.text}</p>
                     </div>
                   ))}
                 </div>
               </motion.div>
             )}
           </motion.div>
-        </div>
+        </motion.div>
 
         {/* My Bookings Section */}
         <motion.div
@@ -730,7 +735,7 @@ const ColdStorage = () => {
           transition={{ delay: 0.5 }}
           className="mt-12"
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">My Bookings</h2>
+          <h2 className="text-2xl font-bold text-brown-800 mb-6 font-poppins">My Bookings</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <AnimatePresence>
               {bookings.map((booking, index) => (
@@ -740,15 +745,15 @@ const ColdStorage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+                  className="bg-white rounded-xl shadow-lg hover:shadow-xl p-6 border-t-4 border-green-500"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="font-medium text-gray-900">{booking.facilityName}</h3>
+                      <h3 className="font-medium text-brown-800">{booking.facilityName}</h3>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         booking.status === 'confirmed' 
                           ? 'bg-green-100 text-green-800' 
-                          : 'bg-yellow-100 text-yellow-800'
+                          : 'bg-amber-100 text-amber-800'
                       }`}>
                         {booking.status === 'confirmed' ? (
                           <><FaCheckCircle className="mr-1" /> Confirmed</>
@@ -760,25 +765,25 @@ const ColdStorage = () => {
                     <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       booking.paymentStatus === 'paid'
                         ? 'bg-blue-100 text-blue-800'
-                        : 'bg-orange-100 text-orange-800'
+                        : 'bg-amber-100 text-amber-800'
                     }`}>
                       {booking.paymentStatus}
                     </span>
                   </div>
 
                   <div className="space-y-2 mb-4">
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className="flex items-center text-sm text-brown-600">
                       <FaWarehouse className="h-4 w-4 mr-2" />
                       {booking.quantity} tons
                     </div>
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className="flex items-center text-sm text-brown-600">
                       <FaCalendarAlt className="h-4 w-4 mr-2" />
                       {booking.startDate} to {booking.endDate}
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-                    <span className="text-sm font-medium text-gray-900">
+                  <div className="flex justify-between items-center pt-4 border-t border-amber-200">
+                    <span className="text-sm font-medium text-brown-800">
                       Total: ₹{booking.totalAmount.toLocaleString()}
                     </span>
                     <div className="space-x-2">
@@ -788,11 +793,11 @@ const ColdStorage = () => {
                         </button>
                       )}
                       {booking.paymentStatus === 'awaiting' && (
-                        <button className="px-3 py-1 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        <button className="px-3 py-1 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
                           Pay Now
                         </button>
                       )}
-                      <button className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800">
+                      <button className="px-3 py-1 text-sm text-brown-600 hover:text-brown-800">
                         Details
                       </button>
                     </div>
@@ -805,11 +810,11 @@ const ColdStorage = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="col-span-full text-center py-12 bg-white rounded-xl shadow-sm"
+                className="col-span-full text-center py-12 bg-white rounded-xl shadow-lg hover:shadow-xl border-t-4 border-green-500"
               >
-                <FaWarehouse className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Bookings Yet</h3>
-                <p className="text-gray-500">Start by selecting a facility to make your first booking.</p>
+                <FaWarehouse className="mx-auto h-12 w-12 text-amber-400 mb-4" />
+                <h3 className="text-lg font-medium text-brown-800 mb-2">No Bookings Yet</h3>
+                <p className="text-brown-600">Start by selecting a facility to make your first booking.</p>
               </motion.div>
             )}
           </div>

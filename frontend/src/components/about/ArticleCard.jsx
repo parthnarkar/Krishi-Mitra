@@ -13,7 +13,7 @@ const ArticleCard = ({ article }) => {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
-      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300"
+      className="bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] border-t-4 border-green-500"
     >
       <div className="relative h-48 overflow-hidden">
         <img 
@@ -22,14 +22,14 @@ const ArticleCard = ({ article }) => {
           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute top-3 right-3">
-          <span className="px-3 py-1 bg-primary-color text-white text-xs font-medium rounded-full">
+          <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full border border-green-200">
             {category}
           </span>
         </div>
       </div>
       
       <div className="p-5">
-        <div className="flex items-center text-gray-500 text-sm mb-2">
+        <div className="flex items-center text-brown-600 text-sm mb-2">
           <div className="flex items-center mr-3">
             <FaCalendarAlt className="mr-1" />
             <span>{date}</span>
@@ -40,16 +40,16 @@ const ArticleCard = ({ article }) => {
           </div>
         </div>
         
-        <h3 className="text-xl font-semibold text-gray-800 mb-2 line-clamp-2">
+        <h3 className="text-xl font-semibold text-brown-800 mb-2 line-clamp-2">
           {title}
         </h3>
-        <p className="text-gray-600 mb-4 line-clamp-3">
+        <p className="text-brown-600 mb-4 line-clamp-3">
           {description}
         </p>
         
         <Link 
           to={`/about/article/${id}`}
-          className="inline-flex items-center text-primary-color font-medium hover:text-primary-dark transition-colors group"
+          className="inline-flex items-center text-green-600 font-medium hover:text-green-700 transition-colors group"
         >
           Read More
           <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />

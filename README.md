@@ -1,188 +1,160 @@
-# 🌾 **KrishiMitra: Direct Farmer-to-Consumer E-Commerce Platform**  
-🚀 **Empowering Indian Farmers | Eliminating Middlemen | Ensuring Fair Pricing**  
+# 🌾 KrishiMitra: Smart Agricultural E-Commerce Platform
 
----
+> A modern e-commerce platform connecting farmers directly to consumers, powered by AI-driven insights and real-time market data.
 
-## 📍 **Team Name: Krishi Mitra** | 🏫 **Institute: Vivekanand Education Society’s Institute of Technology**  
+## 📌 Overview
 
----
+KrishiMitra is a comprehensive agricultural platform that revolutionizes the traditional farming supply chain by eliminating middlemen and providing direct market access to farmers. The platform leverages AI and machine learning to offer smart crop recommendations, real-time price insights, and automated logistics solutions.
 
-## 📌 Overview  
-KrishiMitra is a **Direct Farmer-to-Consumer E-Commerce Platform** that aims to:  
-- ✅ **Eliminate middlemen** to provide farmers with better profits.  
-- ✅ **Enhance accessibility** through multilingual voice assistance.  
-- ✅ **Ensure price transparency** with real-time market pricing.  
-- ✅ **Optimize order management** through an automated system.  
+### 🎯 Key Objectives
+- Connect farmers directly with consumers for better profits
+- Provide AI-powered crop recommendations and market insights
+- Enable bulk trading and cold storage management
+- Ensure fair pricing through transparent market data
+- Support multilingual chatbot assistance for better accessibility
 
-Our platform provides a **seamless connection between farmers and consumers** by leveraging **AI, real-time price insights, and smart logistics** to ensure fair trade and fresh produce.  
+## ✨ Features
 
----
+### 🧠 AI-Powered Features
+- **Smart Crop Recommendations**: AI-driven suggestions based on location, season, and market trends
+- **Price Prediction**: Real-time market price analysis and forecasting
+- **Demand Forecasting**: Predictive analytics for crop demand
+- **Chatbot Assistant**: AI-powered support for farming queries
 
-## 🚀 Key Features  
+### 🛒 E-Commerce Features
+- **Direct Farmer-to-Consumer Marketplace**: Eliminate middlemen for better profits
+- **Bulk Buy/Sell Platform**: Connect with buyers and sellers for bulk transactions
+- **Cold Storage Booking**: Manage and book cold storage facilities
+- **Real-time Price Tracking**: Monitor market prices for various crops
+- **Product Catalog**: Comprehensive listing of agricultural products
+- **Order Management**: Track and manage orders efficiently
 
-### 🧠 **AI-Powered Smart Pricing System**  
-- 🔹 **Real-Time Market Price Adjustments** – Prices adapt to changing demand & supply.  
-- 🔹 **Price Prediction & Demand Insights** – AI analyzes historical trends.  
-- 🔹 **Dynamic Bargaining System** – Allows consumers to negotiate prices within set thresholds.  
+### 👤 User Features
+- **Role-based Dashboards**: Separate interfaces for farmers and consumers
+- **Multilingual Support**: Chatbot assistance in Hindi, Marathi, and English
+- **Secure Authentication**: JWT-based user management
+- **Responsive Design**: Mobile-first approach for all devices
+- **Profile Management**: User profile customization
+- **Notification System**: Real-time updates and alerts
 
-### 🛒 **Direct Farmer-to-Consumer E-Commerce Platform**  
-- 🔹 **Eliminate Middlemen** – Ensures higher profits for farmers.  
-- 🔹 **Flexible Product Listing** – Farmers can list products via voice or text.  
-- 🔹 **Multilingual Support (Hindi, Marathi, English)** – Increases accessibility.  
+### 🔄 System Features
+- **Automated Order Management**: Smart routing and allocation
+- **Inventory Management**: Real-time stock tracking
+- **Payment Integration**: Secure transaction processing
+- **Logistics Optimization**: AI-driven delivery route planning
+- **Data Analytics**: Comprehensive reporting and insights
+- **API Integration**: Seamless third-party service integration
 
-### 🎙️ **Voice-Assisted Product Listing & Ordering**  
-- 🔹 **Multilingual Voice Commands** – Farmers can list products and manage inventory easily.  
-- 🔹 **Speech-to-Text API Integration** – Supports voice input for farmers with limited literacy.  
+## 🛠️ Tech Stack
 
-### 🔄 **Automated Order Allocation System**  
-- 🔹 **Intelligent Order Routing** – Prevents order delays by dynamically allocating to the nearest supplier.  
-- 🔹 **Stock Availability Check** – Ensures seamless order fulfillment.  
+### Frontend
+- **Framework**: React.js with Vite
+- **Styling**: Tailwind CSS
+- **State Management**: React Context API
+- **UI Components**: Custom components with Framer Motion
+- **Icons**: React Icons
+- **Routing**: React Router
+- **HTTP Client**: Axios
+- **Animation**: Framer Motion
+- **Charts**: Chart.js
+- **Notifications**: React Hot Toast
 
-### 🤖 **Chatbot Integration for Farmer & Consumer Support**  
-- 🔹 **AI Chatbot** – Assists with queries, recommendations, and order support.  
-- 🔹 **24/7 Customer Support** – Multilingual support for easy understanding.  
+### Backend
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Authentication**: JWT
+- **API Integration**: RESTful architecture
+- **Security**: CORS
+- **File Upload**: Multer
+- **Error Handling**: Express Async Handler
+- **Database**: MongoDB with Mongoose
 
----
+### Database
+- **Primary**: MongoDB
+- **Schema Design**: Mongoose ODM
+- **Validation**: Schema-level validation
+- **Relationships**: Document references
 
-## 🎥 **Demo Videos**
+### AI/ML
+- **Crop Recommendation**: Random Forest Classifier
+- **Price Prediction**: TensorFlow/PyTorch
+- **NLP**: Gemini 1.5 Flash for chatbot
 
-📹 **AI Crop Recommendation & Demand Forecasting**  
-🔗 [Watch Demo](https://youtu.be/Bi8YwI73nXs)  
+## 📸 Screenshots
 
-📹 **Payment Gateway Integration**  
-🔗 [Watch Demo](https://youtu.be/Fc7pyvdvB5A)  
+### Main Features
+- AI Crop Recommendation Interface
+- Bulk Buy/Sell Marketplace
+- Cold Storage Management
+- User Dashboard
+- Product Listings
+- Order Management
 
----
+## 🎥 Demo Video
+[Watch Demo](https://youtu.be/Bi8YwI73nXs)
 
-## 💰 Revenue Model  
+## 🚀 Installation & Setup
 
-1. **Transaction-Based Commission** – 5-10% per transaction.  
-2. **Subscription Plans** – Premium services for frequent buyers.  
-3. **Delivery Fees** – Varying based on distance and delivery type.  
-4. **Data Monetization** – Insights provided to stakeholders (optional).  
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB
+- Python (v3.7+ for ML models)
+- Git
 
----
-
-## 🚚 Logistics & Delivery Model  
-
-✅ **Local Farmer Delivery System** – Ensures cost-effective and faster delivery.  
-✅ **Third-Party Logistics Integration** – Seamless order fulfillment with partners.  
-✅ **Route Optimization Using AI** – Reduces delivery time and cost.  
-✅ **Cold Storage & Inventory Management** – Prevents spoilage of perishable goods.  
-
----
-
-## 🛠️ Tech Stack  
-
-### 📱 **Frontend:**  
-- **React.js + Tailwind CSS** (Responsive UI & UX)  
-
-### ⚙️ **Backend:**  
-- **Node.js + Express.js** (Scalable API Architecture)  
-
-### 🗂️ **Database:**  
-- **MongoDB** (Product, User & Transaction Management)  
-
-### 🔥 **Authentication:**  
-- **Firebase Authentication** (Secure Login & User Management)  
-
-### 🤖 **AI & ML Models:**  
-- **Random Forest Classifier** – Crop recommendation & demand prediction.  
-- **TensorFlow / PyTorch** – Price prediction & product suggestion models.  
-
-### 📢 **API Integration:**  
-- **Google Speech-to-Text API** – Voice-assisted product listing.  
-- **OpenAI GPT-4 API** – Chatbot for assistance and recommendations.  
-- **i18n Translation API** – Multilingual platform support.  
-
----
-
-## 📌 Database Schema  
-
-### 👤 **User Schema**  
-- Name, Contact Info, Role (Farmer/Consumer), Location, etc.  
-
-### 🛒 **Product Schema**  
-- Product Name, Price, Quantity, Category, Season, etc.  
-
-### 📦 **Order Schema**  
-- Order Details, Status, Assigned Delivery, Payment Info, etc.  
-
----
-
-## 🎯 Future Roadmap  
-
-### 🔹 **AI & Predictive Models Expansion**  
-- ✅ Advanced Market Price Prediction.  
-- ✅ AI-driven Crop Health Monitoring.  
-- ✅ Predictive Harvest Scheduling for Optimum Profits.  
-
-### 🔹 **Marketplace & Logistics Enhancements**  
-- ✅ Expand Logistics Network & Delivery Partners.  
-- ✅ Smart Inventory & Demand-Supply Balancing.  
-- ✅ Subscription-Based Bulk Delivery for Urban Areas.  
-
-### 🔹 **Financial Inclusion & Economic Growth**  
-- ✅ Provide Micro-Credit to Farmers.  
-- ✅ Insurance for Crop Failures & Market Risks.  
-- ✅ Increase Farmer Income by 50-70%.  
-
----
-
-## 📢 How to Run the Project?  
-
-### 📌 **Backend Setup:**  
-1. **Navigate to backend directory:**  
+### Backend Setup
+1. Clone the repository:
    ```bash
-   cd krishi-connect/backend
+   git clone https://github.com/your-username/krishi-mitra.git
+   cd krishi-mitra/backend
    ```
 
-2. **Install dependencies:**  
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. **Run the server:**  
-   ```bash
-   node server.js
-   ```
-
----
-
-### 📌 **Frontend Setup:**  
-1. **Navigate to frontend directory:**  
-   ```bash
-   cd krishi-connect/frontend
-   ```
-
-2. **Install dependencies:**  
-   ```bash
-   npm install
-   ```
-
-3. **Run the React app:**  
+3. Start the server:
    ```bash
    npm start
    ```
 
+### Frontend Setup
+1. Navigate to frontend directory:
+   ```bash
+   cd ../frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Access the application at `http://localhost:5173`
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Team
+
+- **Team Name**: Krishi Mitra
+- **Institute**: Vivekanand Education Society's Institute of Technology
+
 ---
 
-## 📢 How to Contribute?  
-We welcome **developers, agricultural experts, and AI enthusiasts** to collaborate.  
-
-### 📌 **Steps to Contribute:**  
-1. **Fork the Repository**  
-2. **Create a Feature Branch (`feature-name`)**  
-3. **Commit Your Changes**  
-4. **Open a Pull Request**  
-
----
-
-## 🌾 **KrishiMitra: Empowering Farmers with AI-Driven Solutions**  
-📍 **Team: Krishi Mitra** | 🏫 **Institute: Vivekanand Education Society’s Institute of Technology**  
-
----
-
-✅ **Happy Coding!** 🤝  
-
----
+Made with ❤️ by Team Krishi Mitra

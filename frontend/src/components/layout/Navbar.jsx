@@ -21,9 +21,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white shadow-md py-3' : 'bg-white/90 backdrop-blur-md py-4'
-    }`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3 rounded-b-1xl' : 'bg-white/90 backdrop-blur-md py-4 rounded-b-2xl'}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
@@ -31,43 +29,43 @@ const Navbar = () => {
             <div className="w-10 h-10 rounded-full bg-primary-bg flex items-center justify-center">
               <FaLeaf className="text-2xl text-primary-color" />
             </div>
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-dark to-primary-light">KrishiConnect</span>
+            <span className="text-brown-700 hover:text-green-600 font-medium tracking-wide transition-all duration-200 ease-in-out relative group py-2 ">KrishiConnect</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-10">
-            <Link to="/products" className="text-neutral-600 hover:text-primary-color transition-colors relative group py-2">
+          <div className="hidden md:flex items-center space-x-5">
+            <Link to="/products" className="text-brown-700 hover:text-green-600 font-medium tracking-wide transition-all duration-200 ease-in-out relative group py-2">
               Products
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link to="/dashboard" className="text-neutral-600 hover:text-primary-color transition-colors relative group py-2">
+            <Link to="/dashboard" className="text-brown-700 hover:text-green-600 font-medium tracking-wide transition-all duration-200 ease-in-out relative group py-2">
               Dashboard
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link to="/cold-storage" className="text-neutral-600 hover:text-primary-color transition-colors relative group py-2">
+            <Link to="/cold-storage" className="text-brown-700 hover:text-green-600 font-medium tracking-wide transition-all duration-200 ease-in-out relative group py-2">
               Cold Storage
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link to="/bulk-buy" className="text-neutral-600 hover:text-primary-color transition-colors relative group py-2">
+            <Link to="/bulk-buy" className="text-brown-700 hover:text-green-600 font-medium tracking-wide transition-all duration-200 ease-in-out relative group py-2">
               Bulk Buy
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link to="/crop-recommendation" className="text-neutral-600 hover:text-primary-color transition-colors relative group py-2">
+            <Link to="/crop-recommendation" className="text-brown-700 hover:text-green-600 font-medium tracking-wide transition-all duration-200 ease-in-out relative group py-2">
               AI Crop Guide
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link to="/about" className="text-neutral-600 hover:text-primary-color transition-colors relative group py-2">
+            <Link to="/about" className="text-brown-700 hover:text-green-600 font-medium tracking-wide transition-all duration-200 ease-in-out relative group py-2">
               About
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link to="/contact" className="text-neutral-600 hover:text-primary-color transition-colors relative group py-2">
+            <Link to="/contact" className="text-brown-700 hover:text-green-600 font-medium tracking-wide transition-all duration-200 ease-in-out relative group py-2">
               Contact
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-color transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-6 ">
             <div className="relative group">
               <input
                 type="text"
@@ -92,11 +90,13 @@ const Navbar = () => {
             </Link>
             <button
               onClick={() => setShowChatbot(true)}
-              className="bg-gradient-to-r from-primary-color to-primary-light text-white p-2.5 rounded-full hover:shadow-md transition-all duration-300 hover:scale-110"
+              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-110"
               aria-label="Open AI Assistant"
             >
               <FaRobot className="text-xl" />
             </button>
+
+
           </div>
 
           {/* Mobile Menu Button */}

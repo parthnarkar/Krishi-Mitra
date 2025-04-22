@@ -40,32 +40,32 @@ const DashboardPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl border-t-4 border-red-500">
           <h2 className="text-xl font-semibold text-red-600 mb-2">Error</h2>
-          <p className="text-gray-600">{error}</p>
+          <p className="text-brown-600">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">
+        <div className="bg-white rounded-xl shadow-lg hover:shadow-xl p-6 mb-8 border-t-4 border-green-500">
+          <h1 className="text-2xl font-bold text-brown-800 font-poppins">
             Welcome back, {user?.name || 'User'}!
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-brown-600 mt-1">
             Here's what's happening with your account today.
           </p>
         </div>
@@ -108,12 +108,12 @@ const DashboardPage = () => {
         </div>
 
         {/* Recent Orders Section */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-xl shadow-lg hover:shadow-xl p-6 border-t-4 border-green-500">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Recent Orders</h2>
+            <h2 className="text-xl font-semibold text-brown-800 font-poppins">Recent Orders</h2>
             <Link
               to="/orders"
-              className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors duration-300"
             >
               View All Orders
             </Link>
@@ -121,8 +121,8 @@ const DashboardPage = () => {
 
           {!orders || orders.length === 0 ? (
             <div className="text-center py-8">
-              <FaBox className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">No orders found</p>
+              <FaBox className="h-12 w-12 text-amber-400 mx-auto mb-4" />
+              <p className="text-brown-600">No orders found</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -130,7 +130,7 @@ const DashboardPage = () => {
                 <OrderCard key={order._id} order={order} />
               )) : (
                 <div className="text-center py-4">
-                  <p className="text-gray-600">Error loading orders</p>
+                  <p className="text-brown-600">Error loading orders</p>
                 </div>
               )}
             </div>

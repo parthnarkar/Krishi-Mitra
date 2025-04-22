@@ -4,7 +4,7 @@ const articles = [
     title: 'Smart Irrigation Techniques for Water Conservation',
     description: 'Learn about modern irrigation methods that can help farmers save water while maintaining crop health and increasing yields.',
     category: 'Smart Farming',
-    imageUrl: 'https://images.unsplash.com/photo-1601049676869-702ea24cfd58?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    imageUrl: 'https://www.hydropoint.com/wp-content/uploads/What-is-smart-irrigation-1.jpeg',
     date: 'June 15, 2023',
     content: [
       'Water is one of the most precious resources for agriculture, and efficient irrigation is crucial for sustainable farming. Smart irrigation techniques can help farmers optimize water usage while ensuring healthy crop growth.',
@@ -20,7 +20,7 @@ const articles = [
     title: 'PM Kisan Samman Nidhi: A Complete Guide for Farmers',
     description: 'Understanding the PM Kisan Samman Nidhi scheme, eligibility criteria, application process, and how to receive direct income support.',
     category: 'Government Schemes',
-    imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    imageUrl: 'https://www.newstak.in/_next/image?url=https%3A%2F%2Fcf-img-a-in.tosshub.com%2Flingo%2Fnwtak%2Fimages%2Fstory%2F202504%2F67f976b1d3927-pm-kisan-samman-nidhi-110812819-16x9.jpg&w=3840&q=75',
     date: 'July 22, 2023',
     content: [
       'The Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) is a government scheme that provides direct income support of ₹6,000 per year to eligible farmer families. This financial assistance helps farmers meet their agricultural needs and household expenses.',
@@ -52,7 +52,7 @@ const articles = [
     title: 'Soil Testing: The Foundation of Successful Farming',
     description: 'Learn about the importance of soil testing, how to interpret results, and how to improve soil health for better crop yields.',
     category: 'Climate & Soil',
-    imageUrl: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    imageUrl: 'https://g3soilworks.com/wp-content/uploads/2023/07/soil-testing-agronomy-inspector-taking-soil-sampl-2021-08-26-16-53-52-utc-scaled.jpg',
     date: 'September 10, 2023',
     content: [
       'Soil testing is a fundamental practice in modern agriculture that provides valuable insights into soil health and fertility. By understanding the nutrient content, pH level, and other properties of the soil, farmers can make informed decisions about fertilization, crop selection, and management practices.',
@@ -68,7 +68,7 @@ const articles = [
     title: 'From Struggling Farmer to Successful Agripreneur',
     description: 'The inspiring journey of Rajesh Kumar, who transformed his small farm into a profitable agribusiness through innovation and perseverance.',
     category: 'Success Stories',
-    imageUrl: 'https://images.unsplash.com/photo-1595356700395-6f14b5c1f33f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    imageUrl: 'https://kj1bcdn.b-cdn.net/media/102256/subhash-khetulal-sharma.jpg',
     date: 'October 3, 2023',
     content: [
       'Rajesh Kumar\'s journey from a struggling farmer to a successful agripreneur is a testament to the power of innovation, perseverance, and continuous learning in agriculture. When he inherited his family\'s 2-acre farm in Maharashtra 15 years ago, he faced numerous challenges, including unpredictable weather, fluctuating market prices, and limited access to modern farming techniques.',

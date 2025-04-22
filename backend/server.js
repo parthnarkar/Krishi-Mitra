@@ -54,6 +54,10 @@ app.use('/api/bulk-buy', bulkBuyRoutes);
 const coldStorageBookingsRoutes = require('./routes/coldStorageBookings');
 app.use('/api/cold-storage-bookings', coldStorageBookingsRoutes);
 
+// Crop Recommendation Routes
+const cropRecommendationRoutes = require('./routes/cropRecommendationRoutes');
+app.use('/', cropRecommendationRoutes); // Using root path as specified in the frontend
+
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

@@ -64,18 +64,21 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
       {/* Header Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center max-w-4xl mx-auto mb-16"
+        className="text-center max-w-4xl mx-auto mb-16 animate-fade-in-up"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <div className="inline-block mb-4 p-2 bg-green-100 rounded-full">
+          <FaEnvelope className="h-12 w-12 text-green-600" />
+        </div>
+        <h1 className="text-4xl md:text-5xl font-bold text-brown-800 font-poppins mb-4 tracking-tight">
           Get in Touch with Us
         </h1>
-        <p className="text-xl text-gray-600">
+        <p className="text-lg text-brown-600 max-w-3xl mx-auto leading-relaxed">
           We're here to help with anything — from bulk orders to learning queries.
         </p>
       </motion.div>
@@ -87,11 +90,11 @@ const ContactPage = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white rounded-2xl shadow-md p-8"
+            className="bg-white rounded-xl shadow-lg hover:shadow-xl p-8 border-t-4 border-green-500"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium text-brown-700 mb-1">
                   Name
                 </label>
                 <input
@@ -101,12 +104,12 @@ const ContactPage = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-amber-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
                   placeholder="Your name"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-brown-700 mb-1">
                   Email
                 </label>
                 <input
@@ -116,12 +119,12 @@ const ContactPage = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-amber-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
                   placeholder="your.email@example.com"
                 />
               </div>
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="subject" className="block text-sm font-medium text-brown-700 mb-1">
                   Subject
                 </label>
                 <input
@@ -131,12 +134,12 @@ const ContactPage = () => {
                   value={formData.subject}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-amber-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300"
                   placeholder="How can we help?"
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="message" className="block text-sm font-medium text-brown-700 mb-1">
                   Message
                 </label>
                 <textarea
@@ -146,7 +149,7 @@ const ContactPage = () => {
                   onChange={handleInputChange}
                   required
                   rows="4"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 resize-none"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-amber-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 resize-none"
                   placeholder="Tell us more about your inquiry..."
                 ></textarea>
               </div>
@@ -154,7 +157,7 @@ const ContactPage = () => {
                 type="submit"
                 disabled={isSubmitting}
                 className={`w-full px-6 py-4 bg-green-600 text-white rounded-xl font-medium text-lg 
-                  flex items-center justify-center group hover:bg-green-700 transition-all duration-300
+                  flex items-center justify-center group hover:bg-green-700 transition-all duration-300 transform hover:scale-105
                   ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
               >
                 {isSubmitting ? (
@@ -195,8 +198,8 @@ const ContactPage = () => {
             className="space-y-8"
           >
             {/* Contact Details Card */}
-            <div className="bg-white rounded-2xl shadow-md p-8">
-              <h3 className="text-2xl font-semibold text-gray-900 mb-6">Contact Information</h3>
+            <div className="bg-white rounded-xl shadow-lg hover:shadow-xl p-8 border-t-4 border-green-500">
+              <h3 className="text-2xl font-semibold text-brown-800 mb-6 font-poppins">Contact Information</h3>
               <div className="space-y-6">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
@@ -205,8 +208,8 @@ const ContactPage = () => {
                     </div>
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Email</p>
-                    <a href="mailto:contact@krishimitra.com" className="text-lg text-gray-900 hover:text-green-600 transition-colors">
+                    <p className="text-sm font-medium text-brown-600">Email</p>
+                    <a href="mailto:contact@krishimitra.com" className="text-lg text-brown-800 hover:text-green-600 transition-colors">
                       contact@krishimitra.com
                     </a>
                   </div>
@@ -218,8 +221,8 @@ const ContactPage = () => {
                     </div>
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Phone</p>
-                    <a href="tel:+919876543210" className="text-lg text-gray-900 hover:text-green-600 transition-colors">
+                    <p className="text-sm font-medium text-brown-600">Phone</p>
+                    <a href="tel:+919876543210" className="text-lg text-brown-800 hover:text-green-600 transition-colors">
                       +91 98765 43210
                     </a>
                   </div>
@@ -231,8 +234,8 @@ const ContactPage = () => {
                     </div>
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Address</p>
-                    <p className="text-lg text-gray-900">
+                    <p className="text-sm font-medium text-brown-600">Address</p>
+                    <p className="text-lg text-brown-800">
                       KrishiMitra Office, Tech Park<br />
                       Mumbai, Maharashtra 400001
                     </p>
@@ -241,8 +244,8 @@ const ContactPage = () => {
               </div>
 
               {/* Social Media Links */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <h4 className="text-sm font-medium text-gray-500 mb-4">Connect With Us</h4>
+              <div className="mt-8 pt-6 border-t border-amber-200">
+                <h4 className="text-sm font-medium text-brown-600 mb-4">Connect With Us</h4>
                 <div className="flex space-x-4">
                   <a href="#" className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600 hover:bg-green-200 transition-colors">
                     <FaWhatsapp className="text-xl" />
@@ -258,10 +261,10 @@ const ContactPage = () => {
             </div>
 
             {/* Map Section */}
-            <div className="bg-white rounded-2xl shadow-md p-4 relative overflow-hidden group">
+            <div className="bg-white rounded-xl shadow-lg hover:shadow-xl p-4 relative overflow-hidden group border-t-4 border-green-500">
               <div className="relative h-64 overflow-hidden rounded-xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                  src="https://imgs.search.brave.com/ncIOF_ZpbvUf14dLw_7-1kfSiaklO3s2LUVe9q0rO-g/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzAyLzA0LzU1Lzcx/LzM2MF9GXzIwNDU1/NzE3MV8yNlgwQWFv/dVF3VmxScU90a1B0/d3lwYWgyUXJzNFRJ/eC5qcGc"
                   alt="KrishiMitra Office Location"
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 />
@@ -283,22 +286,22 @@ const ContactPage = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="mt-16"
         >
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
+          <h2 className="text-3xl font-bold text-brown-800 mb-8 text-center font-poppins">Frequently Asked Questions</h2>
           <div className="max-w-3xl mx-auto space-y-4">
             {faqItems.map((item, index) => (
               <motion.div
                 key={index}
                 initial={false}
                 animate={{ backgroundColor: expandedFaq === index ? 'rgb(243, 244, 246)' : 'white' }}
-                className="border border-gray-200 rounded-xl overflow-hidden"
+                className="border border-amber-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <button
                   onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
                   className="w-full px-6 py-4 text-left flex items-center justify-between focus:outline-none"
                 >
-                  <span className="text-lg font-medium text-gray-900">{item.question}</span>
+                  <span className="text-lg font-medium text-brown-800">{item.question}</span>
                   <FaChevronDown 
-                    className={`text-gray-500 transition-transform duration-300 ${
+                    className={`text-brown-400 transition-transform duration-300 ${
                       expandedFaq === index ? 'transform rotate-180' : ''
                     }`}
                   />
@@ -312,7 +315,7 @@ const ContactPage = () => {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <div className="px-6 pb-4 text-gray-600">
+                  <div className="px-6 pb-4 text-brown-600">
                     {item.answer}
                   </div>
                 </motion.div>

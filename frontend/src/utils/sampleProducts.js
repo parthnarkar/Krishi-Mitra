@@ -127,7 +127,7 @@ export const sampleProducts = [
     quantity: 120,
     unit: 'kg',
     description: 'Sweet and tender green peas, perfect for curries, rice dishes, or as a side. These peas are grown using organic farming methods.',
-    image: 'https://images.unsplash.com/photo-1587735243615-c03f25aaff15?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60',
+    image: 'https://images.unsplash.com/photo-1690023852149-0c69ac74734f?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     seller: {
       _id: 'f1',
       name: 'Green Valley Farms',

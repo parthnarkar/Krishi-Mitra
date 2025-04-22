@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaLock, FaLeaf, FaSpinner } from 'react-icons/fa';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { loginUser, setToken } from '../../utils/authApi';
-import Input from '../Input';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -10,29 +9,55 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
-  const [loginMethod, setLoginMethod] = useState('password'); // 'password' or 'otp'
+  const [showPassword, setShowPassword] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const images = [
+    {
+      url: "https://images.unsplash.com/photo-1652872279128-29560e0619c9?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      title: "Sustainable Farming",
+      description: "Connect with local farmers"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      title: "Fresh Produce",
+      description: "Direct from farm to table"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=1999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      title: "Modern Agriculture",
+      description: "Embracing technology in farming"
+    }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
-    
-    // Clear error when user starts typing
+
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
         [name]: ''
       }));
     }
-    
-    // Clear API error when user starts typing
+
     if (apiError) {
       setApiError('');
     }
@@ -40,189 +65,196 @@ const Login = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
-    if (loginMethod === 'password') {
-      if (!formData.email.trim()) {
-        newErrors.email = 'Email is required';
-      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        newErrors.email = 'Email is invalid';
-      }
-      
-      if (!formData.password) {
-        newErrors.password = 'Password is required';
-      }
-    } else {
-      // OTP validation
-      if (!formData.email.trim()) {
-        newErrors.email = 'Email or Mobile Number is required';
-      }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Your Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
     }
-    
+
+    if (!formData.password) {
+      newErrors.password = 'Your Password is required';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsLoading(true);
     setApiError('');
-    
+
     try {
-      // Call API to login user
       const response = await loginUser({
         email: formData.email,
         password: formData.password
       });
-      
-      // Save token to localStorage
+
       setToken(response.token);
-      
-      // Show success toast
-      toast.success('Login successful! Welcome to KrishiMitra');
-      
-      // Redirect to dashboard
-      navigate('/dashboard');
+      toast.success('Login successful! Redirecting...');
+      navigate('/dashboard', { replace: true });
     } catch (error) {
-      setApiError(error.message || 'Login failed. Please check your credentials.');
-      toast.error('Login failed. Please check your credentials.');
+      const errorMessage = error.response?.data?.message || error.message || 'Login failed. Please check your credentials.';
+      setApiError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const toggleLoginMethod = () => {
-    setLoginMethod(loginMethod === 'password' ? 'otp' : 'password');
-    setErrors({});
-    setApiError('');
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-earth-green-50 to-earth-brown-50 px-4 py-12">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">
-        <div className="relative">
-          {/* Background pattern */}
-          <div className="absolute inset-0 bg-earth-green-50 opacity-20">
-            <div className="absolute inset-0" style={{ 
-              backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-              backgroundSize: '30px 30px'
-            }}></div>
-          </div>
-          
-          {/* Header with logo and welcome text */}
-          <div className="relative p-8 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-earth-green-100 mb-4">
-              <FaLeaf className="text-earth-green-600 text-3xl" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2 font-poppins">Welcome to KrishiMitra</h1>
-            <p className="text-gray-600 font-poppins">Connect with farmers and consumers</p>
-          </div>
-        </div>
-        
-        <div className="p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email/Mobile Input */}
-            <div className="mb-6">
-              <Input
-                label="Email or Mobile Number"
-                type={loginMethod === 'password' ? 'email' : 'text'} 
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                error={errors.email}
-                placeholder={loginMethod === 'password' ? "Enter your email" : "Enter email or mobile number"}
-                required
-                className="w-full"
-              />
+    <div className="flex items-center justify-center h-full p-4">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-6xl overflow-hidden">
+        <div className="flex flex-col md:flex-row">
+          {/* Left Side - Login Form */}
+          <div className="w-full md:w-1/2 p-8 md:p-12">
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold mb-2">Welcome, to <strong className='text-[#1B5E20] text-3xl underline'>Krishi-Connect</strong></h2>
+              <h1 className="text-4xl font-bold text-gray-900 pt-4">Log In</h1>
             </div>
 
-            {/* Password Input */}
-            {loginMethod === 'password' && (
-              <div className="mb-6">
-                <Input
-                  label="Password"
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  error={errors.password}
-                  placeholder="Enter your password"
-                  required
-                  className="w-full"
-                />
-              </div>
-            )}
-
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="rememberMe"
-                  name="rememberMe"
-                  checked={formData.rememberMe}
-                  onChange={handleChange}
-                  className="h-4 w-4 text-earth-green-600 focus:ring-earth-green-500 border-gray-300 rounded cursor-pointer"
-                />
-                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700 font-poppins cursor-pointer">
-                  Remember me
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-gray-700 text-sm font-medium mb-2">
+                  Your Email
                 </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    errors.email ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent`}
+                  placeholder="Your email"
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                )}
               </div>
-              
-              <Link 
-                to="/forgot-password" 
-                className="text-sm font-medium text-earth-green-600 hover:text-earth-green-500 font-poppins transition-colors duration-200"
-              >
-                Forgot Password?
-              </Link>
-            </div>
-            
-            {/* Error Message */}
-            {apiError && (
-              <div className="p-4 mb-6 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm font-poppins">
-                {apiError}
+
+              <div>
+                <label className="block text-gray-700 text-sm font-medium mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 rounded-lg border ${
+                      errors.password ? 'border-red-500' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent`}
+                    placeholder="Your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+                )}
               </div>
-            )}
-            
-            {/* Submit Button */}
-            <button 
-              type="submit" 
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 font-poppins disabled:opacity-70 disabled:cursor-not-allowed"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <FaSpinner className="animate-spin mr-3 h-5 w-5" />
-                  Signing In...
-                </>
-              ) : (
-                'Sign In'
+
+              <div className="text-right">
+                <Link 
+                  to="/forgot-password" 
+                  className="text-sm text-blue-500 hover:text-blue-600"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
+
+              {apiError && (
+                <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg">
+                  {apiError}
+                </div>
               )}
-            </button>
-            
-            {/* Toggle Login Method */}
-            <div className="text-center mt-4">
-              <button 
-                type="button" 
-                onClick={toggleLoginMethod}
-                className="text-sm text-earth-green-600 hover:text-earth-green-500 focus:outline-none font-poppins transition-colors duration-200 underline"
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-[#1B5E20] text-white py-3 rounded-lg font-medium hover:bg-[#154a19] transition-colors duration-200"
               >
-                {loginMethod === 'password' ? 'Login with OTP instead' : 'Login with password instead'}
+                {isLoading ? 'Loading...' : 'Log In'}
               </button>
+
+              <div className="text-center text-sm text-gray-600">
+                Don't have an account?{' '}
+                <Link to="/register" className="text-[#1B5E20] font-medium hover:text-[#154a19]">
+                  Sign Up
+                </Link>
+              </div>
+            </form>
+          </div>
+
+          {/* Right Side - Image Slideshow */}
+          <div className="hidden md:block w-1/2 bg-[#1B5E20] relative overflow-hidden">
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                  index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40 z-[1]" />
+                <img
+                  src={image.url}
+                  alt={image.title}
+                  className="absolute inset-0 w-full h-full object-cover object-center"
+                />
+                <div className="absolute top-8 right-8 z-10 transition-all duration-700 transform text-right max-w-[280px]">
+                  <div className={`transition-all duration-700 transform ${
+                    index === currentImageIndex 
+                      ? 'translate-x-0 opacity-100' 
+                      : 'translate-x-8 opacity-0'
+                  }`}>
+                    <h3 className="text-3xl font-bold text-white mb-2 tracking-wide leading-tight">
+                      {image.title}
+                    </h3>
+                    <div className="h-0.5 w-16 bg-white/80 ml-auto mb-3 transition-all duration-700 transform origin-right" 
+                         style={{
+                           transform: index === currentImageIndex ? 'scaleX(1)' : 'scaleX(0)'
+                         }}
+                    />
+                    <p className="text-lg text-white/90 font-light">
+                      {image.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Image Navigation Dots */}
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`h-1.5 transition-all duration-300 rounded-full ${
+                    index === currentImageIndex 
+                      ? 'w-8 bg-white' 
+                      : 'w-4 bg-white/40 hover:bg-white/60'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
             </div>
-          </form>
-          
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600 font-poppins">
-              New to KrishiMitra?{' '}
-              <Link to="/register" className="font-medium text-earth-green-600 hover:text-earth-green-500">
-                Register here
-              </Link>
-            </p>
           </div>
         </div>
       </div>
@@ -230,4 +262,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;
