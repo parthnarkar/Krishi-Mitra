@@ -1,97 +1,61 @@
 # 🌾 KrishiMitra: Smart Agricultural E-Commerce Platform
 
-> A modern e-commerce platform connecting farmers directly to consumers, powered by AI-driven insights and real-time market data.
+> A smart agricultural platform that empowers farmers by removing middlemen, enabling direct market access, and delivering AI-powered recommendations, real-time pricing, and automated logistics.
 
 ## 📌 Overview
 
 KrishiMitra is a comprehensive agricultural platform that revolutionizes the traditional farming supply chain by eliminating middlemen and providing direct market access to farmers. The platform leverages AI and machine learning to offer smart crop recommendations, real-time price insights, and automated logistics solutions.
 
-### 🎯 Key Objectives
+## 🎯 Key Objectives
 - Connect farmers directly with consumers for better profits
 - Provide AI-powered crop recommendations and market insights
 - Enable bulk trading and cold storage management
 - Ensure fair pricing through transparent market data
 - Support multilingual chatbot assistance for better accessibility
 
-## ✨ Features
+## 🚀 Key Features
 
-### 🧠 AI-Powered Features
-- **Smart Crop Recommendations**: AI-driven suggestions based on location, season, and market trends
-- **Price Prediction**: Real-time market price analysis and forecasting
-- **Demand Forecasting**: Predictive analytics for crop demand
-- **Chatbot Assistant**: AI-powered support for farming queries
+### 🤖 AI Intelligence
+-  **Smart Crops Recommendation** – Auto-suggest crops using location, season & trends  
+-  **Market Insights** – Predict prices & demand in real-time  
+-  **Multilingual Agriculture Chatbot** – AI chatbot for instant query resolution  
 
-### 🛒 E-Commerce Features
-- **Direct Farmer-to-Consumer Marketplace**: Eliminate middlemen for better profits
-- **Bulk Buy/Sell Platform**: Connect with buyers and sellers for bulk transactions
-- **Cold Storage Booking**: Manage and book cold storage facilities
-- **Real-time Price Tracking**: Monitor market prices for various crops
-- **Product Catalog**: Comprehensive listing of agricultural products
-- **Order Management**: Track and manage orders efficiently
+### 🛍️ Marketplace
+-  **Direct Trade** – Farmer-to-consumer, no middlemen  
+-  **Bulk Exchange** – Seamless large-scale buying/selling  
+-  **Cold Storage** – Book & manage storage units  
+-  **Live Rates** – Track current crop prices  
+-  **Product + Orders** – Browse, buy, and manage orders  
 
-### 👤 User Features
-- **Role-based Dashboards**: Separate interfaces for farmers and consumers
-- **Multilingual Support**: Chatbot assistance in Hindi, Marathi, and English
-- **Secure Authentication**: JWT-based user management
-- **Responsive Design**: Mobile-first approach for all devices
-- **Profile Management**: User profile customization
-- **Notification System**: Real-time updates and alerts
+### 👨‍🌾 User Experience
+-  **Dashboards** – Tailored for farmers & buyers  
+-  **Multilingual Chat** – Hindi, Marathi, English support  
+-  **JWT Auth** – Secure logins  
+-  **Responsive UI** – Mobile-first design  
+-  **Profiles + Alerts** – Real-time updates & user settings  
 
-### 🔄 System Features
-- **Automated Order Management**: Smart routing and allocation
-- **Inventory Management**: Real-time stock tracking
-- **Payment Integration**: Secure transaction processing
-- **Logistics Optimization**: AI-driven delivery route planning
-- **Data Analytics**: Comprehensive reporting and insights
-- **API Integration**: Seamless third-party service integration
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **Framework**: React.js with Vite
-- **Styling**: Tailwind CSS
-- **State Management**: React Context API
-- **UI Components**: Custom components with Framer Motion
-- **Icons**: React Icons
-- **Routing**: React Router
-- **HTTP Client**: Axios
-- **Animation**: Framer Motion
-- **Charts**: Chart.js
-- **Notifications**: React Hot Toast
+**Frontend**: React.js (Vite), Tailwind CSS, Context API, React Router, Axios, Framer Motion, Chart.js, React Hot Toast, React Icons  
+**Backend**: Node.js, Express.js, JWT, REST APIs, CORS, Multer, Async Handler, MongoDB (Mongoose)  
+**Database**: MongoDB with Mongoose ODM, schema validation, document refs  
+**AI/ML**: Random Forest (Crop), TensorFlow/PyTorch (Price), Gemini 1.5 Flash (Chatbot)
 
-### Backend
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Authentication**: JWT
-- **API Integration**: RESTful architecture
-- **Security**: CORS
-- **File Upload**: Multer
-- **Error Handling**: Express Async Handler
-- **Database**: MongoDB with Mongoose
-
-### Database
-- **Primary**: MongoDB
-- **Schema Design**: Mongoose ODM
-- **Validation**: Schema-level validation
-- **Relationships**: Document references
-
-### AI/ML
-- **Crop Recommendation**: Random Forest Classifier
-- **Price Prediction**: TensorFlow/PyTorch
-- **NLP**: Gemini 1.5 Flash for chatbot
 
 ## 📸 Screenshots
 
-### Main Features
-- AI Crop Recommendation Interface
-- Bulk Buy/Sell Marketplace
-- Cold Storage Management
-- User Dashboard
-- Product Listings
-- Order Management
-
 ## 🎥 Demo Video
-[Watch Demo](https://youtu.be/Bi8YwI73nXs)
+
+## 📌 Project Reports & Presentations
+
+### Presentations
+- [Syrus Hackathon-2025 PPT](https://drive.google.com/file/d/1tG34Dt4RR1B_ZplmhPXxoT3xdjsVb8aJ/view?usp=sharing)
+- [Field Project(VESIT) PPT](https://drive.google.com/file/d/1eM5iPMvdUaBFIdMhFITtCdFMbDDZT73H/view?usp=sharing)
+
+### Project Report
+
+Feel free to review these documents for more details on the projects.
 
 ## 🚀 Installation & Setup
 
@@ -104,8 +68,8 @@ KrishiMitra is a comprehensive agricultural platform that revolutionizes the tra
 ### Backend Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/krishi-mitra.git
-   cd krishi-mitra/backend
+   git clone https://github.com/parthnarkar/Krishi-Mitra.git
+   cd Krishi-Mitra/backend
    ```
 
 2. Install dependencies:
@@ -117,6 +81,13 @@ KrishiMitra is a comprehensive agricultural platform that revolutionizes the tra
    ```bash
    npm start
    ```
+   
+4. Run the ML Model Server (in a new terminal)
+   ```bash
+   cd Krishi-Mitra/backend/ml_model/model
+   python app.py
+   ```
+   > Make sure Python and required libraries for the ML model are installed. You can use a virtual environment if needed.
 
 ### Frontend Setup
 1. Navigate to frontend directory:
