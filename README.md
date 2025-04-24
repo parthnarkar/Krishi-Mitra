@@ -54,8 +54,9 @@ KrishiMitra is a comprehensive agricultural platform that revolutionizes the tra
 - [Field Project(VESIT) PPT](https://drive.google.com/file/d/1eM5iPMvdUaBFIdMhFITtCdFMbDDZT73H/view?usp=sharing)
 
 ### Project Report
+- [Project Report - VESIT](https://drive.google.com/file/d/1CNKT2lTT2K9yv75GZDgsDyaHqYfTMzVP/view?usp=sharing)
 
-Feel free to review these documents for more details on the projects.
+Take a look at these documents for a deeper understanding of the projects.
 
 ## 🚀 Installation & Setup
 
@@ -128,4 +129,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ by Team Krishi Mitra
+Made with ❤️ by Team Krishi-Mitra
